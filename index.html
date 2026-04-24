@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Alex Martínez – Front-End Developer &amp; Digital Marketing 2026</title>
+  <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
+    name="description" />
+  <!-- Vendor CSS (Chocolat + AOS + Swiper + Jarallax) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts: Inter -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap"
+    rel="stylesheet" />
+  <!-- Portfolio styles -->
+  <link href="css/style.css" rel="stylesheet" />
+  <!-- Preload dynamic wallpaper -->
+  <link rel="preload" as="image" href="images/banner-image-1.jpg" />
+</head>
+
+<body class="desktop-mode" data-bs-theme="dark">
+
+  <!-- Cursor canvas (fixed) -->
+  <canvas id="cursor-canvas"></canvas>
+  <div class="cursor-dot" id="cursorDot"></div><!-- ================================================================
+     START MENU (CLASSIC 98 STYLE)
+     ================================================================ -->
+<div id="start-menu" class="win11-start-menu">
+  <div style="display:flex; flex:1;">
+    <div class="sm-sidebar">Windows 98</div>
+    <div class="sm-main">
+      <div class="sm-app" onclick="openWindow('window-cv')"><img src="images/icons/intro.png"><span>Bienvenida (CV)</span></div>
+      <div class="sm-app" onclick="openWindow('window-about')"><img src="images/icons/about.png"><span>Sobre Mí</span></div>
+      <div class="sm-app" onclick="openWindow('window-experience')"><img src="images/icons/experience.png"><span>Experiencia</span></div>
+      <div class="sm-app" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Habilidades</span></div>
+      <div class="sm-app" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proyectos</span></div>
+      <div class="sm-divider"></div>
+      <div class="sm-app" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contacto</span></div>
+      <div class="sm-app" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
+      <div class="sm-app" onclick="openWindow('window-weather')"><img src="images/icons/weather.png"><span>Clima</span></div>
+      <div class="sm-app" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Calendario</span></div>
+      <div class="sm-app" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>System Logs</span></div>
+    </div>
+  </div>
+  <div class="sm-footer">
+    <button class="sm-power-btn" onclick="showPowerPopup()">
+      <i class="fas fa-power-off"></i> <span>Shut Down...</span>
+    </button>
+  </div>
+</div>
+
+  <!-- ================================================================
+     WINDOWS 11 TASKBAR
+     ================================================================ -->
+  <div class="win11-taskbar">
+    <div class="taskbar-inner">
+      <!-- LEFT: Start Button -->
+      <div class="tb-left">
+        <button class="tb-btn tb-start" id="start-btn" title="Inicio">
+          <i class="fab fa-windows"></i>
+        </button>
+      </div>
+      <!-- CENTER: Dynamic App Icons -->
+      <div class="tb-center" id="taskbar-icons">
+        <!-- App icons added by JS -->
+      </div>
+      <!-- RIGHT: System Tray + Clock -->
+      <div class="tb-right">
+        <button class="tb-btn" id="theme-toggle" title="Cambiar tema">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="tb-btn" id="lang-toggle" title="Language">EN</button>
+        <div class="tb-system-tray">
+        <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo"><i class="fas fa-image"></i></button>
+        <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo"><i class="fas fa-window-restore"></i></button>
+        <i class="fas fa-wifi"></i>
+        <i class="fas fa-volume-up"></i>
+        <i class="fas fa-battery-three-quarters"></i>
+      </div>
+        <div class="tb-clock" id="taskbar-clock">
+          <span id="clock-time">--:--</span>
+          <span id="clock-date">--/--/----</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+     DESKTOP
+     ================================================================ -->
+  <div class="win11-desktop" id="desktop">
+
+    <!-- DESKTOP ICONS -->
+    <div class="desktop-icons">
+
+      <div class="desktop-icon" onclick="openWindow('window-cv')">
+        <img alt="CV" class="desktop-png-icon" src="images/icons/intro.png" />
+        <span data-en="Welcome" data-es="Bienvenida">Bienvenida</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-about')">
+        <img alt="Sobre Mí" class="desktop-png-icon" src="images/icons/about.png" />
+        <span data-en="About" data-es="Sobre Mí">Sobre Mí</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-experience')">
+        <img alt="Experiencia" class="desktop-png-icon" src="images/icons/experience.png" />
+        <span data-en="Experience" data-es="Experiencia">Experiencia</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-skills')">
+        <img alt="Habilidades" class="desktop-png-icon" src="images/icons/skills.png" />
+        <span data-en="Skills" data-es="Habilidades">Habilidades</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-portfolio')">
+        <img alt="Proyectos" class="desktop-png-icon" src="images/icons/portfolio.png" />
+        <span data-en="Projects" data-es="Proyectos">Proyectos</span>
+      </div>
+
+      <!-- DuckDuckGo — abre nueva pestaña con búsqueda -->
+      <a class="desktop-icon" href="https://duckduckgo.com" target="_blank" style="text-decoration:none;">
+        <img alt="DuckDuckGo" class="desktop-png-icon" src="images/icons/duckduckgo.png"/>
+        <span>DuckDuckGo</span>
+      </a>
+
+      <div class="desktop-icon" onclick="openWindow('window-contact')">
+        <img alt="Contacto" class="desktop-png-icon" src="images/icons/contact.png" />
+        <span data-en="Contact" data-es="Contacto">Contacto</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-music')">
+        <img alt="Música" class="desktop-png-icon" src="images/icons/music.png" />
+        <span data-en="Music" data-es="Música">Música</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-weather')">
+        <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" />
+        <span data-en="Weather" data-es="Clima">Clima</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-calendar')">
+        <img alt="Calendario" class="desktop-png-icon" src="images/icons/calendar.png" />
+        <span data-en="Calendar" data-es="Calendario">Calendario</span>
+      </div>
+
+      <a class="desktop-icon" href="https://wa.me/56945341572?text=Hola%20Alex" style="text-decoration:none;"
+        target="_blank">
+        <img alt="WhatsApp" class="desktop-png-icon" src="images/icons/whatsapp.png" />
+        <span>WhatsApp</span>
+      </a>
+
+      <div class="desktop-icon" onclick="openWindow('window-logs')">
+        <img alt="Log Viewer" class="desktop-png-icon" src="images/icons/logviewer.png" />
+        <span data-en="Logs" data-es="Registros">System Logs</span>
+      </div>
+
+    </div><!-- /.desktop-icons -->
+
+    <!-- ================================================================
+       WINDOWS CONTAINER
+       ================================================================ -->
+    <div id="windows-container">
+
+      <!-- ======================== CV / INICIO ======================== -->
+      <div class="win11-window" id="window-cv" style="width:600px; height:480px;">
+        <div class="window-header">
+          <div class="window-title"><img alt="CV" class="win-img" src="images/icons/intro.png" /> Portafolio — Alex
+            Martínez</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-cv')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-cv')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-cv')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:30px 40px; overflow-y:auto;">
+          <!-- Avatar + nombre -->
+          <div style="display:flex; align-items:center; gap:24px; margin-bottom:24px;">
+            <div id="cv-avatar"
+              style="width:80px;height:80px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);background:linear-gradient(135deg,#0078d4,#60cdff);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;flex-shrink:0;">
+              AM</div>
+            <div>
+              <h2 data-en="Alex Martínez" data-es="Alex Martínez"
+                style="margin:0;font-size:1.6rem;color:#fff;font-weight:700;">Alex Martínez</h2>
+              <p data-en="Front-End Developer &amp; UI/UX · Villarrica, Chile"
+                data-es="Desarrollador Front-End &amp; UI/UX · Villarrica, Chile"
+                style="margin:4px 0 0;color:#60cdff;font-size:0.9rem;">Desarrollador Front-End &amp; UI/UX · Villarrica,
+                Chile</p>
+            </div>
+          </div>
+          <hr style="border-color:rgba(255,255,255,0.1);margin-bottom:20px;" />
+          <h4 data-en="Professional Summary" data-es="Resumen Profesional"
+            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">
+            Resumen Profesional</h4>
+          <p data-en="Front-End developer passionate about crafting modern digital experiences. Specialized in HTML5, CSS3, JavaScript, with a focus on smooth UX and premium aesthetics."
+            data-es="Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3, JavaScript, con enfoque en UX fluido y estética premium."
+            style="font-size:0.9rem;color:rgba(255,255,255,0.75);line-height:1.7;">
+            Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3,
+            JavaScript, con enfoque en UX fluido y estética premium.
+          </p>
+          <h4 data-en="Key Experience" data-es="Experiencia Clave"
+            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 10px;">
+            Experiencia Clave</h4>
+          <ul style="font-size:0.9rem;color:rgba(255,255,255,0.75);line-height:1.8;padding-left:18px;">
+            <li data-en="Cine Club Chatarra — Cultural Project, Villarrica"
+              data-es="Cine Club Chatarra — Proyecto Cultural, Villarrica">Cine Club Chatarra — Proyecto Cultural,
+              Villarrica</li>
+            <li data-en="Portfolio and website development for independent clients"
+              data-es="Desarrollo de portfolios y sitios para clientes independientes">Desarrollo de portfolios y sitios
+              para clientes independientes</li>
+            <li data-en="Responsive layout and advanced UI development"
+              data-es="Maquetación responsive y desarrollo de UI avanzado">Maquetación responsive y desarrollo de UI
+              avanzado</li>
+          </ul>
+          <h4 data-en="Skills" data-es="Habilidades"
+            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 10px;">
+            Habilidades</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+            <span class="cv-tag">HTML5</span>
+            <span class="cv-tag">CSS3 / SCSS</span>
+            <span class="cv-tag">JavaScript</span>
+            <span class="cv-tag">Bootstrap 5</span>
+            <span class="cv-tag">Figma / UI Design</span>
+            <span class="cv-tag">SEO</span>
+            <span class="cv-tag">WordPress</span>
+          </div>
+          <h4 data-en="Contact" data-es="Contacto"
+            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 10px;">
+            Contacto</h4>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <div class="cv-contact-item">
+              <a href="mailto:alex.martinez@email.com" style="color:#60cdff;font-size:0.85rem;text-decoration:none;">
+                <img src="images/icons/gmail.png" style="width:16px;height:16px;margin-right:6px;vertical-align:middle;">alex.martinez@email.com
+              </a>
+            </div>
+            <a href="https://wa.me/56945341572" style="color:#25D366;font-size:0.85rem;text-decoration:none;"
+              target="_blank"><i class="fab fa-whatsapp" style="margin-right:6px;"></i>+56 9 4534 1572</a>
+            <div class="cv-contact-item">
+              <a href="https://github.com/AlexMartinez" style="color:rgba(255,255,255,0.6);font-size:0.85rem;text-decoration:none;" target="_blank">
+                <img src="images/icons/github.png" style="width:16px;height:16px;margin-right:6px;vertical-align:middle;">GitHub
+              </a>
+            </div>
+          </div>
+          <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn-special" onclick="openWindow('window-portfolio'); return false;"
+              style="font-size:0.8rem;padding:8px 18px;" data-en="View Projects" data-es="Ver Proyectos">Ver
+              Proyectos</button>
+            <button class="btn-outline-custom" onclick="openWindow('window-contact'); return false;"
+              style="font-size:0.8rem;padding:8px 18px;" data-en="Contact Me" data-es="Contáctame">Contáctame</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== BIENVENIDA / INTRO ======================== -->
+      <div class="win11-window d-none" id="window-intro">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-info-circle"></i> Bienvenida</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-intro')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-intro')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-intro')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <div
+            class="hero-section position-relative d-flex align-items-center justify-content-center overflow-hidden window-inner-section"
+            id="intro">
+            <div class="hero-bg-overlay"></div>
+            <div class="container position-relative z-2 text-center">
+              <div class="row justify-content-center">
+                <div class="col-lg-10">
+                  <span class="introduction mb-3 d-block" data-en="FRONT-END &amp; UI/UX DEVELOPER"
+                    data-es="DESARROLLADOR FRONT-END &amp; UI/UX">DESARROLLADOR FRONT-END &amp; UI/UX</span>
+                  <h1 class="main-title mb-4 txt-fx" data-en="ALEX MARTÍNEZ" data-es="ALEX MARTÍNEZ">ALEX MARTÍNEZ</h1>
+                  <p class="hero-description mx-auto mb-5"
+                    data-en="I transform ideas into elegant, functional, and high-performance digital experiences."
+                    data-es="Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.">
+                    Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.
+                  </p>
+                  <div class="hero-btns">
+                    <button class="btn-special" data-en="View Projects" data-es="Ver Proyectos"
+                      onclick="openWindow('window-portfolio')">Ver Proyectos</button>
+                    <button class="btn-outline-custom ms-lg-3" data-en="Let's Talk" data-es="Hablemos"
+                      onclick="openWindow('window-contact')">Hablemos</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== SOBRE MÍ ======================== -->
+      <div class="win11-window d-none" id="window-about">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-user"></i> Sobre Mí</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-about')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-about')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-about')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="about">
+            <div class="row align-items-center mb-5" data-aos="fade-up">
+              <div class="col-lg-4 text-center text-lg-start mb-4 mb-lg-0">
+                <div class="avatar-container">
+                  <div id="about-avatar"
+                    style="width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#0078d4,#60cdff);display:flex;align-items:center;justify-content:center;font-size:3.5rem;font-weight:700;color:#fff;margin:0 auto;">
+                    AM</div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <span class="introduction mb-2 d-block" data-en="HELLO, I'M ALEX" data-es="HOLA, SOY ALEX">HOLA, SOY
+                  ALEX</span>
+                <h2 class="name mb-3" data-en="Developer &amp; Marketer" data-es="Desarrollador &amp; Marketer">
+                  Desarrollador &amp; Marketer</h2>
+                <p class="description w-100"
+                  data-en="Specialized in creating high-impact visual and technical digital solutions. My approach combines minimalist aesthetics with exceptional performance."
+                  data-es="Especializado en crear soluciones digitales de alto impacto visual y técnico. Mi enfoque combina la estética minimalistacon un rendimiento excepcional.">
+                  Especializado en crear soluciones digitales de alto impacto visual y técnico. Mi enfoque combina la
+                  estética minimalistacon un rendimiento excepcional.
+                </p>
+              </div>
+            </div>
+            <div class="row d-flex flex-wrap" data-aos="fade-up">
+              <!-- Formación -->
+              <div class="col-lg-6 pb-5">
+                <span class="introduction mb-3 d-block" data-en="ACADEMIC PROFILE" data-es="PERFIL ACADÉMICO">PERFIL
+                  ACADÉMICO</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Education" data-es="Formación">Formación</h2>
+                <div class="data-info py-3">
+                  <span class="meta-date">2025</span>
+                  <h3 class="info-title" data-en="Web Design &amp; Development Diploma"
+                    data-es="Diplomado Diseño &amp; Programación Web">Diplomado Diseño &amp; Programación Web</h3>
+                  <p data-en="AIEP / SENCE / Movistar — 100 hours — Grade 100"
+                    data-es="AIEP / SENCE / Movistar — 100 horas — Nota 100">AIEP / SENCE / Movistar — 100 horas — Nota
+                    100</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025</span>
+                  <h3 class="info-title" data-en="Digital Marketing Diploma" data-es="Diplomado Marketing Digital">
+                    Diplomado Marketing Digital &amp; Gestión Estratégica</h3>
+                  <p>AIEP / SENCE / Movistar — 90 horas — Nota 100</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025</span>
+                  <h3 class="info-title" data-en="Real Estate Brokerage" data-es="Corretaje de Propiedades">Corretaje de
+                    Propiedades</h3>
+                  <p>Learning Group / Fundación Emprenden — 57 horas</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2010</span>
+                  <h3 class="info-title" data-en="IT Technical Degree" data-es="Técnico Superior en Informática">Técnico
+                    Superior en Informática</h3>
+                  <p>CFT Andrés Bello — Incompleto</p>
+                </div>
+              </div>
+              <!-- Certificaciones -->
+              <div class="col-lg-6 pb-5">
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Certifications" data-es="Certificaciones">
+                  Certificaciones</h2>
+                <div class="data-info py-3">
+                  <span class="meta-date">2025 · 40h · Nota 100</span>
+                  <h3 class="info-title">JavaScript</h3>
+                  <p data-en="Programming with JavaScript" data-es="Programación con JavaScript">Programación con
+                    JavaScript</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025 · 30h · Nota 96</span>
+                  <h3 class="info-title">HTML5 + CSS3</h3>
+                  <p data-en="Web Design HTML5+CSS" data-es="Diseño Web HTML5+CSS">Diseño Web HTML5+CSS</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025 · 30h · Nota 98</span>
+                  <h3 class="info-title">Growth Hacking</h3>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025 · 30h · Nota 100</span>
+                  <h3 class="info-title" data-en="Cybersecurity" data-es="Ciberseguridad en entornos digitales">
+                    Ciberseguridad en entornos digitales</h3>
+                </div>
+                <div class="cert-stats mt-4">
+                  <div class="stat-item">
+                    <span class="stat-number">497</span>
+                    <span class="stat-label" data-en="Certified Hours" data-es="Horas Certificadas">Horas
+                      Certificadas</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">97.9</span>
+                    <span class="stat-label" data-en="Overall Average" data-es="Promedio General">Promedio
+                      General</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== EXPERIENCIA ======================== -->
+      <div class="win11-window d-none" id="window-experience">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-briefcase"></i> Experiencia</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-experience')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-experience')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-experience')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="experience">
+            <div class="row mb-5">
+              <div class="col-lg-6" data-aos="fade-up">
+                <span class="introduction mb-3 d-block" data-en="PROFESSIONAL JOURNEY"
+                  data-es="TRAYECTORIA PROFESIONAL">TRAYECTORIA PROFESIONAL</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Experience" data-es="Experiencia">Experiencia</h2>
+                <p data-en="Over 14 years across sales, hospitality, security and technology."
+                  data-es="Más de 14 años en ventas, gastronomía, seguridad y tecnología.">Más de 14 años en ventas,
+                  gastronomía, seguridad y tecnología.</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="info-element py-4" data-aos="fade-up">
+                  <table class="table personal-table">
+                    <tbody>
+                      <tr>
+                        <th data-en="Name" data-es="Nombre">Nombre</th>
+                        <td>Alex Michel Martínez Díaz</td>
+                      </tr>
+                      <tr>
+                        <th data-en="Age" data-es="Edad">Edad</th>
+                        <td>34</td>
+                      </tr>
+                      <tr>
+                        <th data-en="Location" data-es="Ubicación">Ubicación</th>
+                        <td>Villarrica, Chile</td>
+                      </tr>
+                      <tr>
+                        <th>Email</th>
+                        <td><a
+                            href="/cdn-cgi/l/email-protection#37565b524f5a5645435e59524d535e564d0e0677505a565e5b1954585a"><span
+                              class="__cf_email__"
+                              data-cfemail="fa9b969f82979b888e93949f809e939b80c3cbba9d979b9396d4999597">[email&#160;protected]</span></a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th data-en="Phone" data-es="Teléfono">Teléfono</th>
+                        <td><a href="tel:+56945341572">+56 9 4534 1572</a></td>
+                      </tr>
+                      <tr>
+                        <th data-en="Languages" data-es="Idiomas">Idiomas</th>
+                        <td>Español (Nativo) · Inglés (B1+)</td>
+                      </tr>
+                      <tr class="no-border-bottom">
+                        <th data-en="Availability" data-es="Disponibilidad">Disponibilidad</th>
+                        <td data-en="Immediate · Own transport" data-es="Inmediata · Movilidad propia">Inmediata ·
+                          Movilidad propia</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="experience-timeline py-4" data-aos="fade-up">
+                  <div class="timeline-item" data-aos="fade-left">
+                    <div class="tl-date">ACTUALIDAD</div>
+                    <div class="tl-content">
+                      <h4 data-en="Chatarra Cinema Club" data-es="Cine Club Chatarra">Cine Club Chatarra</h4>
+                      <p data-en="Cultural project — management, promotion and diffusion of independent cinema."
+                        data-es="Proyecto cultural. Gestión, promoción y difusión de obras cinematográficas independientes.">
+                        Proyecto cultural. Gestión, promoción y difusión de obras cinematográficas independientes.</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="100">
+                    <span class="tl-date">2024</span>
+                    <div class="tl-content">
+                      <h4 data-en="Sales – Tricot" data-es="Vendedor – Tricot">Vendedor – Tricot</h4>
+                      <p>Villarrica</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="150">
+                    <span class="tl-date">2023–24</span>
+                    <div class="tl-content">
+                      <h4 data-en="Property Security" data-es="Seguridad en Parcela">Seguridad en Parcela</h4>
+                      <p>Neltume</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
+                    <span class="tl-date">2023</span>
+                    <div class="tl-content">
+                      <h4 data-en="Waiter – Bigllarrica" data-es="Garzón – Bigllarrica">Garzón – Bigllarrica</h4>
+                      <p>Villarrica</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="250">
+                    <span class="tl-date">2015–18</span>
+                    <div class="tl-content">
+                      <h4 data-en="Sales – Hiper Lider" data-es="Vendedor – Hiper Lider">Vendedor – Hiper Lider</h4>
+                      <p>Santiago</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="300">
+                    <span class="tl-date">2011</span>
+                    <div class="tl-content">
+                      <h4 data-en="Security Guard – Hiper Lider 88" data-es="Guardia – Hiper Lider 88">Guardia – Hiper
+                        Lider 88</h4>
+                      <p data-en="CCTV · Access control" data-es="CCTV · Control de accesos">CCTV · Control de accesos
+                      </p>
+                    </div>
+                  </div>
+                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="350">
+                    <span class="tl-date">2010</span>
+                    <div class="tl-content">
+                      <h4 data-en="Croupier – Casino Enjoy Pucón" data-es="Crupier – Casino Enjoy Pucón">Crupier –
+                        Casino Enjoy Pucón</h4>
+                      <p>Baccarat · Ruleta</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== HABILIDADES ======================== -->
+      <div class="win11-window d-none" id="window-skills">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-laptop-code"></i> Habilidades</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-skills')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-skills')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-skills')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="skills">
+            <div class="row mb-5">
+              <div class="col-lg-6" data-aos="fade-up">
+                <span class="introduction mb-3 d-block" data-en="TECH STACK" data-es="STACK TECNOLÓGICO">STACK
+                  TECNOLÓGICO</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Skills" data-es="Habilidades">Habilidades</h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6" data-aos="fade-up">
+                <div class="skill-chart py-4">
+                  <ul class="skill-chart-list list-unstyled">
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title">HTML5 /
+                          CSS3</span><span class="skill-pct">92%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="92"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span
+                          class="skill-title">JavaScript</span><span class="skill-pct">85%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="85"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span
+                          class="skill-title">WordPress</span><span class="skill-pct">90%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="90"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title">SEO / Google
+                          Analytics</span><span class="skill-pct">88%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="88"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title">Growth
+                          Hacking</span><span class="skill-pct">82%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="82"></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="skill-chart py-4">
+                  <ul class="skill-chart-list list-unstyled">
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Web Analytics" data-es="Analítica Web">Analítica Web</span><span
+                          class="skill-pct">87%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="87"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Cybersecurity" data-es="Ciberseguridad">Ciberseguridad</span><span
+                          class="skill-pct">80%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="80"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Advanced Office" data-es="Ofimática Avanzada">Ofimática Avanzada</span><span
+                          class="skill-pct">95%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="95"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Sales &amp; Service" data-es="Ventas &amp; Atención">Ventas &amp;
+                          Atención</span><span class="skill-pct">93%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="93"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="English B1+" data-es="Inglés B1+">Inglés B1+</span><span class="skill-pct">65%</span>
+                      </div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="65"></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="tech-tags mt-4" data-aos="fade-up" data-aos-delay="300">
+              <span class="tech-tag">HTML5</span>
+              <span class="tech-tag">CSS3</span>
+              <span class="tech-tag">JavaScript</span>
+              <span class="tech-tag">Bootstrap 5</span>
+              <span class="tech-tag">WordPress</span>
+              <span class="tech-tag">SEO</span>
+              <span class="tech-tag">Google Analytics</span>
+              <span class="tech-tag">Growth Hacking</span>
+              <span class="tech-tag">CCTV</span>
+              <span class="tech-tag" data-en="Cybersecurity" data-es="Ciberseguridad">Ciberseguridad</span>
+              <span class="tech-tag" data-en="MS Office" data-es="Ofimática">Ofimática</span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== PORTAFOLIO ======================== -->
+      <div class="win11-window d-none" id="window-portfolio" style="width:720px;height:560px">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-project-diagram"></i> Proyectos</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-portfolio')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-portfolio')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-portfolio')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="portfolio">
+            <div class="section-header my-4" data-aos="fade-up">
+              <span class="introduction mb-3 d-block" data-en="RECENT PROJECTS" data-es="PROYECTOS RECIENTES">PROYECTOS
+                RECIENTES</span>
+              <h2 class="name mb-2 txt-fx text-uppercase" data-en="Portfolio" data-es="Portafolio">Portafolio</h2>
+              <p data-en="Selection of works in web design, marketing and development."
+                data-es="Selección de trabajos en diseño web, marketing y desarrollo.">Selección de trabajos en diseño
+                web, marketing y desarrollo.</p>
+            </div>
+            <!-- Project cards -->
+            <div class="row g-4" data-aos="fade-up">
+              <div class="col-md-6">
+                <div class="proj-card">
+                  <div class="proj-card-icon"><i class="fas fa-globe"></i></div>
+                  <h5 class="proj-card-title" data-en="Windows 11 Portfolio" data-es="Portfolio Windows 11">Portfolio
+                    Windows 11</h5>
+                  <p class="proj-card-desc" data-en="This portfolio — Windows 11 desktop simulator in HTML/CSS/JS."
+                    data-es="Este portfolio — Simulador de escritorio Windows 11 en HTML/CSS/JS.">Este portfolio —
+                    Simulador de escritorio Windows 11 en HTML/CSS/JS.</p>
+                  <div class="proj-card-tags"><span class="tech-tag">HTML5</span><span class="tech-tag">CSS3</span><span
+                      class="tech-tag">JavaScript</span></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="proj-card">
+                  <div class="proj-card-icon"><i class="fas fa-film"></i></div>
+                  <h5 class="proj-card-title" data-en="Cine Club Chatarra" data-es="Cine Club Chatarra">Cine Club
+                    Chatarra</h5>
+                  <p class="proj-card-desc"
+                    data-en="Cultural project — promotion and diffusion of independent cinema in Villarrica."
+                    data-es="Proyecto cultural de difusión cinematográfica independiente en Villarrica.">Proyecto
+                    cultural de difusión cinematográfica independiente en Villarrica.</p>
+                  <div class="proj-card-tags"><span class="tech-tag">WordPress</span><span
+                      class="tech-tag">Marketing</span></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="proj-card">
+                  <div class="proj-card-icon"><i class="fas fa-chart-line"></i></div>
+                  <h5 class="proj-card-title" data-en="Digital Marketing Campaigns"
+                    data-es="Campañas de Marketing Digital">Campañas de Marketing Digital</h5>
+                  <p class="proj-card-desc" data-en="SEO, growth hacking and analytics for independent clients."
+                    data-es="SEO, growth hacking y analítica web para clientes independientes.">SEO, growth hacking y
+                    analítica web para clientes independientes.</p>
+                  <div class="proj-card-tags"><span class="tech-tag">SEO</span><span
+                      class="tech-tag">Analytics</span><span class="tech-tag">Growth Hacking</span></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="proj-card">
+                  <div class="proj-card-icon"><i class="fas fa-code"></i></div>
+                  <h5 class="proj-card-title" data-en="Responsive Web Projects" data-es="Proyectos Web Responsivos">
+                    Proyectos Web Responsivos</h5>
+                  <p class="proj-card-desc" data-en="Responsive sites for independent clients — Bootstrap 5, CSS3."
+                    data-es="Sitios responsivos para clientes independientes — Bootstrap 5, CSS3.">Sitios responsivos
+                    para clientes independientes — Bootstrap 5, CSS3.</p>
+                  <div class="proj-card-tags"><span class="tech-tag">Bootstrap</span><span class="tech-tag">CSS3</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== CONTACTO ======================== -->
+      <div class="win11-window d-none" id="window-contact">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-envelope"></i> Contacto</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-contact')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-contact')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-contact')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="contact">
+            <div class="row mb-5">
+              <div class="col-lg-6" data-aos="fade-up">
+                <span class="introduction mb-3 d-block" data-en="LET'S WORK TOGETHER"
+                  data-es="TRABAJEMOS JUNTOS">TRABAJEMOS JUNTOS</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Contact" data-es="Contacto">Contacto</h2>
+                <p data-en="Have a project in mind? Write me and let's talk."
+                  data-es="¿Tienes un proyecto en mente? Escríbeme y conversamos.">¿Tienes un proyecto en mente?
+                  Escríbeme y conversamos.</p>
+              </div>
+            </div>
+            <div class="row d-flex g-5">
+              <!-- FAQ Accordion -->
+              <div class="col-lg-7" data-aos="fade-up">
+                <h3 class="mb-4" data-en="Frequently Asked Questions" data-es="Preguntas Frecuentes">Preguntas
+                  Frecuentes</h3>
+                <div class="accordion" id="faqAccordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" data-bs-target="#faq1" data-bs-toggle="collapse"
+                        data-en="What is your availability?" data-es="¿Cuál es tu disponibilidad?" type="button">¿Cuál
+                        es tu disponibilidad?</button>
+                    </h2>
+                    <div class="accordion-collapse collapse show" data-bs-parent="#faqAccordion" id="faq1">
+                      <div class="accordion-body"
+                        data-en="Immediately available. I have my own transport and can travel as needed."
+                        data-es="Disponibilidad inmediata. Cuento con movilidad propia y puedo desplazarme según requiera el proyecto.">
+                        Disponibilidad inmediata. Cuento con movilidad propia y puedo desplazarme según requiera el
+                        proyecto.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" data-bs-target="#faq2" data-bs-toggle="collapse"
+                        data-en="What type of projects do you take?" data-es="¿Qué tipo de proyectos aceptas?"
+                        type="button">¿Qué tipo de proyectos aceptas?</button>
+                    </h2>
+                    <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq2">
+                      <div class="accordion-body"
+                        data-en="Web design and development, digital marketing, SEO, web audits and content management."
+                        data-es="Diseño y desarrollo web, marketing digital, SEO, auditorías web y gestión de contenidos.">
+                        Diseño y desarrollo web, marketing digital, SEO, auditorías web y gestión de contenidos.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" data-bs-target="#faq3" data-bs-toggle="collapse"
+                        data-en="Do you work remotely?" data-es="¿Trabajas de forma remota?" type="button">¿Trabajas de
+                        forma remota?</button>
+                    </h2>
+                    <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq3">
+                      <div class="accordion-body"
+                        data-en="Yes, both remotely and in-person. I adapt to the team or client needs."
+                        data-es="Sí, trabajo remoto y presencial. Me adapto a las necesidades del equipo o cliente.">Sí,
+                        trabajo remoto y presencial. Me adapto a las necesidades del equipo o cliente.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Contact Form -->
+              <div class="col-lg-5">
+                <div class="right-content" data-aos="fade-up">
+                  <div class="element-header mb-4">
+                    <h3 data-en="Send me a direct message." data-es="Envíame un mensaje directo.">Envíame un mensaje
+                      directo.</h3>
+                  </div>
+                  <div class="contact-form py-4">
+                    <div class="alert-success-custom d-none" id="form-success">
+                      <i class="fas fa-check-circle"></i>
+                      <span data-en="Message sent! I'll reply soon."
+                        data-es="¡Mensaje enviado! Te responderé pronto.">¡Mensaje enviado! Te responderé pronto.</span>
+                    </div>
+                    <div class="alert-error-custom d-none" id="form-error">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span data-en="Error sending. Email me directly."
+                        data-es="Error al enviar. Escríbeme directo al correo.">Error al enviar. Escríbeme directo al
+                        correo.</span>
+                    </div>
+                    <div id="contactForm">
+                      <div class="pb-3">
+                        <input class="form-control custom-input" data-placeholder-en="Your full name"
+                          data-placeholder-es="Tu nombre completo" id="contact-name" placeholder="Tu nombre completo"
+                          type="text" />
+                      </div>
+                      <div class="pb-3">
+                        <input class="form-control custom-input" data-placeholder-en="Your email address"
+                          data-placeholder-es="Tu correo electrónico" id="contact-email"
+                          placeholder="Tu correo electrónico" type="email" />
+                      </div>
+                      <div class="pb-3">
+                        <input class="form-control custom-input" data-placeholder-en="Subject"
+                          data-placeholder-es="Asunto" id="contact-subject" placeholder="Asunto" type="text" />
+                      </div>
+                      <div class="pb-3">
+                        <textarea class="form-control custom-input" data-placeholder-en="Your message"
+                          data-placeholder-es="Tu mensaje" id="contact-message" placeholder="Tu mensaje"
+                          rows="5"></textarea>
+                      </div>
+                      <button class="btn-submit w-100" id="contact-submit" type="button">
+                        <span class="btn-text" data-en="Send Message" data-es="Enviar Mensaje">Enviar Mensaje</span>
+                        <span class="btn-loading d-none"><i class="fas fa-spinner fa-spin"></i></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="widgets">
+        <!-- ======================== MÚSICA (YouTube IFrame API) ======================== -->
+        <div class="win11-window win11-widget d-none" id="window-music">
+          <div class="window-header">
+            <div class="window-title"><i class="fas fa-headphones"></i> Music Player</div>
+            <div class="window-controls">
+              <button class="btn-min" onclick="minimizeWindow('window-music')"><i class="fas fa-minus"></i></button>
+              <button class="btn-close" onclick="closeWindow('window-music')"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="window-content music-player-body">
+            <!-- Portada / visualizador -->
+            <div class="music-album-art" id="music-art-bg">
+              <!-- Iframe oculto de YouTube — la API lo controla -->
+              <div id="yt-player-container"
+                style="display:none; position:absolute; width:1px; height:1px; overflow:hidden;">
+                <div id="yt-player"></div>
+              </div>
+              <div class="music-disc-wrapper">
+                <div class="music-disc" id="music-disc">
+                  <i class="fas fa-compact-disc"></i>
+                </div>
+              </div>
+              <!-- Badge "YT Audio" -->
+              <div class="music-yt-badge"><i class="fab fa-youtube"></i> YouTube Audio</div>
+            </div>
+            <!-- Info de la canción -->
+            <div class="music-track-info">
+              <div class="music-track-name" id="music-track-name">Cargando...</div>
+              <div class="music-track-artist" id="music-track-artist">YouTube · Sin derechos de autor</div>
+            </div>
+            <!-- Barra de progreso clicable -->
+            <div class="music-progress-bar" id="music-progress-bar">
+              <div class="music-progress-fill" id="music-progress-fill"></div>
+            </div>
+            <div class="music-time-row">
+              <span id="music-time-current">0:00</span>
+              <span id="music-time-total">0:00</span>
+            </div>
+            <!-- Controles -->
+            <div class="music-controls">
+              <button class="music-btn music-btn-sm" id="music-btn-prev" title="Anterior">
+                <img src="images/icons/skip-start.png" class="music-btn-icon" alt="Anterior">
+              </button>
+              <button class="music-btn music-btn-lg" id="music-btn-play" title="Reproducir / Pausar">
+                <img src="images/icons/play.png" class="music-btn-icon" id="music-play-icon-img" alt="Play">
+              </button>
+              <button class="music-btn music-btn-sm" id="music-btn-next" title="Siguiente">
+                <img src="images/icons/skip-end.png" class="music-btn-icon" alt="Siguiente">
+              </button>
+            </div>
+            <!-- Volumen -->
+            <div class="music-volume-row">
+              <i class="fas fa-volume-down music-vol-icon"></i>
+              <input type="range" id="music-volume" min="0" max="100" value="70" class="music-volume-slider">
+              <i class="fas fa-volume-up music-vol-icon"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- ======================== CLIMA ======================== -->
+        <div class="win11-window win11-widget d-none" id="window-weather">
+          <div class="window-header">
+            <div class="window-title"><i class="fas fa-cloud-sun"></i> Clima</div>
+            <div class="window-controls">
+              <button class="btn-min" onclick="minimizeWindow('window-weather')"><i class="fas fa-minus"></i></button>
+              <button class="btn-close" onclick="closeWindow('window-weather')"><i class="fas fa-times"></i></button>
+            </div>
+          </div>
+          <div class="window-content weather-widget-body">
+            <div class="weather-widget-inner">
+              <i id="weather-icon" class="fas fa-cloud-sun weather-main-icon"></i>
+              <div class="weather-info">
+                <div class="weather-temp-row">
+                  <span id="weather-temp" class="weather-temp-big">--°C</span>
+                  <span id="weather-desc" class="weather-desc-text">Cargando...</span>
+                </div>
+                <span class="weather-location"><i class="fas fa-map-marker-alt"></i> <span
+                    id="weather-location">Detectando...</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== CALENDARIO ======================== -->
+      <div class="win11-window d-none" id="window-calendar">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-calendar-alt"></i> Calendario</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-calendar')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:20px; overflow:hidden;">
+          <div id="calendar-widget">
+            <div class="cal-header">
+              <button id="cal-prev" class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
+              <span id="cal-title" style="font-size:1rem;font-weight:600;color:#fff;"></span>
+              <button id="cal-next" class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="cal-days-header">
+              <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
+            </div>
+            <div id="cal-body" class="cal-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== SYSTEM LOGS ======================== -->
+      <div class="win11-window d-none" id="window-logs" style="width:520px;height:360px;">
+        <div class="window-header">
+          <div class="window-title"><img alt="Logs" class="win-img" src="images/icons/logviewer.png" /> System Logs
+            Viewer</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-logs')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-logs')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-logs')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" id="log-output-area"
+          style="padding:10px; overflow-y:auto; background:#000; color:#00FF00; font-family:monospace; font-size:0.8rem;">
+          <div>[SYSTEM INIT] - Virtual Log Viewer Initialized</div>
+        </div>
+      </div>
+
+    </div><!-- /#windows-container -->
+  </div><!-- /#desktop -->
+
+  <!-- ================================================================
+     SCRIPTS (load order matters)
+     1. jQuery (required by plugins.js)
+     2. plugins.js (Swiper, AOS, Chocolat, Jarallax)
+     3. Bootstrap bundle (includes Popper)
+     4. script.js (portfolio logic)
+<!-- Scripts — orden importante -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- YouTube IFrame API (antes de script.js) -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
