@@ -1,3 +1,3 @@
 # gambito700.github.io
 portafolio 
-<a>ldkkf<a>
+<a>linkeado al proyecto pages.github.com <a>
