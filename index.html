@@ -7,6 +7,20 @@
   <title>Alex Martínez – Front-End Developer &amp; Digital Marketing 2026</title>
   <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
     name="description" />
+  <!-- CSP (GitHub Pages no deja poner headers HTTP, usamos meta) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com https://www.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <!-- Open Graph / Twitter Cards -->
+  <meta property="og:title" content="Alex Martínez – Front-End Developer &amp; Digital Marketing">
+  <meta property="og:description" content="Portafolio profesional – Desarrollador Web especializado en UI/UX, Marketing Digital y SEO.">
+  <meta property="og:url" content="https://gambito700.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://gambito700.github.io/images/banner-image-1.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Alex Martínez – Front-End Developer">
+  <meta name="twitter:description" content="Portafolio profesional – UI/UX · Marketing Digital · Villarrica, Chile">
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Alex Michel Martínez Díaz","jobTitle":"Front-End Developer & UI/UX","url":"https://gambito700.github.io/","address":{"@type":"PostalAddress","addressLocality":"Villarrica","addressRegion":"La Araucanía","addressCountry":"CL"},"knowsAbout":["HTML5","CSS3","JavaScript","WordPress","SEO","Growth Hacking"],"alumniOf":["AIEP","CFT Andrés Bello"]}</script>
   <!-- Vendor CSS (Chocolat + AOS + Swiper + Jarallax) -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
   <!-- Bootstrap 5 -->
@@ -14,9 +28,16 @@
   <!-- Font Awesome 6 -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap"
     rel="stylesheet" />
+  <!-- Preconnect a CDNs -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <!-- Portfolio styles -->
   <link href="css/style.css" rel="stylesheet" />
   <!-- Preload dynamic wallpaper -->
@@ -25,32 +46,36 @@
 
 <body class="desktop-mode" data-bs-theme="dark">
 
-  <!-- Cursor canvas (fixed) -->
-  <canvas id="cursor-canvas"></canvas>
-  <div class="cursor-dot" id="cursorDot"></div><!-- ================================================================
-     START MENU (CLASSIC 98 STYLE)
+  <!-- ================================================================
+     START MENU (WINDOWS 11 STYLE)
      ================================================================ -->
 <div id="start-menu" class="win11-start-menu">
-  <div style="display:flex; flex:1;">
-    <div class="sm-sidebar">Windows 98</div>
-    <div class="sm-main">
-      <div class="sm-app" onclick="openWindow('window-cv')"><img src="images/icons/intro.png"><span>Bienvenida (CV)</span></div>
-      <div class="sm-app" onclick="openWindow('window-about')"><img src="images/icons/about.png"><span>Sobre Mí</span></div>
-      <div class="sm-app" onclick="openWindow('window-experience')"><img src="images/icons/experience.png"><span>Experiencia</span></div>
-      <div class="sm-app" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Habilidades</span></div>
-      <div class="sm-app" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proyectos</span></div>
-      <div class="sm-divider"></div>
-      <div class="sm-app" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contacto</span></div>
-      <div class="sm-app" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
-      <div class="sm-app" onclick="openWindow('window-weather')"><img src="images/icons/weather.png"><span>Clima</span></div>
-      <div class="sm-app" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Calendario</span></div>
-      <div class="sm-app" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>System Logs</span></div>
+  <div class="sm-search-bar">
+    <i class="fas fa-search sm-search-icon"></i>
+    <input type="text" class="sm-search-input" data-placeholder-en="Search apps..." data-placeholder-es="Buscar aplicaciones..." placeholder="Buscar aplicaciones...">
+  </div>
+  <div class="sm-section">
+    <span class="sm-section-title" data-en="Pinned" data-es="Fijados">Fijados</span>
+    <div class="sm-apps-grid">
+      <div class="sm-grid-item" onclick="openWindow('window-cv')"><img src="images/icons/intro.png"><span>CV</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-about')"><img src="images/icons/about.png"><span>About</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-experience')"><img src="images/icons/experience.png"><span>Exp.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Skills</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proy.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contact</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-weather')"><img src="images/icons/weather.png"><span>Clima</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
     </div>
   </div>
   <div class="sm-footer">
-    <button class="sm-power-btn" onclick="showPowerPopup()">
-      <i class="fas fa-power-off"></i> <span>Shut Down...</span>
-    </button>
+    <span class="sm-user-name">Alex Martínez</span>
+    <div class="sm-power-actions">
+      <button class="sm-power-btn" onclick="showPowerPopup()" title="Apagar" aria-label="Apagar">
+        <i class="fas fa-power-off"></i>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -61,7 +86,7 @@
     <div class="taskbar-inner">
       <!-- LEFT: Start Button -->
       <div class="tb-left">
-        <button class="tb-btn tb-start" id="start-btn" title="Inicio">
+        <button class="tb-btn tb-start" id="start-btn" title="Inicio" aria-label="Inicio">
           <i class="fab fa-windows"></i>
         </button>
       </div>
@@ -71,10 +96,10 @@
       </div>
       <!-- RIGHT: System Tray + Clock -->
       <div class="tb-right">
-        <button class="tb-btn" id="theme-toggle" title="Cambiar tema">
+        <button class="tb-btn" id="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
           <i class="fas fa-moon"></i>
         </button>
-        <button class="tb-btn" id="lang-toggle" title="Language">EN</button>
+        <button class="tb-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma">EN</button>
         <div class="tb-system-tray">
         <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo"><i class="fas fa-image"></i></button>
         <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo"><i class="fas fa-window-restore"></i></button>
@@ -99,7 +124,7 @@
     <div class="desktop-icons">
 
       <div class="desktop-icon" onclick="openWindow('window-cv')">
-        <img alt="CV" class="desktop-png-icon" src="images/icons/intro.png" />
+        <img alt="CV" class="desktop-png-icon" src="images/icons/intro.png" loading="lazy" />
         <span data-en="Welcome" data-es="Bienvenida">Bienvenida</span>
       </div>
 
@@ -190,49 +215,39 @@
             <button class="btn-close" onclick="closeWindow('window-cv')"><i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="window-content" style="padding:30px 40px; overflow-y:auto;">
+        <div class="window-content window-content-cv">
+          <!-- Welcome banner -->
+          <div class="cv-hero-banner">
+            <span class="cv-hero-badge" data-en="FRONT-END &amp; UI/UX DEVELOPER" data-es="DESARROLLADOR FRONT-END &amp; UI/UX">DESARROLLADOR FRONT-END &amp; UI/UX</span>
+            <p class="cv-hero-tagline" data-en="I transform ideas into elegant, functional, and high-performance digital experiences." data-es="Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.">Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.</p>
+          </div>
           <!-- Avatar + nombre -->
-          <div style="display:flex; align-items:center; gap:24px; margin-bottom:24px;">
-            <div id="cv-avatar"
-              style="width:80px;height:80px;border-radius:50%;border:2px solid rgba(255,255,255,0.2);background:linear-gradient(135deg,#0078d4,#60cdff);display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:#fff;flex-shrink:0;">
-              AM</div>
+          <div class="cv-avatar-row">
+            <div id="cv-avatar" class="cv-avatar-circle">AM</div>
             <div>
-              <h2 data-en="Alex Martínez" data-es="Alex Martínez"
-                style="margin:0;font-size:1.6rem;color:#fff;font-weight:700;">Alex Martínez</h2>
-              <p data-en="Front-End Developer &amp; UI/UX · Villarrica, Chile"
-                data-es="Desarrollador Front-End &amp; UI/UX · Villarrica, Chile"
-                style="margin:4px 0 0;color:#60cdff;font-size:0.9rem;">Desarrollador Front-End &amp; UI/UX · Villarrica,
-                Chile</p>
+              <h2 class="cv-name" data-en="Alex Martínez" data-es="Alex Martínez">Alex Martínez</h2>
+              <p class="cv-subtitle" data-en="Front-End Developer &amp; UI/UX · Villarrica, Chile"
+                data-es="Desarrollador Front-End &amp; UI/UX · Villarrica, Chile">Desarrollador Front-End &amp; UI/UX · Villarrica, Chile</p>
             </div>
           </div>
-          <hr style="border-color:rgba(255,255,255,0.1);margin-bottom:20px;" />
-          <h4 data-en="Professional Summary" data-es="Resumen Profesional"
-            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">
-            Resumen Profesional</h4>
-          <p data-en="Front-End developer passionate about crafting modern digital experiences. Specialized in HTML5, CSS3, JavaScript, with a focus on smooth UX and premium aesthetics."
-            data-es="Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3, JavaScript, con enfoque en UX fluido y estética premium."
-            style="font-size:0.9rem;color:rgba(255,255,255,0.75);line-height:1.7;">
+          <hr class="cv-divider" />
+          <h4 class="cv-section-title" data-en="Professional Summary" data-es="Resumen Profesional">Resumen Profesional</h4>
+          <p class="cv-body-text" data-en="Front-End developer passionate about crafting modern digital experiences. Specialized in HTML5, CSS3, JavaScript, with a focus on smooth UX and premium aesthetics."
+            data-es="Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3, JavaScript, con enfoque en UX fluido y estética premium.">
             Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3,
             JavaScript, con enfoque en UX fluido y estética premium.
           </p>
-          <h4 data-en="Key Experience" data-es="Experiencia Clave"
-            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 10px;">
-            Experiencia Clave</h4>
-          <ul style="font-size:0.9rem;color:rgba(255,255,255,0.75);line-height:1.8;padding-left:18px;">
+          <h4 class="cv-section-title" data-en="Key Experience" data-es="Experiencia Clave">Experiencia Clave</h4>
+          <ul class="cv-body-list">
             <li data-en="Cine Club Chatarra — Cultural Project, Villarrica"
-              data-es="Cine Club Chatarra — Proyecto Cultural, Villarrica">Cine Club Chatarra — Proyecto Cultural,
-              Villarrica</li>
+              data-es="Cine Club Chatarra — Proyecto Cultural, Villarrica">Cine Club Chatarra — Proyecto Cultural, Villarrica</li>
             <li data-en="Portfolio and website development for independent clients"
-              data-es="Desarrollo de portfolios y sitios para clientes independientes">Desarrollo de portfolios y sitios
-              para clientes independientes</li>
+              data-es="Desarrollo de portfolios y sitios para clientes independientes">Desarrollo de portfolios y sitios para clientes independientes</li>
             <li data-en="Responsive layout and advanced UI development"
-              data-es="Maquetación responsive y desarrollo de UI avanzado">Maquetación responsive y desarrollo de UI
-              avanzado</li>
+              data-es="Maquetación responsive y desarrollo de UI avanzado">Maquetación responsive y desarrollo de UI avanzado</li>
           </ul>
-          <h4 data-en="Skills" data-es="Habilidades"
-            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 10px;">
-            Habilidades</h4>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <h4 class="cv-section-title" data-en="Skills" data-es="Habilidades">Habilidades</h4>
+          <div class="cv-tag-row">
             <span class="cv-tag">HTML5</span>
             <span class="cv-tag">CSS3 / SCSS</span>
             <span class="cv-tag">JavaScript</span>
@@ -241,68 +256,25 @@
             <span class="cv-tag">SEO</span>
             <span class="cv-tag">WordPress</span>
           </div>
-          <h4 data-en="Contact" data-es="Contacto"
-            style="color:#60cdff;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;margin:20px 0 10px;">
-            Contacto</h4>
-          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+          <h4 class="cv-section-title" data-en="Contact" data-es="Contacto">Contacto</h4>
+          <div class="cv-contact-row">
             <div class="cv-contact-item">
-              <a href="mailto:alex.martinez@email.com" style="color:#60cdff;font-size:0.85rem;text-decoration:none;">
-                <img src="images/icons/gmail.png" style="width:16px;height:16px;margin-right:6px;vertical-align:middle;">alex.martinez@email.com
+              <a href="mailto:alexmartinezdiaz91@gmail.com" class="obfuscated-contact cv-contact-link" data-obfuscated="alexmartinezdiaz91@gmail.com">
+                <img src="images/icons/gmail.png" class="cv-contact-icon"><span class="contact-masked">a***@gmail.com</span><span class="contact-revealed d-none">alexmartinezdiaz91@gmail.com</span>
               </a>
             </div>
-            <a href="https://wa.me/56945341572" style="color:#25D366;font-size:0.85rem;text-decoration:none;"
-              target="_blank"><i class="fab fa-whatsapp" style="margin-right:6px;"></i>+56 9 4534 1572</a>
+            <a href="https://wa.me/56945341572" class="obfuscated-contact cv-contact-wa" data-obfuscated="+56945341572" target="_blank"><i class="fab fa-whatsapp cv-contact-icon"></i><span class="contact-masked">+56 *** *** ****</span><span class="contact-revealed d-none">+56 9 4534 1572</span></a>
             <div class="cv-contact-item">
-              <a href="https://github.com/AlexMartinez" style="color:rgba(255,255,255,0.6);font-size:0.85rem;text-decoration:none;" target="_blank">
-                <img src="images/icons/github.png" style="width:16px;height:16px;margin-right:6px;vertical-align:middle;">GitHub
+              <a href="https://github.com/AlexMartinez" class="cv-contact-gh" target="_blank">
+                <img src="images/icons/github.png" class="cv-contact-icon">GitHub
               </a>
             </div>
           </div>
-          <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn-special" onclick="openWindow('window-portfolio'); return false;"
-              style="font-size:0.8rem;padding:8px 18px;" data-en="View Projects" data-es="Ver Proyectos">Ver
-              Proyectos</button>
-            <button class="btn-outline-custom" onclick="openWindow('window-contact'); return false;"
-              style="font-size:0.8rem;padding:8px 18px;" data-en="Contact Me" data-es="Contáctame">Contáctame</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- ======================== BIENVENIDA / INTRO ======================== -->
-      <div class="win11-window d-none" id="window-intro">
-        <div class="window-header">
-          <div class="window-title"><i class="fas fa-info-circle"></i> Bienvenida</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-intro')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-intro')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-intro')"><i class="fas fa-times"></i></button>
-          </div>
-        </div>
-        <div class="window-content">
-          <div
-            class="hero-section position-relative d-flex align-items-center justify-content-center overflow-hidden window-inner-section"
-            id="intro">
-            <div class="hero-bg-overlay"></div>
-            <div class="container position-relative z-2 text-center">
-              <div class="row justify-content-center">
-                <div class="col-lg-10">
-                  <span class="introduction mb-3 d-block" data-en="FRONT-END &amp; UI/UX DEVELOPER"
-                    data-es="DESARROLLADOR FRONT-END &amp; UI/UX">DESARROLLADOR FRONT-END &amp; UI/UX</span>
-                  <h1 class="main-title mb-4 txt-fx" data-en="ALEX MARTÍNEZ" data-es="ALEX MARTÍNEZ">ALEX MARTÍNEZ</h1>
-                  <p class="hero-description mx-auto mb-5"
-                    data-en="I transform ideas into elegant, functional, and high-performance digital experiences."
-                    data-es="Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.">
-                    Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.
-                  </p>
-                  <div class="hero-btns">
-                    <button class="btn-special" data-en="View Projects" data-es="Ver Proyectos"
-                      onclick="openWindow('window-portfolio')">Ver Proyectos</button>
-                    <button class="btn-outline-custom ms-lg-3" data-en="Let's Talk" data-es="Hablemos"
-                      onclick="openWindow('window-contact')">Hablemos</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="cv-btn-row">
+            <button class="btn-special cv-btn-sm" onclick="openWindow('window-portfolio'); return false;"
+              data-en="View Projects" data-es="Ver Proyectos">Ver Proyectos</button>
+            <button class="btn-outline-custom cv-btn-sm" onclick="openWindow('window-contact'); return false;"
+              data-en="Contact Me" data-es="Contáctame">Contáctame</button>
           </div>
         </div>
       </div>
@@ -456,15 +428,12 @@
                       </tr>
                       <tr>
                         <th>Email</th>
-                        <td><a
-                            href="/cdn-cgi/l/email-protection#37565b524f5a5645435e59524d535e564d0e0677505a565e5b1954585a"><span
-                              class="__cf_email__"
-                              data-cfemail="fa9b969f82979b888e93949f809e939b80c3cbba9d979b9396d4999597">[email&#160;protected]</span></a>
+                        <td><span class="obfuscated-contact" data-obfuscated="alexmartinezdiaz91@gmail.com"><span class="contact-masked">a***@gmail.com</span><span class="contact-revealed d-none">alexmartinezdiaz91@gmail.com</span></span>
                         </td>
                       </tr>
                       <tr>
                         <th data-en="Phone" data-es="Teléfono">Teléfono</th>
-                        <td><a href="tel:+56945341572">+56 9 4534 1572</a></td>
+                        <td><span class="obfuscated-contact" data-obfuscated="+56945341572"><span class="contact-masked">+56 *** *** ****</span><span class="contact-revealed d-none">+56 9 4534 1572</span></span></td>
                       </tr>
                       <tr>
                         <th data-en="Languages" data-es="Idiomas">Idiomas</th>
@@ -855,31 +824,31 @@
                         data-es="Error al enviar. Escríbeme directo al correo.">Error al enviar. Escríbeme directo al
                         correo.</span>
                     </div>
-                    <div id="contactForm">
+                    <form id="contactForm" action="https://formspree.io/f/xpqeyqqg" method="POST">
                       <div class="pb-3">
                         <input class="form-control custom-input" data-placeholder-en="Your full name"
-                          data-placeholder-es="Tu nombre completo" id="contact-name" placeholder="Tu nombre completo"
-                          type="text" />
+                          data-placeholder-es="Tu nombre completo" id="contact-name" name="name" placeholder="Tu nombre completo"
+                          type="text" required />
                       </div>
                       <div class="pb-3">
                         <input class="form-control custom-input" data-placeholder-en="Your email address"
-                          data-placeholder-es="Tu correo electrónico" id="contact-email"
-                          placeholder="Tu correo electrónico" type="email" />
+                          data-placeholder-es="Tu correo electrónico" id="contact-email" name="email"
+                          placeholder="Tu correo electrónico" type="email" required />
                       </div>
                       <div class="pb-3">
                         <input class="form-control custom-input" data-placeholder-en="Subject"
-                          data-placeholder-es="Asunto" id="contact-subject" placeholder="Asunto" type="text" />
+                          data-placeholder-es="Asunto" id="contact-subject" name="subject" placeholder="Asunto" type="text" />
                       </div>
                       <div class="pb-3">
                         <textarea class="form-control custom-input" data-placeholder-en="Your message"
-                          data-placeholder-es="Tu mensaje" id="contact-message" placeholder="Tu mensaje"
-                          rows="5"></textarea>
+                          data-placeholder-es="Tu mensaje" id="contact-message" name="message" placeholder="Tu mensaje"
+                          rows="5" required></textarea>
                       </div>
-                      <button class="btn-submit w-100" id="contact-submit" type="button">
+                      <button class="btn-submit w-100" id="contact-submit" type="submit">
                         <span class="btn-text" data-en="Send Message" data-es="Enviar Mensaje">Enviar Mensaje</span>
                         <span class="btn-loading d-none"><i class="fas fa-spinner fa-spin"></i></span>
                       </button>
-                    </div>
+                    </form>
                   </div>
                 </div>
               </div>
@@ -1025,12 +994,12 @@
      3. Bootstrap bundle (includes Popper)
      4. script.js (portfolio logic)
 <!-- Scripts — orden importante -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <!-- YouTube IFrame API (antes de script.js) -->
   <script src="https://www.youtube.com/iframe_api"></script>
-  <script src="js/script.js"></script>
+  <script src="js/script.js" defer></script>
 </body>
 
 </html>

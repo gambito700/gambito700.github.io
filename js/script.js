@@ -144,7 +144,7 @@
       if (!existing) {
         // Find icon from desktop or start menu
         var sourceIcon = document.querySelector(`.desktop-icon[onclick*="${id}"] img`) ||
-          document.querySelector(`.sm-app[onclick*="${id}"] img`);
+          document.querySelector(`.sm-grid-item[onclick*="${id}"] img`);
         var iconSrc = sourceIcon ? sourceIcon.src : "images/icons/about.png";
 
         var btn = document.createElement("button");
@@ -226,6 +226,8 @@
         battery.addEventListener("chargingchange", updateBattery);
         battery.addEventListener("levelchange", updateBattery);
         updateBattery();
+      }).catch(function () {
+        systemLog("[battery] API not available");
       });
     } else {
       var img = document.getElementById("tray-battery-icon");
@@ -337,9 +339,28 @@
   };
 
   window.showPowerPopup = function () {
-    alert("Contacto: alex.martinez@email.com\nVillarrica, Chile");
+    alert("Contacto: alexmartinezdiaz91@gmail.com\nVillarrica, Chile");
     systemLog("Power menu opened: Contact info displayed");
   };
+
+  // ── Click-to-Reveal for obfuscated contacts ──────────────
+  function initObfuscatedContacts() {
+    document.querySelectorAll(".obfuscated-contact").forEach(function (el) {
+      el.addEventListener("click", function (e) {
+        e.preventDefault();
+        var masked = el.querySelector(".contact-masked");
+        var revealed = el.querySelector(".contact-revealed");
+        if (masked && revealed) {
+          masked.classList.toggle("d-none");
+          revealed.classList.toggle("d-none");
+        }
+        var href = el.getAttribute("href");
+        if (href && !masked.classList.contains("d-none")) {
+          window.open(href, "_blank");
+        }
+      });
+    });
+  }
 
   var ICON_DARK = "images/icons/theme-dark.png";   // modo oscuro activo
   var ICON_LIGHT = "images/icons/theme-light.png"; // modo claro activo
@@ -533,8 +554,7 @@
     var btn = document.getElementById("lang-toggle");
     if (!btn) return;
 
-    // Default to EN on every load
-    currentLang = "en";
+    // Keep auto-detected language (don't force English)
     updateLanguage();
 
     btn.addEventListener("click", function () {
@@ -618,7 +638,8 @@
     var errorMsg = document.getElementById("form-error");
     if (!btn) return;
 
-    btn.addEventListener("click", function () {
+    btn.addEventListener("click", function (e) {
+      e.preventDefault();
       var name = (document.getElementById("contact-name").value || "").trim();
       var email = (document.getElementById("contact-email").value || "").trim();
       var subject = (document.getElementById("contact-subject").value || "").trim();
@@ -637,17 +658,27 @@
       btn.querySelector(".btn-loading").classList.remove("d-none");
       btn.disabled = true;
 
-      /* ── Simulated success (replace with EmailJS or Formspree) ── */
-      setTimeout(function () {
-        successMsg.classList.remove("d-none");
-        errorMsg.classList.add("d-none");
-        ["contact-name", "contact-email", "contact-subject", "contact-message"].forEach(function (id) {
-          var f = document.getElementById(id); if (f) f.value = "";
-        });
+      /* ── Send via Formspree ── */
+      var formData = new FormData(document.getElementById("contactForm"));
+      fetch("https://formspree.io/f/xpqeyqqg", {
+        method: "POST",
+        body: formData,
+        headers: { "Accept": "application/json" }
+      }).then(function (response) {
+        if (response.ok) {
+          successMsg.classList.remove("d-none");
+          errorMsg.classList.add("d-none");
+          document.getElementById("contactForm").reset();
+          systemLog("Contact form submitted by: " + name);
+        } else {
+          showErr(currentLang === "es" ? "Error al enviar. Escríbeme directo a alexmartinezdiaz91@gmail.com" : "Error sending. Email me at alexmartinezdiaz91@gmail.com");
+        }
         resetBtn();
         setTimeout(function () { successMsg.classList.add("d-none"); }, 6000);
-        systemLog("Contact form submitted by: " + name);
-      }, 1500);
+      }).catch(function () {
+        showErr(currentLang === "es" ? "Error de conexión. Escríbeme directo a alexmartinezdiaz91@gmail.com" : "Connection error. Email me at alexmartinezdiaz91@gmail.com");
+        resetBtn();
+      });
     });
 
     function showErr(msg) {
@@ -715,30 +746,50 @@
      ============================================================ */
   async function getCity() {
     try {
-      const res = await fetch("https://ipapi.co/json/");
+      const controller = new AbortController();
+      const timeout = setTimeout(function () { controller.abort(); }, 3000);
+      const res = await fetch("https://ipapi.co/json/", { signal: controller.signal });
+      clearTimeout(timeout);
+      if (!res.ok) throw new Error("HTTP " + res.status);
       const data = await res.json();
       return data.city || "Villarrica";
-    } catch {
+    } catch (e) {
+      systemLog("[weather] City detection failed: " + e.message);
       return "Villarrica";
     }
   }
 
   async function initWeather() {
-    const city = await getCity();
     const tempEl = document.getElementById("weather-temp");
     const descEl = document.getElementById("weather-desc");
-    if (!tempEl) return;
+    if (!tempEl) {
+      tempEl.textContent = "--°C";
+      return;
+    }
 
-    // Simple Open-Meteo for the city
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=-39.28&longitude=-72.23&current_weather=true")
-      .then(r => r.json())
-      .then(data => {
-        tempEl.textContent = Math.round(data.current_weather.temperature) + "°C";
-        descEl.textContent = city + ", CL"; // Simplified for audit
+    const city = await getCity();
+    const controller = new AbortController();
+    const timeout = setTimeout(function () { controller.abort(); }, 5000);
+
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=-39.28&longitude=-72.23&current_weather=true", { signal: controller.signal })
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
       })
-      .catch(() => {
+      .then(function (data) {
+        clearTimeout(timeout);
+        if (data && data.current_weather) {
+          tempEl.textContent = Math.round(data.current_weather.temperature) + "°C";
+          if (descEl) descEl.textContent = city + ", CL";
+        } else {
+          throw new Error("Empty response");
+        }
+      })
+      .catch(function (e) {
+        clearTimeout(timeout);
+        systemLog("[weather] Forecast failed: " + e.message);
         tempEl.textContent = "18°C";
-        descEl.textContent = "Villarrica, CL";
+        if (descEl) descEl.textContent = "Villarrica, CL";
       });
   }
 
@@ -986,6 +1037,7 @@
     initCalendar();
     initWeather();
     initMusicPlayer();
+    initObfuscatedContacts();
 
     // Auto-open widgets
     setTimeout(() => {
