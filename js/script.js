@@ -414,10 +414,10 @@
       btn.title = isLight ? "Cambiar a modo oscuro" : "Cambiar a modo claro";
     }
 
-    // Default to Dark Mode on every load
-    document.body.classList.remove("light-mode");
-    document.documentElement.dataset.theme = "dark";
-    updateThemeBtn(false);
+    // Default to Light Mode on every load
+    document.body.classList.add("light-mode");
+    document.documentElement.dataset.theme = "light";
+    updateThemeBtn(true);
 
     btn.addEventListener("click", function () {
       document.body.classList.toggle("light-mode");

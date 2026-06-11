@@ -2710,3 +2710,73 @@ body.desktop-mode {
   #window-weather { width: 220px !important; }
   #window-music   { width: 300px !important; height: 400px !important; }
 }
+
+/* ─────────────────────────────────────────────────────────
+   COMPREHENSIVE LIGHT MODE CV OVERRIDES (must come after dark styles)
+   ─────────────────────────────────────────────────────────── */
+
+.light-mode .window-content {
+  background: #f5f5f5 !important;
+  color: #111 !important;
+}
+
+.light-mode .window-content-cv {
+  background: #f5f5f5 !important;
+  color: #111 !important;
+}
+
+.light-mode .cv-hero-banner {
+  border-bottom-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-mode .cv-hero-tagline {
+  color: #333 !important;
+}
+
+.light-mode .cv-avatar-circle {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.light-mode .cv-name {
+  color: #1a1a1a !important;
+}
+
+.light-mode .cv-subtitle {
+  color: #00a7f2 !important;
+}
+
+.light-mode .cv-divider {
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.light-mode .cv-section-title {
+  color: #00a7f2 !important;
+}
+
+.light-mode .cv-body-text {
+  color: #333 !important;
+}
+
+.light-mode .cv-body-list {
+  color: #333 !important;
+}
+
+.light-mode .cv-contact-link {
+  color: #00a7f2 !important;
+}
+
+.light-mode .cv-contact-gh {
+  color: #333 !important;
+}
+
+.light-mode .cv-tag {
+  background: rgba(0, 167, 242, 0.1) !important;
+  color: #00a7f2 !important;
+  border-color: rgba(0, 167, 242, 0.3) !important;
+}
+
+.light-mode .cv-btn-sm {
+  background: #00a7f2 !important;
+  color: white !important;
+  border: 1px solid #00a7f2 !important;
+}
