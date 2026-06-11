@@ -131,6 +131,7 @@ body.light-mode {
 
 .light-mode .sm-power-btn:hover {
   background: rgba(0, 0, 0, 0.08);
+  color: #333;
 }
 
 .light-mode .sm-search-bar {
@@ -205,6 +206,48 @@ body.light-mode {
 
 .light-mode .cal-header span {
   color: #111;
+}
+
+.light-mode .cal-nav-btn {
+  color: #333;
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.light-mode .cal-days-header span {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.light-mode .cv-hero-banner {
+  border-bottom-color: rgba(0,0,0,0.1);
+}
+
+.light-mode .cv-avatar-circle {
+  border-color: rgba(0,0,0,0.15);
+}
+
+.light-mode .cv-tag {
+  color: #0078d4;
+}
+
+.light-mode .music-btn {
+  color: #333;
+}
+
+.light-mode .music-time-row {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.light-mode .music-vol-icon {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.light-mode .music-yt-badge {
+  color: #fff;
+}
+
+.light-mode .weather-widget-body {
+  background: linear-gradient(135deg, #e8f0fe, #c8d6e5) !important;
 }
 
 /* Desktop icon day mode text shadow is handled in the desktop section below */
@@ -372,13 +415,13 @@ a:hover {
   flex: 1;
 }
 
-/* CENTER: App icons */
+/* CENTER: Start button + App icons (Win11 centering) */
 .tb-center {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 4px;
-  flex: 2;
+  flex: 1;
 }
 
 /* RIGHT: tray, lang, clock */
@@ -1466,6 +1509,7 @@ body.desktop-mode {
   position: absolute;
   top: 0;
   left: 0;
+  background-color: #0f0f0f;
   background-size: cover;
   background-position: center;
   transition: background-image 0.8s ease;
@@ -1540,6 +1584,11 @@ body.desktop-mode {
 .light-mode .desktop-icon {
   color: #000;
   text-shadow: 0 1px 4px rgba(255, 255, 255, 0.8);
+}
+
+.light-mode .desktop-icon:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .desktop-icon:hover {

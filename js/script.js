@@ -328,20 +328,42 @@
     } catch (e) { }
   };
 
-  window.nextWallpaper = function () {
-    var seed = Math.floor(Math.random() * 1000);
-    var url = "https://picsum.photos/seed/" + seed + "/1366/768";
-    var d = document.getElementById("desktop");
+  var wallpaperFailCount = 0;
+  var WALLPAPER_FALLBACK = "images/banner-image-1.jpg";
+
+  function setWallpaperFallback(d) {
+    if (!d) d = document.getElementById("desktop");
     if (!d) return;
+    d.style.backgroundImage = "url('" + WALLPAPER_FALLBACK + "')";
+    d.style.backgroundColor = "#1a1a2e";
+    systemLog("[wallpaper] Using local fallback image");
+  }
+
+  function loadPicsumWallpaper(d, seed) {
+    var url = "https://picsum.photos/seed/" + seed + "/1366/768";
     var img = new Image();
     img.onload = function () {
       d.style.backgroundImage = "url('" + url + "')";
-      systemLog("[wallpaper] Next wallpaper loaded — seed: " + seed);
+      wallpaperFailCount = 0;
+      systemLog("[wallpaper] Loaded — seed: " + seed);
     };
     img.onerror = function () {
-      systemLog("[wallpaper] Failed to load — keeping current wallpaper");
+      wallpaperFailCount++;
+      systemLog("[wallpaper] Failed (attempt " + wallpaperFailCount + ")");
+      if (wallpaperFailCount >= 3) {
+        setWallpaperFallback(d);
+      } else {
+        d.style.backgroundColor = "#0f0f0f";
+      }
     };
     img.src = url;
+  }
+
+  window.nextWallpaper = function () {
+    var d = document.getElementById("desktop");
+    if (!d) return;
+    var seed = Math.floor(Math.random() * 1000);
+    loadPicsumWallpaper(d, seed);
   };
 
   window.showPowerPopup = function () {
@@ -403,24 +425,21 @@
     initStartMenu();
   }
 
-  // ── Dynamic Wallpaper (Bing) ──────────────────────────────────
+  // ── Dynamic Wallpaper ──────────────────────────────────
   function initWallpaper() {
     if (!document.body.classList.contains("desktop-mode")) return;
     if (!navigator.onLine) {
       systemLog("[wallpaper] Offline — using CSS fallback");
+      var d = document.getElementById("desktop");
+      if (d) d.style.backgroundColor = "#1a1a2e";
       return;
     }
     try {
+      var d = document.getElementById("desktop");
+      if (!d) return;
+      d.style.backgroundColor = "#0f0f0f";
       var seed = Math.floor(Math.random() * 1000);
-      var url = "https://picsum.photos/seed/" + seed + "/1366/768";
-      var img = new Image();
-      img.onload = function () {
-        var d = document.getElementById("desktop");
-        if (d) d.style.backgroundImage = "url('" + url + "')";
-        systemLog("[wallpaper] Bing wallpaper loaded");
-      };
-      img.onerror = function () { systemLog("[wallpaper] Failed to load — CSS fallback active"); };
-      img.src = url;
+      loadPicsumWallpaper(d, seed);
     } catch (e) { systemLog("[wallpaper] Error: " + e.message); }
   }
 
