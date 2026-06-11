@@ -935,30 +935,29 @@
                     id="weather-location">Detectando...</span></span>
               </div>
             </div>
+        </div>
+      </div>
+
+      <!-- ======================== CALENDARIO ======================== -->
+      <div class="win11-window win11-widget d-none" id="window-calendar">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-calendar-alt"></i> Calendario</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
           </div>
         </div>
-
-        <!-- ======================== CALENDARIO ======================== -->
-        <div class="win11-window win11-widget d-none" id="window-calendar">
-          <div class="window-header">
-            <div class="window-title"><i class="fas fa-calendar-alt"></i> Calendario</div>
-            <div class="window-controls">
-              <button class="btn-min" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
-              <button class="btn-close" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
+        <div class="window-content" style="padding:16px; overflow-y:auto;">
+          <div id="calendar-widget">
+            <div class="cal-header">
+              <button id="cal-prev" class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
+              <span id="cal-title" style="font-size:1rem;font-weight:600;"></span>
+              <button id="cal-next" class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
-          </div>
-          <div class="window-content" style="padding:16px; overflow-y:auto;">
-            <div id="calendar-widget">
-              <div class="cal-header">
-                <button id="cal-prev" class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
-                <span id="cal-title" style="font-size:1rem;font-weight:600;"></span>
-                <button id="cal-next" class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
-              </div>
-              <div class="cal-days-header">
-                <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
-              </div>
-              <div id="cal-body" class="cal-body"></div>
+            <div class="cal-days-header">
+              <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
             </div>
+            <div id="cal-body" class="cal-body"></div>
           </div>
         </div>
       </div>

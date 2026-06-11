@@ -41,6 +41,20 @@
   --t-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+[data-theme="light"] {
+  --bg: #fffffb;
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-opaque: #f0f0f0;
+  --border: rgba(0, 0, 0, 0.1);
+  --text: #1a1a1a;
+  --muted: #555;
+  --heading: #000;
+  --accent: #00a7f2;
+  --accent2: #00c8eb;
+  --accent-soft: rgba(0, 167, 242, 0.12);
+  --shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
 /* Tema claro (opcional, pero ajustado a la nueva paleta) */
 [data-theme="light"] body,
 body.light-mode {
@@ -67,7 +81,7 @@ body.light-mode {
 }
 
 .light-mode .window-header i {
-  color: #0078d4;
+  color: #00a7f2;
 }
 
 .light-mode .window-controls button {
@@ -182,7 +196,7 @@ body.light-mode {
 }
 
 .light-mode .cv-section-title {
-  color: #0078d4;
+  color: #00a7f2;
 }
 
 .light-mode .cv-divider {
@@ -194,7 +208,7 @@ body.light-mode {
 }
 
 .light-mode .cv-contact-gh {
-  color: #555;
+  color: #333;
 }
 
 .light-mode .proj-card-title {
@@ -228,7 +242,7 @@ body.light-mode {
 }
 
 .light-mode .cv-tag {
-  color: #0078d4;
+  color: #00a7f2;
 }
 
 .light-mode .music-btn {
@@ -248,8 +262,62 @@ body.light-mode {
   background: rgba(0,0,0,0.06);
 }
 
+.light-mode .music-player-body {
+  background: #f5f5f5 !important;
+}
+.light-mode .music-album-art {
+  background: linear-gradient(135deg, #d0d8e8, #e8edf5);
+}
+.light-mode .music-disc-wrapper {
+  background: rgba(0, 0, 0, 0.06);
+}
+.light-mode .music-disc {
+  color: var(--accent);
+}
+.light-mode .music-track-name {
+  color: #222;
+}
+.light-mode .music-track-artist {
+  color: rgba(0, 0, 0, 0.4);
+}
+.light-mode .music-progress-bar {
+  background: rgba(0, 0, 0, 0.12);
+}
+.light-mode .music-progress-fill {
+  background: var(--accent);
+}
+.light-mode .music-btn {
+  color: #333;
+}
+.light-mode .music-btn-lg {
+  background: var(--accent) !important;
+  box-shadow: 0 4px 14px rgba(0, 167, 242, 0.3);
+}
+.light-mode .music-vol-icon {
+  color: rgba(0, 0, 0, 0.35);
+}
+.light-mode .music-volume-slider {
+  background: rgba(0, 0, 0, 0.12);
+}
+.light-mode .music-volume-slider::-webkit-slider-thumb {
+  background: var(--accent);
+}
+
 .light-mode .weather-widget-body {
   background: linear-gradient(135deg, #e8f0fe, #c8d6e5) !important;
+}
+.light-mode .weather-temp-big {
+  color: #111;
+}
+.light-mode .weather-desc-text {
+  color: rgba(0, 0, 0, 0.55);
+}
+.light-mode .weather-location {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+.light-mode .cal-day:hover {
+  background: rgba(0, 167, 242, 0.2);
 }
 
 /* Desktop icon day mode text shadow is handled in the desktop section below */
@@ -1700,6 +1768,11 @@ body.desktop-mode {
   right: auto !important;
   left: auto !important;
   height: 400px !important;
+}
+
+#window-calendar {
+  width: 340px !important;
+  height: 360px !important;
 }
 
 
