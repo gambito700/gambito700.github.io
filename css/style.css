@@ -150,6 +150,63 @@ body.light-mode {
   color: #333;
 }
 
+.light-mode .window-title {
+  color: #111;
+}
+
+.light-mode .window-title i {
+  color: #0078d4;
+}
+
+.light-mode .cv-name {
+  color: #111;
+}
+
+.light-mode .cv-subtitle {
+  color: #0078d4;
+}
+
+.light-mode .cv-hero-badge {
+  color: #0078d4;
+}
+
+.light-mode .cv-hero-tagline {
+  color: #555;
+}
+
+.light-mode .cv-body-text,
+.light-mode .cv-body-list {
+  color: #333;
+}
+
+.light-mode .cv-section-title {
+  color: #0078d4;
+}
+
+.light-mode .cv-divider {
+  border-color: rgba(0,0,0,0.1);
+}
+
+.light-mode .cv-contact-link {
+  color: #0078d4;
+}
+
+.light-mode .cv-contact-gh {
+  color: #555;
+}
+
+.light-mode .proj-card-title {
+  color: #111;
+}
+
+.light-mode #calendar-widget {
+  color: #111;
+}
+
+.light-mode .cal-header span {
+  color: #111;
+}
+
 /* Desktop icon day mode text shadow is handled in the desktop section below */
 
 [data-theme="light"] {
@@ -1540,21 +1597,11 @@ body.desktop-mode {
   flex-direction: column;
   z-index: 10;
   overflow: hidden;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.2s, visibility 0.2s;
   pointer-events: auto;
 }
 
 .win11-window.d-none {
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
-.win11-window:not(.d-none) {
-  opacity: 1;
-  visibility: visible;
+  display: none !important;
 }
 
 .win11-window.maximized {
@@ -1822,47 +1869,7 @@ body.desktop-mode {
   outline-offset: 2px;
 }
 
-/* =========================================
-   WINDOWS 11 START MENU OVERRIDE
-   ========================================= */
-.desktop-mode .nav-overlay {
-  position: fixed !important;
-  bottom: 70px !important;
-  left: 50% !important;
-  top: auto !important;
-  transform: translateX(-50%) translateY(20px) !important;
-  width: 380px !important;
-  height: 480px !important;
-  max-width: 90vw !important;
-  background: rgba(32, 32, 32, 0.85) !important;
-  backdrop-filter: blur(30px) !important;
-  -webkit-backdrop-filter: blur(30px) !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  transition: all 0.2s ease-out !important;
-  display: flex !important;
-  flex-direction: column !important;
-  padding: 20px !important;
-  z-index: 9999 !important;
-}
-
-.desktop-mode .nav-overlay.show-start-menu {
-  opacity: 1 !important;
-  visibility: visible !important;
-  transform: translateX(-50%) translateY(0) !important;
-}
-
-.desktop-mode .nav__list {
-  display: grid !important;
-  grid-template-columns: repeat(3, 1fr) !important;
-  gap: 15px !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  list-style: none !important;
-}
+/* Old nav-overlay (Win98) styles removed */
 
 /* -------------------------------------------------------
     8. START MENU - WINDOWS 11 STYLE
@@ -2020,41 +2027,7 @@ body.desktop-mode {
   color: rgba(255, 255, 255, 0.3);
 }
 
-.desktop-mode .nav__list-item {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-radius: 8px !important;
-  padding: 15px 5px !important;
-  transition: background 0.1s;
-}
-
-.desktop-mode .nav__list-item:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-}
-
-.desktop-mode .nav__list-item a {
-  font-size: 0.75rem !important;
-  text-align: center !important;
-  color: white !important;
-  text-decoration: none !important;
-  width: 100%;
-  height: 100%;
-}
-
-.desktop-mode .nav-social {
-  margin-top: auto !important;
-  display: flex !important;
-  justify-content: center !important;
-  gap: 20px !important;
-  margin-bottom: 20px !important;
-}
-
-.desktop-mode .nav-social a i {
-  font-size: 1.2rem !important;
-  color: white !important;
-}
+/* Old nav__list-item and nav-social (Win98) styles removed */
 
 /* -------------------------------------------------------
    30. CALENDAR WIDGET

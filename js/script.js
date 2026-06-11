@@ -332,10 +332,16 @@
     var seed = Math.floor(Math.random() * 1000);
     var url = "https://picsum.photos/seed/" + seed + "/1366/768";
     var d = document.getElementById("desktop");
-    if (d) {
+    if (!d) return;
+    var img = new Image();
+    img.onload = function () {
       d.style.backgroundImage = "url('" + url + "')";
       systemLog("[wallpaper] Next wallpaper loaded — seed: " + seed);
-    }
+    };
+    img.onerror = function () {
+      systemLog("[wallpaper] Failed to load — keeping current wallpaper");
+    };
+    img.src = url;
   };
 
   window.showPowerPopup = function () {
