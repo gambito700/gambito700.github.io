@@ -8,7 +8,7 @@
   <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
     name="description" />
   <!-- CSP (GitHub Pages no deja poner headers HTTP, usamos meta) -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com https://www.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com https://www.google.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com;">
   <meta name="referrer" content="no-referrer-when-downgrade">
   <!-- Open Graph / Twitter Cards -->
   <meta property="og:title" content="Alex Martínez – Front-End Developer &amp; Digital Marketing">
@@ -85,11 +85,11 @@
       <!-- LEFT: Spacer -->
       <div class="tb-left"></div>
       <!-- CENTER: Start Button + Dynamic App Icons -->
-      <div class="tb-center" id="taskbar-icons">
+      <div class="tb-center">
+        <div id="taskbar-icons" class="taskbar-apps"><!-- App icons added by JS --></div>
         <button class="tb-btn tb-start" id="start-btn" title="Inicio" aria-label="Inicio">
           <i class="fab fa-windows"></i>
         </button>
-        <!-- App icons added by JS -->
       </div>
       <!-- RIGHT: System Tray + Clock -->
       <div class="tb-right">

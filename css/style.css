@@ -277,8 +277,8 @@ body {
   line-height: 1.6;
   font-size: 1rem;
   overflow-x: hidden;
-  /* Cursor personalizado con fallback a default */
-  cursor: url('../images/icons/custom-cursor.png') 4 4, default;
+  /* Cursor nativo por defecto */
+  cursor: default;
   transition: background 0.4s ease, color 0.4s ease;
   -webkit-font-smoothing: antialiased;
   background-size: cover;
@@ -301,7 +301,7 @@ select,
 .music-volume-slider,
 [onclick],
 [role="button"] {
-  cursor: url('../images/icons/custom-cursor.png') 4 4, pointer !important;
+  cursor: pointer !important;
 }
 label,
 select,
@@ -413,6 +413,24 @@ a:hover {
   justify-content: center;
   gap: 4px;
   flex: 1;
+  position: relative; /* needed to center the Start button absolutely */
+}
+
+/* Center the Start button regardless of icons rendered */
+#start-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11000; /* above app icons */
+}
+
+/* Container where JS app icons are appended */
+.taskbar-apps {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  justify-content: center;
 }
 
 /* RIGHT: tray, lang, clock */

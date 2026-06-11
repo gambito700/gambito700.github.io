@@ -94,7 +94,14 @@
 
   window.closeWindow = function (id) {
     var win = document.getElementById(id);
-    if (win) win.classList.add("d-none");
+    if (win) {
+      // Ensure any transient state is cleared when closing
+      win.classList.remove("maximized", "minimized");
+      win.style.width = "";
+      win.style.height = "";
+      try { delete win.dataset.prevRect; } catch (e) {}
+      win.classList.add("d-none");
+    }
     updateTaskbarIcon(id, false);
     saveOpenWindows();
   };
