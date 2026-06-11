@@ -78,7 +78,7 @@
     var win = document.getElementById(id);
     if (!win) return;
 
-    win.classList.remove("d-none");
+    win.classList.remove("d-none", "minimized");
     bringToFront(win);
 
     // Update Taskbar Icon
@@ -101,8 +101,7 @@
 
   window.minimizeWindow = function (id) {
     var win = document.getElementById(id);
-    if (win) win.classList.add("d-none");
-    // We keep the icon but remove active state or mark as minimized
+    if (win) win.classList.add("minimized");
     var icon = document.querySelector(`.tb-app[data-win="${id}"]`);
     if (icon) icon.classList.remove("active-win");
     saveOpenWindows();
@@ -113,13 +112,29 @@
     if (!win) return;
     if (win.classList.contains("maximized")) {
       win.classList.remove("maximized");
-      // Restore to a sensible default if no specific style exists
-      if (!win.style.left || win.style.left === "0px") {
+      var prev = win.dataset.prevRect;
+      if (prev) {
+        try {
+          var r = JSON.parse(prev);
+          win.style.left = r.left + "px";
+          win.style.top = r.top + "px";
+          win.style.width = r.width + "px";
+          win.style.height = r.height + "px";
+        } catch (e) {}
+      } else {
         win.style.left = "100px";
         win.style.top = "100px";
       }
       reclampAllWindows();
     } else {
+      win.dataset.prevRect = JSON.stringify({
+        left: win.offsetLeft,
+        top: win.offsetTop,
+        width: win.offsetWidth,
+        height: win.offsetHeight
+      });
+      win.style.width = "";
+      win.style.height = "";
       win.classList.add("maximized");
       win.style.left = "0px";
       win.style.top = "0px";
@@ -129,7 +144,7 @@
   };
 
   window.closeAllWindows = function () {
-    document.querySelectorAll(".win11-window:not(.d-none)").forEach(win => {
+    document.querySelectorAll(".win11-window:not(.d-none):not(.minimized)").forEach(win => {
       closeWindow(win.id);
     });
     systemLog("All windows closed");
@@ -153,7 +168,7 @@
         btn.title = id.replace("window-", "").toUpperCase();
         btn.onclick = function () {
           var win = document.getElementById(id);
-          if (win.classList.contains("d-none")) {
+          if (win.classList.contains("d-none") || win.classList.contains("minimized")) {
             openWindow(id);
           } else {
             minimizeWindow(id);
@@ -328,23 +343,32 @@
     } catch (e) { }
   };
 
-  var WALLPAPER_FALLBACK = "images/banner-image-1.jpg";
+
 
   function setWallpaperFallback(d) {
     if (!d) d = document.getElementById("desktop");
     if (!d) return;
-    d.style.backgroundImage = "url('" + WALLPAPER_FALLBACK + "')";
+    d.style.backgroundImage = "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)";
     d.style.backgroundColor = "#1a1a2e";
-    systemLog("[wallpaper] Using local fallback image");
+    systemLog("[wallpaper] Using gradient fallback");
   }
 
   window.nextWallpaper = function () {
     var d = document.getElementById("desktop");
     if (!d) return;
     var seed = Math.floor(Math.random() * 1000);
-    d.style.backgroundImage = "url('https://picsum.photos/seed/" + seed + "/1366/768')";
-    d.style.backgroundColor = "#0f0f0f";
-    systemLog("[wallpaper] Next wallpaper — seed: " + seed);
+    var url = "https://picsum.photos/seed/" + seed + "/1366/768";
+    var img = new Image();
+    img.onload = function () {
+      d.style.backgroundImage = "url('" + url + "')";
+      d.style.backgroundColor = "#0f0f0f";
+      systemLog("[wallpaper] Next — seed: " + seed);
+    };
+    img.onerror = function () {
+      systemLog("[wallpaper] Next failed — fallback");
+      setWallpaperFallback(d);
+    };
+    img.src = url;
   };
 
   window.showPowerPopup = function () {
@@ -383,18 +407,20 @@
       btn.title = isLight ? "Cambiar a modo oscuro" : "Cambiar a modo claro";
     }
 
-    // Default to Dark Mode on every load (no persistence for theme selection as per current logic)
+    // Default to Dark Mode on every load
     document.body.classList.remove("light-mode");
+    document.documentElement.dataset.theme = "dark";
     updateThemeBtn(false);
 
     btn.addEventListener("click", function () {
       document.body.classList.toggle("light-mode");
       var isLight = document.body.classList.contains("light-mode");
       updateThemeBtn(isLight);
+      document.documentElement.dataset.theme = isLight ? "light" : "dark";
 
       var desktop = document.getElementById("desktop");
       if (desktop) {
-        desktop.style.filter = isLight ? "brightness(1.1) saturate(0.8)" : "";
+        desktop.style.backgroundColor = isLight ? "#e8e8e8" : "#0f0f0f";
       }
 
       systemLog("Theme toggled: " + (isLight ? "Light" : "Dark"));
@@ -464,58 +490,6 @@
     setInterval(tick, 1000);
   }
 
-
-  /* ============================================================
-     C. CUSTOM CURSOR (Canvas Trail)
-     Fixed canvas so it follows correctly even on scroll.
-     ============================================================ */
-  function initCursor() {
-    var canvas = document.getElementById("cursor-canvas");
-    var dot = document.getElementById("cursorDot");
-    // Skip on touch devices
-    if (!canvas || window.matchMedia("(pointer: coarse)").matches) return;
-
-    var ctx = canvas.getContext("2d");
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-    resize();
-    window.addEventListener("resize", resize);
-
-    var points = [], MAX = 60, FADE = 5000;
-    var lastMove = Date.now(), alpha = 1, fading = false;
-
-    document.addEventListener("mousemove", function (e) {
-      if (dot) { dot.style.left = e.clientX + "px"; dot.style.top = e.clientY + "px"; }
-      points.push({ x: e.clientX, y: e.clientY });
-      if (points.length > MAX) points.shift();
-      lastMove = Date.now(); fading = false; alpha = 1;
-    });
-    document.addEventListener("mouseover", function (e) {
-      if (dot && e.target.closest("a, button, label")) dot.style.transform = "translate(-50%,-50%) scale(2.5)";
-    });
-    document.addEventListener("mouseout", function (e) {
-      if (dot && e.target.closest("a, button, label")) dot.style.transform = "translate(-50%,-50%) scale(1)";
-    });
-
-    (function draw() {
-      requestAnimationFrame(draw);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (points.length < 2) return;
-      if (!fading && Date.now() - lastMove > FADE) fading = true;
-      if (fading) { alpha -= 0.008; if (alpha <= 0) { alpha = 0; points = []; return; } }
-      ctx.save();
-      for (var i = 1; i < points.length; i++) {
-        var t = i / points.length;
-        ctx.beginPath();
-        ctx.moveTo(points[i - 1].x, points[i - 1].y);
-        ctx.lineTo(points[i].x, points[i].y);
-        ctx.strokeStyle = "rgba(232,197,71," + (t * 0.65 * alpha) + ")";
-        ctx.lineWidth = t * 2.5;
-        ctx.lineCap = ctx.lineJoin = "round";
-        ctx.stroke();
-      }
-      ctx.restore();
-    })();
-  }
 
 
   /* ============================================================
@@ -777,10 +751,7 @@
   async function initWeather() {
     const tempEl = document.getElementById("weather-temp");
     const descEl = document.getElementById("weather-desc");
-    if (!tempEl) {
-      tempEl.textContent = "--°C";
-      return;
-    }
+    if (!tempEl) return;
 
     const city = await getCity();
     const controller = new AbortController();
@@ -1043,7 +1014,6 @@
 
     // UI features
     initClock();
-    initCursor();
     initSkillBars();
     initLangToggle();
     initSliders();
