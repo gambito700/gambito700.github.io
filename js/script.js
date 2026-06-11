@@ -328,7 +328,6 @@
     } catch (e) { }
   };
 
-  var wallpaperFailCount = 0;
   var WALLPAPER_FALLBACK = "images/banner-image-1.jpg";
 
   function setWallpaperFallback(d) {
@@ -339,31 +338,13 @@
     systemLog("[wallpaper] Using local fallback image");
   }
 
-  function loadPicsumWallpaper(d, seed) {
-    var url = "https://picsum.photos/seed/" + seed + "/1366/768";
-    var img = new Image();
-    img.onload = function () {
-      d.style.backgroundImage = "url('" + url + "')";
-      wallpaperFailCount = 0;
-      systemLog("[wallpaper] Loaded — seed: " + seed);
-    };
-    img.onerror = function () {
-      wallpaperFailCount++;
-      systemLog("[wallpaper] Failed (attempt " + wallpaperFailCount + ")");
-      if (wallpaperFailCount >= 3) {
-        setWallpaperFallback(d);
-      } else {
-        d.style.backgroundColor = "#0f0f0f";
-      }
-    };
-    img.src = url;
-  }
-
   window.nextWallpaper = function () {
     var d = document.getElementById("desktop");
     if (!d) return;
     var seed = Math.floor(Math.random() * 1000);
-    loadPicsumWallpaper(d, seed);
+    d.style.backgroundImage = "url('https://picsum.photos/seed/" + seed + "/1366/768')";
+    d.style.backgroundColor = "#0f0f0f";
+    systemLog("[wallpaper] Next wallpaper — seed: " + seed);
   };
 
   window.showPowerPopup = function () {
@@ -425,22 +406,31 @@
     initStartMenu();
   }
 
-  // ── Dynamic Wallpaper ──────────────────────────────────
+  // ── Dynamic Wallpaper (Picsum) ──────────────────────────
   function initWallpaper() {
     if (!document.body.classList.contains("desktop-mode")) return;
+    var d = document.getElementById("desktop");
+    if (!d) return;
+    d.style.backgroundColor = "#0f0f0f";
     if (!navigator.onLine) {
-      systemLog("[wallpaper] Offline — using CSS fallback");
-      var d = document.getElementById("desktop");
-      if (d) d.style.backgroundColor = "#1a1a2e";
+      systemLog("[wallpaper] Offline");
+      setWallpaperFallback(d);
       return;
     }
     try {
-      var d = document.getElementById("desktop");
-      if (!d) return;
-      d.style.backgroundColor = "#0f0f0f";
       var seed = Math.floor(Math.random() * 1000);
-      loadPicsumWallpaper(d, seed);
-    } catch (e) { systemLog("[wallpaper] Error: " + e.message); }
+      var url = "https://picsum.photos/seed/" + seed + "/1366/768";
+      var img = new Image();
+      img.onload = function () {
+        d.style.backgroundImage = "url('" + url + "')";
+        systemLog("[wallpaper] Init loaded — seed: " + seed);
+      };
+      img.onerror = function () {
+        systemLog("[wallpaper] Init failed");
+        setWallpaperFallback(d);
+      };
+      img.src = url;
+    } catch (e) { systemLog("[wallpaper] Error: " + e.message); setWallpaperFallback(d); }
   }
 
   // ── Auto-detect Language ──────────────────────────────────────

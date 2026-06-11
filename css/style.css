@@ -1654,12 +1654,11 @@ body.desktop-mode {
 }
 
 .win11-window.maximized {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: calc(100vh - 50px);
-  transform: none;
-  border-radius: 0;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: calc(100vh - 50px) !important;
+  border-radius: 0 !important;
 }
 
 
