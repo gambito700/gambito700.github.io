@@ -322,68 +322,6 @@ body.light-mode {
 
 /* Desktop icon day mode text shadow is handled in the desktop section below */
 
-/* Light mode form elements and alerts */
-.light-mode .custom-input {
-  background: #ffffff !important;
-  border: 1px solid #d0d0d0 !important;
-  color: #1a1a1a !important;
-}
-
-.light-mode .custom-input::placeholder {
-  color: #666666 !important;
-}
-
-.light-mode .custom-input:focus {
-  border-color: #0078d4 !important;
-  background: #f9f9f9 !important;
-  box-shadow: 0 0 0 4px rgba(0, 120, 212, 0.15) !important;
-}
-
-.light-mode .alert-success-custom {
-  background: #f0fdf4;
-  border-left: 2px solid #22c55e;
-  color: #15803d;
-}
-
-.light-mode .alert-error-custom {
-  background: #fef2f2;
-  border-left: 2px solid #ef4444;
-  color: #991b1b;
-}
-
-/* Light mode personal table */
-.light-mode .personal-table {
-  color: #1a1a1a;
-}
-
-.light-mode .personal-table th {
-  color: #333333;
-  border-color: #e0e0e0;
-}
-
-.light-mode .personal-table td {
-  color: #1a1a1a;
-  border-color: #e0e0e0;
-}
-
-.light-mode .personal-table a {
-  color: #0078d4;
-  text-decoration: none;
-}
-
-.light-mode .personal-table a:hover {
-  opacity: 0.8;
-  text-decoration: underline;
-}
-
-.light-mode .personal-table-link {
-  color: #0078d4;
-}
-
-.light-mode .personal-table-link:hover {
-  opacity: 0.8;
-}
-
 
 /* -------------------------------------------------------
    2. RESET BASE
