@@ -634,7 +634,10 @@
     var errorMsg = document.getElementById("form-error");
     if (!btn) return;
 
-    btn.addEventListener("click", function (e) {
+    var form = document.getElementById("contactForm");
+    if (!form) return;
+
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
       var name = (document.getElementById("contact-name").value || "").trim();
       var email = (document.getElementById("contact-email").value || "").trim();
@@ -655,7 +658,7 @@
       btn.disabled = true;
 
       /* ── Send via Formspree ── */
-      var formData = new FormData(document.getElementById("contactForm"));
+      var formData = new FormData(form);
       fetch("https://formspree.io/f/xpqeyqqg", {
         method: "POST",
         body: formData,
@@ -664,7 +667,7 @@
         if (response.ok) {
           successMsg.classList.remove("d-none");
           errorMsg.classList.add("d-none");
-          document.getElementById("contactForm").reset();
+          form.reset();
           systemLog("Contact form submitted by: " + name);
         } else {
           showErr(currentLang === "es" ? "Error al enviar. Escríbeme directo a alexmartinezdiaz91@gmail.com" : "Error sending. Email me at alexmartinezdiaz91@gmail.com");
