@@ -245,77 +245,6 @@ body.light-mode {
   color: #00a7f2;
 }
 
-.light-mode .music-btn {
-  color: #333;
-}
-
-.light-mode .music-time-row {
-  color: #555;
-}
-
-.light-mode .music-vol-icon {
-  color: #555;
-}
-
-.light-mode .music-yt-badge {
-  color: #333;
-  background: rgba(0,0,0,0.06);
-}
-
-.light-mode .music-player-body {
-  background: #f5f5f5 !important;
-}
-.light-mode .music-album-art {
-  background: linear-gradient(135deg, #d0d8e8, #e8edf5);
-}
-.light-mode .music-disc-wrapper {
-  background: rgba(0, 0, 0, 0.06);
-}
-.light-mode .music-disc {
-  color: var(--accent);
-}
-.light-mode .music-track-name {
-  color: #222;
-}
-.light-mode .music-track-artist {
-  color: rgba(0, 0, 0, 0.4);
-}
-.light-mode .music-progress-bar {
-  background: rgba(0, 0, 0, 0.12);
-}
-.light-mode .music-progress-fill {
-  background: var(--accent);
-}
-.light-mode .music-btn {
-  color: #333;
-}
-.light-mode .music-btn-lg {
-  background: var(--accent) !important;
-  box-shadow: 0 4px 14px rgba(0, 167, 242, 0.3);
-}
-.light-mode .music-vol-icon {
-  color: rgba(0, 0, 0, 0.35);
-}
-.light-mode .music-volume-slider {
-  background: rgba(0, 0, 0, 0.12);
-}
-.light-mode .music-volume-slider::-webkit-slider-thumb {
-  background: var(--accent);
-}
-
-.light-mode .weather-widget-body {
-  background: linear-gradient(135deg, #e8f0fe, #c8d6e5) !important;
-}
-.light-mode .weather-temp-big {
-  color: #111;
-}
-.light-mode .weather-desc-text {
-  color: rgba(0, 0, 0, 0.55);
-}
-.light-mode .weather-location {
-  color: rgba(0, 0, 0, 0.4);
-}
-
 .light-mode .cal-day:hover {
   background: rgba(0, 167, 242, 0.2);
 }
@@ -1010,6 +939,7 @@ section {
 .personal-table {
   color: var(--text);
   font-size: 0.84rem;
+  transition: color 0.4s ease;
 }
 
 .personal-table th {
@@ -1023,6 +953,7 @@ section {
   border-color: var(--border);
   font-weight: 400;
   vertical-align: middle;
+  transition: color 0.4s ease, border-color 0.4s ease;
 }
 
 .personal-table td {
@@ -1030,11 +961,13 @@ section {
   border-color: var(--border);
   padding: 10px 0;
   vertical-align: middle;
+  transition: color 0.4s ease, border-color 0.4s ease;
 }
 
 .personal-table a {
   color: var(--accent);
   text-decoration: none;
+  transition: color 0.4s ease, opacity 0.2s ease;
 }
 
 .personal-table a:hover {
@@ -2301,7 +2234,7 @@ body.desktop-mode {
 /* WEATHER WIDGET COMPACTO */
 .weather-widget-body {
   padding: 10px 14px;
-  background: linear-gradient(135deg, #1a2a3a 0%, #0d1b2a 100%) !important;
+  background: linear-gradient(135deg, var(--surface), var(--bg)) !important;
 }
 
 .weather-widget-inner {
@@ -2312,7 +2245,7 @@ body.desktop-mode {
 
 .weather-main-icon {
   font-size: 2.6rem;
-  color: #f1c40f;
+  color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -2331,26 +2264,26 @@ body.desktop-mode {
 .weather-temp-big {
   font-size: 1.9rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--heading);
   font-family: var(--font-display);
   line-height: 1;
 }
 
 .weather-desc-text {
   font-size: 0.72rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .weather-location {
   font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--muted);
 }
 
 .weather-location i {
   margin-right: 4px;
-  color: #60cdff;
+  color: var(--accent);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -2360,13 +2293,13 @@ body.desktop-mode {
   padding: 0;
   display: flex;
   flex-direction: column;
-  background: #111 !important;
+  background: var(--surface-opaque) !important;
   height: 100%;
 }
 
 .music-album-art {
   height: 130px;
-  background: linear-gradient(135deg, #1a1a2e, #000);
+  background: linear-gradient(135deg, var(--surface), var(--bg));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2380,16 +2313,16 @@ body.desktop-mode {
   width: 86px;
   height: 86px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--surface);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 28px rgba(0, 120, 212, 0.35);
+  box-shadow: 0 0 28px var(--accent-soft);
 }
 
 .music-disc {
   font-size: 3.6rem;
-  color: #0078d4;
+  color: var(--accent);
   animation: discSpin 4s linear infinite;
   animation-play-state: paused;
 }
@@ -2412,7 +2345,7 @@ body.desktop-mode {
 .music-track-name {
   font-size: 0.82rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--heading);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2420,14 +2353,14 @@ body.desktop-mode {
 
 .music-track-artist {
   font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--muted);
   margin-top: 2px;
 }
 
 .music-progress-bar {
   margin: 8px 14px 2px;
   height: 3px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border);
   border-radius: 2px;
   cursor: pointer;
   flex-shrink: 0;
@@ -2446,7 +2379,7 @@ body.desktop-mode {
   justify-content: space-between;
   padding: 0 14px;
   font-size: 0.58rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--muted);
   flex-shrink: 0;
 }
 
@@ -2462,7 +2395,7 @@ body.desktop-mode {
 .music-btn {
   background: transparent;
   border: none;
-  color: #fff;
+  color: var(--heading);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -2472,7 +2405,7 @@ body.desktop-mode {
 }
 
 .music-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--accent-soft);
   transform: scale(1.1);
 }
 
@@ -2487,11 +2420,11 @@ body.desktop-mode {
   height: 46px;
   font-size: 1.1rem;
   background: var(--accent) !important;
-  box-shadow: 0 4px 14px rgba(0, 120, 212, 0.4);
+  box-shadow: 0 4px 14px var(--accent-soft);
 }
 
 .music-btn-lg:hover {
-  background: #005fa3 !important;
+  background: var(--accent-dark, #005fa3) !important;
 }
 
 .music-volume-row {
@@ -2504,7 +2437,7 @@ body.desktop-mode {
 
 .music-vol-icon {
   font-size: 0.68rem;
-  color: rgba(255, 255, 255, 0.35);
+  color: var(--muted);
 }
 
 .music-volume-slider {
@@ -2513,7 +2446,7 @@ body.desktop-mode {
   cursor: pointer;
   -webkit-appearance: none;
   appearance: none;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border);
   border-radius: 2px;
 }
 
