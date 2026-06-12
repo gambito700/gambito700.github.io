@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>404 — Página no encontrada · Alex Martínez</title>
+  <meta name="description" content="Error 404 — El archivo solicitado no está disponible. Volver al escritorio." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="https://gambito700.github.io/" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #050510 0%, #0f0f23 40%, #1a1a3e 70%, #0d0d1a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e0e0e0;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      text-align: center;
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 100%;
+    }
+    .window {
+      background: rgba(28, 28, 36, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 12px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.6);
+    }
+    .dots {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #0078d4;
+      animation: bounce 1.4s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+    .error-code {
+      font-size: 5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #0078d4 0%, #4fc3f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    h1 {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #b0b0b0;
+      margin-bottom: 0.35rem;
+    }
+    p {
+      color: #787878;
+      font-size: 0.85rem;
+      margin-bottom: 2.25rem;
+      line-height: 1.6;
+    }
+    .progress-wrap {
+      margin-bottom: 2.25rem;
+    }
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #0078d4, #4fc3f7);
+      border-radius: 4px;
+      animation: fill 3.5s ease-in-out forwards;
+    }
+    @keyframes fill {
+      0% { width: 0; }
+      30% { width: 42%; }
+      60% { width: 68%; }
+      85% { width: 88%; }
+      100% { width: 100%; }
+    }
+    .progress-label {
+      font-size: 0.7rem;
+      color: #555;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 36px;
+      background: #0078d4;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+    }
+    .btn:hover {
+      background: #1a8ad4;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0, 120, 212, 0.35);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+    .os-footer {
+      margin-top: 1.5rem;
+      font-size: 0.65rem;
+      color: #3a3a3a;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    @media (prefers-color-scheme: light) {
+      body {
+        background: linear-gradient(135deg, #d4d4dc 0%, #e8e8f0 40%, #dcdce6 70%, #cfcfd8 100%);
+      }
+      .window {
+        background: rgba(245, 245, 250, 0.88);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+      }
+      .error-code {
+        background: linear-gradient(135deg, #0078d4 0%, #0099cc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      h1 { color: #444; }
+      p { color: #888; }
+      .progress-track { background: rgba(0, 0, 0, 0.08); }
+      .progress-label { color: #aaa; }
+      .os-footer { color: #ccc; }
+    }
+    @media (max-width: 480px) {
+      .window { padding: 2rem 1.5rem; border-radius: 8px; }
+      .error-code { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="window">
+      <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="error-code" aria-hidden="true">404</div>
+      <h1>Archivo no encontrado</h1>
+      <p>La página que buscas no está disponible<br>o fue movida a otra ubicaci&oacute;n.</p>
+
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div class="progress-fill"></div>
+        </div>
+        <div class="progress-label" id="progressLabel">Cargando escritorio...</div>
+      </div>
+
+      <a href="/" class="btn" aria-label="Volver al escritorio principal">&larr; Volver al Escritorio</a>
+    </div>
+    <div class="os-footer">Windows 11 &middot; gambito700.github.io</div>
+  </div>
+
+  <script>
+    var label = document.getElementById('progressLabel');
+    var steps = ['Iniciando recuperaci&oacute;n...', 'Buscando ruta alternativa...', 'Restaurando escritorio...', 'Listo'];
+    var i = 0;
+    setInterval(function () {
+      if (i < steps.length) {
+        label.textContent = steps[i];
+        i++;
+      }
+    }, 900);
+    setTimeout(function () {
+      window.location.href = '/';
+    }, 5000);
+  </script>
+</body>
+</html>
