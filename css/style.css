@@ -1090,7 +1090,6 @@ section {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--accent), var(--accent2));
-  transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
 }
 
@@ -1471,6 +1470,13 @@ section {
   color: #000000 !important;
 }
 
+.light-mode .personal-table {
+  --bs-table-bg: #f5faff;
+}
+.light-mode .personal-table td {
+  background: var(--bs-table-bg);
+}
+
 .light-mode #window-experience .tl-content h4,
 .light-mode #window-experience .tl-content p,
 .light-mode #window-experience .tl-date {
@@ -1540,6 +1546,7 @@ body.desktop-mode {
   gap: 8px;
   align-content: start;
   pointer-events: none;
+  overflow-y: auto;
 }
 
 /* Cada icono sí captura clicks */
@@ -1584,6 +1591,10 @@ body.desktop-mode {
 .light-mode .desktop-icon {
   color: #000;
   text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+.light-mode .desktop-png-icon {
+  filter: brightness(0.4);
 }
 
 .light-mode .desktop-icon:hover {
@@ -1697,6 +1708,7 @@ body.desktop-mode {
   flex-direction: column;
   overflow: hidden;
   animation: flyoutSlideUp 0.2s ease;
+  pointer-events: auto;
 }
 
 @keyframes flyoutSlideUp {
@@ -2022,6 +2034,40 @@ body.desktop-mode {
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   padding-left: 12px;
 }
+
+/* macOS-style window controls (traffic light) */
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 10px;
+}
+
+.window-controls button {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  color: transparent;
+  transition: color 0.15s ease, filter 0.15s ease;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+}
+.window-controls button i {
+  font-size: 0.45rem;
+  line-height: 1;
+}
+.window-controls button:hover { color: rgba(0,0,0,0.6); }
+.btn-close { background: #ff5f57; }
+.btn-min   { background: #febc2e; }
+.btn-max   { background: #28c840; }
+.light-mode .window-controls button { color: transparent; }
+.light-mode .window-controls button:hover { color: rgba(0,0,0,0.6); }
 
 .window-title {
   color: #fff;
@@ -2840,5 +2886,195 @@ body.desktop-mode {
 .light-mode .cal-empty {
   color: rgba(0, 0, 0, 0.15) !important;
 }
+
+/* ─────────────────────────────────────────────────────────
+   TOAST NOTIFICATION
+   ─────────────────────────────────────────────────────────── */
+.win-toast {
+  position: fixed;
+  bottom: 70px;
+  right: 16px;
+  z-index: 99999;
+  background: rgba(32, 32, 32, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  min-width: 280px;
+  max-width: 360px;
+  animation: toastSlideIn 0.3s ease;
+}
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.win-toast.d-none { display: none !important; }
+.toast-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+}
+.toast-icon {
+  font-size: 1.4rem;
+  color: var(--accent, #0078d4);
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.toast-body { flex: 1; }
+.toast-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.toast-msg {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.3;
+}
+.toast-close {
+  background: transparent;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
+.toast-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.light-mode .win-toast {
+  background: rgba(245, 245, 245, 0.95);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+.light-mode .toast-title { color: #1a1a1a; }
+.light-mode .toast-msg { color: #555; }
+.light-mode .toast-close:hover { background: rgba(0,0,0,0.08); color: #000; }
+
+/* ─────────────────────────────────────────────────────────
+   CALCULATOR
+   ─────────────────────────────────────────────────────────── */
+.calc-btn {
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.1s;
+  min-height: 40px;
+  font-family: inherit;
+}
+.calc-btn:active { transform: scale(0.95); }
+.calc-btn.num {
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+}
+.calc-btn.num:hover { background: rgba(255,255,255,0.15); }
+.calc-btn.op {
+  background: rgba(255,255,255,0.06);
+  color: #aaa;
+}
+.calc-btn.op:hover { background: rgba(255,255,255,0.12); }
+.calc-btn.eq {
+  background: var(--accent, #0078d4);
+  color: #fff;
+}
+.calc-btn.eq:hover { opacity: 0.85; }
+.light-mode .calc-btn.num { background: rgba(0,0,0,0.06); color: #1a1a1a; }
+.light-mode .calc-btn.num:hover { background: rgba(0,0,0,0.1); }
+.light-mode .calc-btn.op { background: rgba(0,0,0,0.04); color: #555; }
+.light-mode .calc-btn.op:hover { background: rgba(0,0,0,0.08); }
+
+/* ─────────────────────────────────────────────────────────
+   FLYOUT — Quick Calendar
+   ─────────────────────────────────────────────────────────── */
+.flyout-cal-content { text-align: center; }
+.flyout-cal-month {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.flyout-cal-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  font-size: 0.6rem;
+}
+.flyout-cal-days span {
+  padding: 3px 0;
+  color: rgba(255,255,255,0.5);
+  border-radius: 3px;
+}
+.flyout-cal-days .cal-today { background: var(--accent,#0078d4); color: #fff; font-weight:600; }
+.flyout-cal-days .cal-weekday { color: rgba(255,255,255,0.25); font-size:0.55rem; }
+.light-mode .flyout-cal-month { color: #1a1a1a; }
+.light-mode .flyout-cal-days span { color: rgba(0,0,0,0.5); }
+.light-mode .flyout-cal-days .cal-weekday { color: rgba(0,0,0,0.25); }
+
+/* ─────────────────────────────────────────────────────────
+   FLYOUT — UTM / UF Indicators
+   ─────────────────────────────────────────────────────────── */
+.flyout-ind-content { display: flex; flex-direction: column; gap: 4px; }
+.ind-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  padding: 3px 0;
+}
+.ind-label { color: rgba(255,255,255,0.5); }
+.ind-value { color: #fff; font-weight: 600; font-family: var(--font-mono); }
+.light-mode .ind-label { color: #888; }
+.light-mode .ind-value { color: #1a1a1a; }
+
+/* ─────────────────────────────────────────────────────────
+   FLYOUT — Timer
+   ─────────────────────────────────────────────────────────── */
+.flyout-timer-content { text-align: center; }
+.timer-display {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.timer-controls { display: flex; justify-content: center; gap: 8px; }
+.timer-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transition: background 0.2s;
+}
+.timer-btn:hover { background: rgba(255,255,255,0.18); }
+.light-mode .timer-display { color: #1a1a1a; }
+.light-mode .timer-btn { background: rgba(0,0,0,0.06); color: #333; }
+.light-mode .timer-btn:hover { background: rgba(0,0,0,0.12); }
+
+/* ─────────────────────────────────────────────────────────
+   MUSIC WINDOW — Light mode overrides
+   ─────────────────────────────────────────────────────────── */
+.light-mode #window-music .window-content {
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+}
+.light-mode .music-title { color: #1a1a1a; }
+.light-mode .music-artist { color: #666 !important; }
+.light-mode #window-music .music-btn { background: transparent; }
+.light-mode #window-music .music-btn-play { background: #0078d4 !important; }
+.light-mode .music-progress-bar { background: rgba(0,0,0,0.1) !important; }
 
 

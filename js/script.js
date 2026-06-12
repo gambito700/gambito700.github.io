@@ -381,7 +381,7 @@
     var d = document.getElementById("desktop");
     if (!d) return;
     var seed = Math.floor(Math.random() * 1000);
-    var url = "https://picsum.photos/seed/" + seed + "/1366/768";
+    var url = "https://picsum.photos/seed/" + seed + "/640/360";
     var img = new Image();
     img.onload = function () {
       d.style.backgroundImage = "url('" + url + "')";
@@ -472,11 +472,17 @@
           darkSlider.value = savedDark;
           setShadowVal("--ts-body-dark", savedDark);
           if (darkVal) darkVal.textContent = savedDark + "%";
+        } else if (darkSlider) {
+          setShadowVal("--ts-body-dark", darkSlider.value);
+          if (darkVal) darkVal.textContent = darkSlider.value + "%";
         }
         if (savedLight !== null && lightSlider) {
           lightSlider.value = savedLight;
           setShadowVal("--ts-body-light", savedLight);
           if (lightVal) lightVal.textContent = savedLight + "%";
+        } else if (lightSlider) {
+          setShadowVal("--ts-body-light", lightSlider.value);
+          if (lightVal) lightVal.textContent = lightSlider.value + "%";
         }
       } catch (e) { /* localStorage not available */ }
     }
@@ -520,7 +526,7 @@
     }
     try {
       var seed = Math.floor(Math.random() * 1000);
-      var url = "https://picsum.photos/seed/" + seed + "/1366/768";
+      var url = "https://picsum.photos/seed/" + seed + "/640/360";
       var img = new Image();
       img.onload = function () {
         d.style.backgroundImage = "url('" + url + "')";
@@ -547,10 +553,12 @@
   /* ============================================================
      B. DIGITAL CLOCK (Time + Date)
      ============================================================ */
+  var clockInterval = null;
   function initClock() {
     var timeEl = document.getElementById("clock-time"); // fixed: was #clockTime
     var dateEl = document.getElementById("clock-date"); // fixed: was #clockDate
     if (!timeEl) return;
+    if (clockInterval) { clearInterval(clockInterval); clockInterval = null; }
     function tick() {
       var n = new Date();
       timeEl.textContent =
@@ -563,7 +571,7 @@
     }
     tick();
     systemLog("[clock] Digital clock started");
-    setInterval(tick, 1000);
+    clockInterval = setInterval(tick, 1000);
   }
 
 
@@ -636,6 +644,7 @@
     applyLanguage(currentLang);
     initClock(); // Re-render clock for date format
     initCalendar(); // Re-render calendar for month names
+    initFlyoutCalendar(); // Update flyout calendar labels
   }
 
   function applyLanguage(lang) {
@@ -1096,6 +1105,221 @@
     systemLog("[flyout] Notification panel initialized");
   }
 
+  // ── Calculator ──────────────────────────────────────────────
+  function initCalculator() {
+    var display = document.getElementById("calc-display");
+    var sub = document.getElementById("calc-sub");
+    if (!display) return;
+    var cur = "0", op = null, prev = null, reset = false;
+    function updateDisplay() {
+      display.textContent = cur.length > 14 ? parseFloat(cur).toExponential(6) : cur;
+    }
+    document.querySelectorAll(".calc-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var v = btn.getAttribute("data-v");
+        if (btn.classList.contains("num")) {
+          if (reset || cur === "0") { cur = ""; reset = false; }
+          if (v === "." && cur.includes(".")) return;
+          cur += v;
+          updateDisplay();
+        } else if (v === "C") {
+          cur = "0"; op = null; prev = null; reset = false;
+          if (sub) sub.textContent = "";
+          updateDisplay();
+        } else if (v === "±") {
+          cur = String(parseFloat(cur) * -1);
+          updateDisplay();
+        } else if (v === "%") {
+          cur = String(parseFloat(cur) / 100);
+          updateDisplay();
+        } else if (v === "=") {
+          if (op && prev !== null) {
+            var a = parseFloat(prev), b = parseFloat(cur), r;
+            if (op === "+") r = a + b;
+            else if (op === "-") r = a - b;
+            else if (op === "×") r = a * b;
+            else if (op === "÷") r = b !== 0 ? a / b : "Error";
+            else if (op === "%") r = a % b;
+            if (sub) sub.textContent = prev + " " + op + " " + cur + " =";
+            cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
+            op = null; prev = null; reset = true;
+            updateDisplay();
+          }
+        } else if (["+","-","×","÷"].includes(v)) {
+          if (op && prev !== null && !reset) {
+            var a = parseFloat(prev), b = parseFloat(cur), r;
+            if (op === "+") r = a + b;
+            else if (op === "-") r = a - b;
+            else if (op === "×") r = a * b;
+            else if (op === "÷") r = b !== 0 ? a / b : "Error";
+            cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
+            updateDisplay();
+          }
+          prev = cur; op = v; reset = true;
+          if (sub) sub.textContent = prev + " " + op;
+        }
+        systemLog("[calc] " + v + " = " + cur);
+      });
+    });
+    systemLog("[calculator] Initialized");
+  }
+
+  // ── Toast Notification (60s delay) ──────────────────────────
+  var toastTimer = null;
+  function initToastNotification() {
+    var toast = document.getElementById("toast-notification");
+    var closeBtn = document.getElementById("toast-close-btn");
+    if (!toast) return;
+    toastTimer = setTimeout(function () {
+      toast.classList.remove("d-none");
+      systemLog("[toast] Notification shown after 60s");
+      setTimeout(function () {
+        toast.classList.add("d-none");
+      }, 20000);
+    }, 60000);
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        toast.classList.add("d-none");
+        if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+      });
+    }
+    systemLog("[toast] Notification scheduled in 60s");
+  }
+
+  // ── Flyout Quick Calendar ───────────────────────────────────
+  function initFlyoutCalendar() {
+    var monthEl = document.getElementById("flyout-cal-month");
+    var daysEl = document.getElementById("flyout-cal-days");
+    if (!monthEl || !daysEl) return;
+    var MONTHS_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+    var MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    var now = new Date();
+    var months = currentLang === "en" ? MONTHS_EN : MONTHS_ES;
+    monthEl.textContent = months[now.getMonth()] + " " + now.getFullYear();
+    var weekdayLabels = currentLang === "en" ? ["Su","Mo","Tu","We","Th","Fr","Sa"] : ["Do","Lu","Ma","Mi","Ju","Vi","Sa"];
+    var html = "";
+    weekdayLabels.forEach(function (l) { html += "<span class='cal-weekday'>" + l + "</span>"; });
+    var first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+    var days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+    for (var i = 0; i < first; i++) { html += "<span></span>"; }
+    for (var d = 1; d <= days; d++) {
+      var cls = (d === now.getDate()) ? "cal-today" : "";
+      html += "<span class='" + cls + "'>" + d + "</span>";
+    }
+    daysEl.innerHTML = html;
+    systemLog("[flyout-cal] Rendered");
+  }
+
+  // ── UTM / UF Fetch ──────────────────────────────────────────
+  function initIndicators() {
+    var utmEl = document.getElementById("ind-utm");
+    var ufEl = document.getElementById("ind-uf");
+    var dolarEl = document.getElementById("ind-dolar");
+    if (!utmEl) return;
+    fetch("https://gambito700.github.io/scraperUTM/api/indicators.json")
+      .then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        if (data.utm && utmEl) utmEl.textContent = "$" + Number(data.utm).toLocaleString("es-CL");
+        if (data.uf && ufEl) ufEl.textContent = "$" + Number(data.uf).toLocaleString("es-CL");
+        if (data.dolar && dolarEl) dolarEl.textContent = "$" + Number(data.dolar).toLocaleString("es-CL");
+        systemLog("[indicators] UTM/UF loaded");
+      })
+      .catch(function () {
+        if (utmEl) utmEl.textContent = "No disponible";
+        if (ufEl) ufEl.textContent = "No disponible";
+        if (dolarEl) dolarEl.textContent = "No disponible";
+        systemLog("[indicators] Fetch failed");
+      });
+  }
+
+  // ── Timer ───────────────────────────────────────────────────
+  var timerState = { running: false, seconds: 0, interval: null };
+  function initTimer() {
+    var display = document.getElementById("timer-display");
+    var startBtn = document.getElementById("timer-start");
+    var pauseBtn = document.getElementById("timer-pause");
+    var resetBtn = document.getElementById("timer-reset");
+    if (!display) return;
+    function formatTime(s) {
+      var h = Math.floor(s / 3600);
+      var m = Math.floor((s % 3600) / 60);
+      var sec = s % 60;
+      return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0") + ":" + String(sec).padStart(2,"0");
+    }
+    function updateDisplay() { display.textContent = formatTime(timerState.seconds); }
+    if (startBtn) {
+      startBtn.addEventListener("click", function () {
+        if (timerState.running) return;
+        timerState.running = true;
+        timerState.interval = setInterval(function () {
+          timerState.seconds++;
+          updateDisplay();
+        }, 1000);
+      });
+    }
+    if (pauseBtn) {
+      pauseBtn.addEventListener("click", function () {
+        timerState.running = false;
+        if (timerState.interval) { clearInterval(timerState.interval); timerState.interval = null; }
+      });
+    }
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        timerState.running = false;
+        if (timerState.interval) { clearInterval(timerState.interval); timerState.interval = null; }
+        timerState.seconds = 0;
+        updateDisplay();
+      });
+    }
+    systemLog("[timer] Initialized");
+  }
+
+  // ── Bind Music Player to both flyout AND window ────────────
+  function bindWindowMusicControls() {
+    var winPlay = document.getElementById("window-music-play");
+    var winPrev = document.getElementById("window-music-prev");
+    var winNext = document.getElementById("window-music-next");
+    var winProgress = document.getElementById("window-progress-bar");
+    var winVolume = document.getElementById("window-music-volume");
+
+    if (winPlay) {
+      winPlay.addEventListener("click", function () {
+        if (!ytPlayer || !ytPlayer.getPlayerState) return;
+        var state = ytPlayer.getPlayerState();
+        if (state === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
+        else ytPlayer.playVideo();
+      });
+    }
+    if (winPrev) {
+      winPrev.addEventListener("click", function () {
+        var prev = (ytCurrentTrack - 1 + ytPlaylist.length) % ytPlaylist.length;
+        loadYTTrack(prev, ytPlaying);
+      });
+    }
+    if (winNext) {
+      winNext.addEventListener("click", function () {
+        var next = (ytCurrentTrack + 1) % ytPlaylist.length;
+        loadYTTrack(next, ytPlaying);
+      });
+    }
+    if (winProgress) {
+      winProgress.addEventListener("click", function (e) {
+        if (!ytPlayer || !ytPlayer.getDuration) return;
+        var rect = winProgress.getBoundingClientRect();
+        var pct = (e.clientX - rect.left) / rect.width;
+        ytPlayer.seekTo(pct * ytPlayer.getDuration(), true);
+      });
+    }
+    if (winVolume) {
+      winVolume.addEventListener("input", function () {
+        if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(parseInt(this.value, 10));
+      });
+    }
+  }
+
   /* ============================================================
      J. DOMContentLoaded — Main Init
      ============================================================ */
@@ -1134,6 +1358,20 @@
 
     // Flyout toggle on clock click
     initFlyout();
+
+    // New features
+    initCalculator();
+    initToastNotification();
+    initFlyoutCalendar();
+    initIndicators();
+    initTimer();
+    bindWindowMusicControls();
+
+    // Auto-open music window on startup
+    setTimeout(function () {
+      openWindow("window-music");
+      systemLog("[startup] Music window auto-opened");
+    }, 800);
 
     reclampAllWindows();
     systemLog("OS Initialized successfully — Windows 11 Overhaul Mode");
