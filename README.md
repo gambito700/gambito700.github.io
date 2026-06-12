@@ -65,4 +65,4 @@ npx serve .
 
 ## Contacto
 
-**Alex Martínez** — [gambito700@gmail.com](mailto:gambito700@gmail.com) · Villarrica, Chile
+**Alex Martínez** — [alexmartinezdiaz91@gmail.com](mailto:alexmartinezdiaz91@gmail.com) · Villarrica, Chile
