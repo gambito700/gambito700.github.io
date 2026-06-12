@@ -47,7 +47,7 @@
   --surface-opaque: #f0f0f0;
   --border: rgba(0, 0, 0, 0.1);
   --text: #1a1a1a;
-  --muted: #555;
+  --muted: #444;
   --heading: #000;
   --accent: #00a7f2;
   --accent2: #00c8eb;
@@ -2782,9 +2782,9 @@ body.desktop-mode {
 }
 
 .light-mode .cal-nav-btn {
-  background: rgba(0, 0, 0, 0.06) !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  color: #333 !important;
+  background: rgba(0, 167, 242, 0.08) !important;
+  border-color: rgba(0, 167, 242, 0.2) !important;
+  color: #000 !important;
 }
 
 .light-mode .cal-nav-btn:hover {
@@ -2806,4 +2806,70 @@ body.desktop-mode {
 
 .light-mode .cal-empty {
   color: rgba(0, 0, 0, 0.15) !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TABLAS - ESTILOS COHERENTES
+   ═══════════════════════════════════════════════════════ */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+thead {
+  background: rgba(0, 120, 212, 0.15);
+}
+
+thead th {
+  color: var(--heading);
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  border-bottom: 2px solid var(--border);
+}
+
+tbody td {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.875rem;
+}
+
+tbody tr:hover {
+  background: rgba(0, 120, 212, 0.08);
+  transition: background var(--t-fast);
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Light Mode Tables */
+.light-mode table {
+  background: #fff;
+  border-color: #ddd;
+}
+
+.light-mode thead {
+  background: rgba(0, 167, 242, 0.1);
+}
+
+.light-mode thead th {
+  color: #000;
+  border-bottom-color: #ddd;
+}
+
+.light-mode tbody td {
+  color: #333;
+  border-bottom-color: #eee;
+}
+
+.light-mode tbody tr:hover {
+  background: rgba(0, 167, 242, 0.05);
 }
