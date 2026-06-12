@@ -28,7 +28,7 @@
   --glass: blur(30px);
   --radius: 8px;
   /* Windows 11 usa esquinas de 8px */
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
 
   /* Tipografías Fluent */
   --font-display: 'Segoe UI Variable Display', 'Segoe UI', 'Inter', sans-serif;
@@ -56,7 +56,7 @@
   --accent: #00a7f2;
   --accent2: #00c8eb;
   --accent-soft: rgba(0, 167, 242, 0.12);
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* Tema claro (opcional, pero ajustado a la nueva paleta) */
@@ -380,7 +380,7 @@ a:hover {
   background: rgba(32, 32, 32, 0.82);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   z-index: 10000;
-  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
@@ -500,7 +500,7 @@ a:hover {
   align-items: flex-end;
   font-family: var(--font-body);
   color: #fff;
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   cursor: pointer;
   padding: 2px 8px;
   border-radius: 6px;
@@ -514,6 +514,19 @@ a:hover {
 .tb-clock span {
   line-height: 1.3;
   white-space: nowrap;
+}
+
+.clock-dropdown-arrow {
+  font-size: 0.5rem;
+  margin-left: 4px;
+  opacity: 0.5;
+  transition: transform 0.2s;
+}
+.tb-clock:hover .clock-dropdown-arrow {
+  opacity: 0.9;
+}
+.tb-clock.active-dropdown .clock-dropdown-arrow {
+  transform: rotate(180deg);
 }
 
 /* -------------------------------------------------------
@@ -792,7 +805,7 @@ a:hover {
   height: 180px;
   object-fit: cover;
   border: 4px solid var(--surface);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
 }
 
 .btn-special {
@@ -915,7 +928,7 @@ section {
 
 .stat-label {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.12em;
   color: var(--muted);
   text-transform: uppercase;
@@ -1023,7 +1036,7 @@ section {
 
 .tl-date {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   color: var(--accent);
   white-space: nowrap;
@@ -1081,12 +1094,13 @@ section {
   border-radius: 2px;
 }
 
-/* Barra de progreso – JS asigna el width y lo ondula */
+/* Barra de progreso – JS asigna el width, animado con CSS transition */
 .skill-fill {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--accent), var(--accent2));
   position: relative;
+  transition: width 1.5s ease-out;
 }
 
 /* Destello que recorre la barra */
@@ -1127,7 +1141,7 @@ section {
 
 .tech-tag {
   font-family: var(--font-mono);
-  font-size: 0.63rem;
+  font-size: 0.75rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   border: 1px solid var(--border);
@@ -1466,13 +1480,6 @@ section {
   color: #000000 !important;
 }
 
-.light-mode .personal-table {
-  --bs-table-bg: #f5faff;
-}
-.light-mode .personal-table td {
-  background: var(--bs-table-bg);
-}
-
 .light-mode #window-experience .tl-content h4,
 .light-mode #window-experience .tl-content p,
 .light-mode #window-experience .tl-date {
@@ -1488,6 +1495,7 @@ section {
   padding: 0 4px;
   cursor: pointer;
   transition: opacity 0.2s;
+  opacity: 1;
 }
 
 .tb-tray-btn:hover {
@@ -1650,7 +1658,7 @@ body.desktop-mode {
   background: #1f1f1f;
   border: 1px solid #2a2a2a;
   border-radius: 12px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   z-index: 10;
@@ -1660,6 +1668,33 @@ body.desktop-mode {
 
 .win11-window.d-none {
   display: none !important;
+}
+
+/* Window open/close animations — more animated/flashy */
+.win11-window.win-opening {
+  animation: winOpen 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes winOpen {
+  0%   { opacity: 0; transform: scale(0.7) translateY(40px); }
+  60%  { opacity: 1; transform: scale(1.05) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.win11-window.win-closing {
+  animation: winClose 0.25s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+  pointer-events: none !important;
+}
+
+@keyframes winClose {
+  0%   { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.8) translateY(30px); }
+}
+
+/* Maximize/restore animation */
+.win11-window.maximized,
+.win11-window:not(.maximized) {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .win11-window.maximized {
@@ -1700,7 +1735,7 @@ body.desktop-mode {
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   z-index: 200;
   display: flex;
   flex-direction: column;
@@ -1717,7 +1752,7 @@ body.desktop-mode {
 .light-mode .notif-flyout {
   background: rgba(245, 245, 245, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 .flyout-header {
@@ -1770,45 +1805,65 @@ body.desktop-mode {
 }
 
 .flyout-widget {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: 10px;
   padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.2s;
+}
+.flyout-widget:hover {
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .light-mode .flyout-widget {
   background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+.light-mode .flyout-widget:hover {
+  border-color: rgba(0, 0, 0, 0.12);
 }
 
 .flyout-widget-title {
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #aaa;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 6px;
 }
-
-.light-mode .flyout-widget-title {
-  color: #666;
+.flyout-widget-title i {
+  color: var(--accent, #0078d4);
+  font-size: 0.7rem;
 }
 
-/* ── Weather inside flyout ── */
+.light-mode .flyout-widget-title {
+  color: rgba(0,0,0,0.35);
+}
+.light-mode .flyout-widget-title i {
+  color: #0078d4;
+}
+
+/* ── Weather inside flyout (Rainmeter style) ── */
 .flyout-weather-content {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
 .flyout-weather-main-icon {
-  font-size: 2.2rem;
+  font-size: 2.6rem;
   color: #60cdff;
+  filter: drop-shadow(0 2px 8px rgba(96, 205, 255, 0.3));
 }
 
 .light-mode .flyout-weather-main-icon {
   color: #0078d4;
+  filter: drop-shadow(0 2px 8px rgba(0, 120, 212, 0.2));
 }
 
 .flyout-weather-info {
@@ -1817,9 +1872,10 @@ body.desktop-mode {
 }
 
 .flyout-weather-temp {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
   color: #fff;
+  letter-spacing: -0.5px;
 }
 
 .light-mode .flyout-weather-temp {
@@ -1827,8 +1883,9 @@ body.desktop-mode {
 }
 
 .flyout-weather-desc {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
 }
 
 .light-mode .flyout-weather-desc {
@@ -1837,7 +1894,7 @@ body.desktop-mode {
 
 .flyout-weather-location {
   font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.35);
   margin-top: 2px;
 }
 
@@ -1974,52 +2031,7 @@ body.desktop-mode {
   display: flex !important;
 }
 
-/* ── Shadow intensity controls (inside Log Viewer) ── */
-.log-shadow-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  flex-wrap: wrap;
-}
-
-.log-shadow-label {
-  font-size: 0.7rem;
-  color: #aaa;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  white-space: nowrap;
-}
-
-.log-shadow-slider {
-  width: 80px;
-  height: 4px;
-  accent-color: var(--accent, #0078d4);
-  cursor: pointer;
-}
-
-.log-shadow-val {
-  font-size: 0.65rem;
-  color: #888;
-  min-width: 28px;
-  text-align: right;
-}
-
-.light-mode .log-shadow-controls {
-  background: rgba(255, 255, 255, 0.5);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.light-mode .log-shadow-label {
-  color: #555;
-}
-
-.light-mode .log-shadow-val {
-  color: #777;
-}
+/* Shadow intensity controls removed per user request */
 
 /* Window Header */
 .window-header {
@@ -2042,14 +2054,14 @@ body.desktop-mode {
 }
 
 .window-controls button {
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.5rem;
+  font-size: 0.52rem;
   color: transparent;
   transition: color 0.15s ease, filter 0.15s ease;
   flex-shrink: 0;
@@ -2057,7 +2069,7 @@ body.desktop-mode {
   line-height: 1;
 }
 .window-controls button i {
-  font-size: 0.45rem;
+  font-size: 0.47rem;
   line-height: 1;
 }
 .window-controls button:hover { color: rgba(0,0,0,0.6); }
@@ -2069,7 +2081,7 @@ body.desktop-mode {
 
 .window-title {
   color: #fff;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -2270,7 +2282,7 @@ body.desktop-mode {
   -webkit-backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -2357,7 +2369,7 @@ body.desktop-mode {
   border: none;
   background: transparent;
   color: var(--text);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   text-align: center;
   line-height: 1.2;
 }
@@ -2530,7 +2542,7 @@ body.desktop-mode {
 }
 
 .proj-card-tags .tech-tag {
-  font-size: 0.58rem;
+  font-size: 0.75rem;
 }
 
 /* -------------------------------------------------------
@@ -2667,7 +2679,7 @@ body.desktop-mode {
 
   /* Iconos: auto-fill manejado por width */
   .desktop-icons {
-    width: 210px;
+    width: 190px;
     gap: 8px;
   }
 
@@ -2684,7 +2696,7 @@ body.desktop-mode {
 
   /* Layout completo — comportamiento por defecto */
   .desktop-icons {
-    width: 210px;
+    width: 190px;
     gap: 8px;
   }
 
@@ -2874,7 +2886,7 @@ body.desktop-mode {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   min-width: 280px;
   max-width: 360px;
   animation: toastSlideIn 0.3s ease;
@@ -2967,63 +2979,85 @@ body.desktop-mode {
 .light-mode .calc-btn.op:hover { background: rgba(0,0,0,0.08); }
 
 /* ─────────────────────────────────────────────────────────
-   FLYOUT — Quick Calendar
+   FLYOUT — Quick Calendar (Rainmeter style)
    ─────────────────────────────────────────────────────────── */
 .flyout-cal-content { text-align: center; }
 .flyout-cal-month {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-size: 0.82rem;
+  font-weight: 700;
   color: #fff;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
 }
 .flyout-cal-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 2px;
-  font-size: 0.6rem;
+  font-size: 0.72rem;
 }
 .flyout-cal-days span {
-  padding: 3px 0;
+  padding: 4px 0;
   color: rgba(255,255,255,0.5);
-  border-radius: 3px;
+  border-radius: 4px;
+  transition: background 0.15s;
 }
-.flyout-cal-days .cal-today { background: var(--accent,#0078d4); color: #fff; font-weight:600; }
-.flyout-cal-days .cal-weekday { color: rgba(255,255,255,0.25); font-size:0.55rem; }
+.flyout-cal-days span:not(.cal-weekday):hover {
+  background: rgba(255,255,255,0.08);
+}
+.flyout-cal-days .cal-today {
+  background: var(--accent,#0078d4);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0,120,212,0.3);
+}
+.flyout-cal-days .cal-weekday {
+  color: rgba(255,255,255,0.3);
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 .light-mode .flyout-cal-month { color: #1a1a1a; }
 .light-mode .flyout-cal-days span { color: rgba(0,0,0,0.5); }
-.light-mode .flyout-cal-days .cal-weekday { color: rgba(0,0,0,0.25); }
+.light-mode .flyout-cal-days span:not(.cal-weekday):hover { background: rgba(0,0,0,0.04); }
+.light-mode .flyout-cal-days .cal-weekday { color: rgba(0,0,0,0.3); }
+.light-mode .flyout-cal-days .cal-today { box-shadow: 0 2px 8px rgba(0,120,212,0.2); }
 
 /* ─────────────────────────────────────────────────────────
-   FLYOUT — UTM / UF Indicators
+   FLYOUT — UTM / UF Indicators (Rainmeter style)
    ─────────────────────────────────────────────────────────── */
 .flyout-ind-content { display: flex; flex-direction: column; gap: 4px; }
 .ind-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.7rem;
-  padding: 3px 0;
+  font-size: 0.72rem;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
-.ind-label { color: rgba(255,255,255,0.5); }
-.ind-value { color: #fff; font-weight: 600; font-family: var(--font-mono); }
+.ind-row:last-child { border-bottom: none; }
+.ind-label { color: rgba(255,255,255,0.45); font-weight: 500; }
+.ind-value { color: #fff; font-weight: 700; font-family: var(--font-mono); }
 .light-mode .ind-label { color: #888; }
 .light-mode .ind-value { color: #1a1a1a; }
+.light-mode .ind-row { border-bottom-color: rgba(0,0,0,0.04); }
 
 /* ─────────────────────────────────────────────────────────
-   FLYOUT — Timer
+   FLYOUT — Timer (Rainmeter style)
    ─────────────────────────────────────────────────────────── */
 .flyout-timer-content { text-align: center; }
 .timer-display {
   font-family: var(--font-mono);
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 700;
   color: #fff;
-  letter-spacing: 2px;
-  margin-bottom: 6px;
+  letter-spacing: 3px;
+  margin-bottom: 8px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
-.timer-controls { display: flex; justify-content: center; gap: 8px; }
+.timer-controls { display: flex; justify-content: center; gap: 10px; }
 .timer-btn {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   border: none;
   background: rgba(255,255,255,0.08);
@@ -3032,11 +3066,20 @@ body.desktop-mode {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
-  transition: background 0.2s;
+  font-size: 0.72rem;
+  transition: background 0.2s, transform 0.15s;
 }
-.timer-btn:hover { background: rgba(255,255,255,0.18); }
-.light-mode .timer-display { color: #1a1a1a; }
+.timer-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
+}
+.timer-btn:active {
+  transform: scale(0.95);
+}
+.light-mode .timer-display {
+  color: #1a1a1a;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
 .light-mode .timer-btn { background: rgba(0,0,0,0.06); color: #333; }
 .light-mode .timer-btn:hover { background: rgba(0,0,0,0.12); }
 

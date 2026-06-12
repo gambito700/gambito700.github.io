@@ -3,21 +3,16 @@
  * PORTAFOLIO ALEX MARTÍNEZ – Front-End 2026
  * File: js/script.js
  *
- * REQUIRES (loaded before this in index.html):
- *   1. jquery-1.11.0.min.js
- *   2. plugins.js  (Swiper, AOS, Chocolat, Jarallax)
- *   3. bootstrap.bundle.min.js
- *
  * SECTIONS:
  *   A. OS Core (window manager, drag, theme, lang, wallpaper, log)
  *   B. Digital Clock
  *   C. Custom Cursor (canvas trail)
- *   D. Skill Bars + Wave Animation
+ *   D. Skill Bars
  *   E. Language Toggle ES/EN
- *   F. Swiper Sliders
- *   G. Text FX (letter by letter)
- *   H. Contact Form
- *   I. Calendar Widget
+ *   F. Text FX (letter by letter)
+ *   G. Contact Form
+ *   H. Calendar Widget
+ *   I. Weather Widget
  *   J. Init (DOMContentLoaded)
  * =====================================================================
  */
@@ -46,7 +41,7 @@
 
     /* Zona de iconos — ventanas no deben iniciar encima */
     var ICON_ZONE_W = window.innerWidth < 481 ? 90 :
-      window.innerWidth < 768 ? 100 : 210;
+      window.innerWidth < 768 ? 100 : 190;
 
     return {
       minX: 0,           /* borde izquierdo */
@@ -78,8 +73,16 @@
     var win = document.getElementById(id);
     if (!win) return;
 
-    win.classList.remove("d-none", "minimized");
+    win.classList.remove("d-none", "minimized", "win-closing");
+    // Trigger opening animation
+    win.classList.add("win-opening");
     bringToFront(win);
+
+    // Clean up animation class after it completes
+    clearTimeout(win._openTimer);
+    win._openTimer = setTimeout(function () {
+      win.classList.remove("win-opening");
+    }, 400);
 
     // Re-trigger lazy feature initializations when window becomes visible
     win.dispatchEvent(new CustomEvent("window-show"));
@@ -98,13 +101,20 @@
 
   window.closeWindow = function (id) {
     var win = document.getElementById(id);
-    if (win) {
+    if (win && !win.classList.contains("win-closing")) {
       // Ensure any transient state is cleared when closing
-      win.classList.remove("maximized", "minimized");
-      win.style.width = "";
-      win.style.height = "";
+      win.classList.remove("maximized", "minimized", "win-opening");
+      // DO NOT clear width/height — preserve window size on close/reopen
+      // win.style.width = "";
+      // win.style.height = "";
       try { delete win.dataset.prevRect; } catch (e) {}
-      win.classList.add("d-none");
+      // Play closing animation
+      win.classList.add("win-closing");
+      clearTimeout(win._closeTimer);
+      win._closeTimer = setTimeout(function () {
+        win.classList.remove("win-closing");
+        win.classList.add("d-none");
+      }, 220);
     }
     updateTaskbarIcon(id, false);
     saveOpenWindows();
@@ -256,21 +266,29 @@
       return { x: e.clientX, y: e.clientY };
     }
 
+    function getWinRect(win) {
+      if (win.classList.contains("d-none")) return { left: 240, top: 60 };
+      var r = win.getBoundingClientRect();
+      return { left: r.left, top: r.top };
+    }
+
     document.querySelectorAll(".window-header").forEach(function (header) {
       var win = header.closest(".win11-window");
 
       function startDrag(e) {
         if (e.target.closest("button")) return;
+        if (win.classList.contains("d-none") || win.classList.contains("minimized")) return;
         activeWin = win;
         isDragging = true;
         var pos = getPos(e);
         startX = pos.x;
         startY = pos.y;
-        initLeft = win.offsetLeft;
-        initTop = win.offsetTop;
+        var rect = getWinRect(win);
+        initLeft = rect.left;
+        initTop = rect.top;
         bringToFront(win);
+        e.stopPropagation();
         e.preventDefault();
-        systemLog("[drag] Started: " + win.id);
       }
 
       win.addEventListener("mousedown", function () { bringToFront(win); });
@@ -286,8 +304,12 @@
       var bounds = getDesktopBounds();
       var newLeft = initLeft + (pos.x - startX);
       var newTop = initTop + (pos.y - startY);
-      var maxLeft = Math.max(0, bounds.maxX - activeWin.offsetWidth);
-      var maxTop = Math.max(0, bounds.maxY - activeWin.offsetHeight);
+
+      // Recalculate bounds with current dimensions
+      var w = activeWin.offsetWidth;
+      var h = activeWin.offsetHeight;
+      var maxLeft = Math.max(0, bounds.maxX - w);
+      var maxTop = Math.max(0, bounds.maxY - h);
 
       activeWin.style.left = Math.max(bounds.minX, Math.min(newLeft, maxLeft)) + "px";
       activeWin.style.top = Math.max(bounds.minY, Math.min(newTop, maxTop)) + "px";
@@ -295,7 +317,7 @@
 
     function endDrag() {
       if (isDragging && activeWin) {
-        systemLog("Drag ended: " + activeWin.id);
+        systemLog("[drag] Ended: " + activeWin.id);
       }
       isDragging = false;
       activeWin = null;
@@ -305,8 +327,6 @@
     document.addEventListener("touchmove", moveDrag, { passive: false });
     document.addEventListener("mouseup", endDrag);
     document.addEventListener("touchend", endDrag);
-
-    systemLog("[drag] Drag system initialized with " + document.querySelectorAll(".window-header").length + " window headers");
   }
 
   // Reajustar ventanas al cambiar tamaño del navegador
@@ -371,7 +391,17 @@
     systemLog("[wallpaper] Using gradient fallback");
   }
 
+  function getWallpaperUrl(seed) {
+    // Use viewport dimensions for crisp wallpaper, capped at 1920x1080
+    var w = Math.min(window.innerWidth, 1920);
+    var h = Math.min(window.innerHeight, 1080);
+    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h;
+  }
+
   function loadWallpaperUrl(d, url, fallback) {
+    // Show loading placeholder
+    d.style.backgroundImage = "none";
+    d.style.backgroundColor = "#1a1a2e";
     var img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = function () {
@@ -390,7 +420,7 @@
     var d = document.getElementById("desktop");
     if (!d) return;
     var seed = Math.floor(Math.random() * 1000);
-    loadWallpaperUrl(d, "https://picsum.photos/seed/" + seed + "/640/360", function () {
+    loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
       setWallpaperFallback(d);
     });
   };
@@ -412,7 +442,7 @@
           revealed.classList.toggle("d-none");
         }
         var href = el.getAttribute("href");
-        if (href && !masked.classList.contains("d-none")) {
+        if (href && revealed && !revealed.classList.contains("d-none")) {
           window.open(href, "_blank");
         }
       });
@@ -431,10 +461,10 @@
       btn.title = isLight ? "Cambiar a modo oscuro" : "Cambiar a modo claro";
     }
 
-    // Default to Light Mode on every load
-    document.body.classList.add("light-mode");
-    document.documentElement.dataset.theme = "light";
-    updateThemeBtn(true);
+    // Default to Dark Mode on every load (no localStorage)
+    document.body.classList.remove("light-mode");
+    document.documentElement.dataset.theme = "dark";
+    updateThemeBtn(false);
 
     btn.addEventListener("click", function () {
       document.body.classList.toggle("light-mode");
@@ -451,62 +481,7 @@
     });
   }
 
-  // ── Shadow Intensity Sliders ────────────────────────────
-  function initShadowSliders() {
-    var darkSlider = document.getElementById("shadow-dark-slider");
-    var lightSlider = document.getElementById("shadow-light-slider");
-    var darkVal = document.getElementById("shadow-dark-val");
-    var lightVal = document.getElementById("shadow-light-val");
-
-    function setShadowVal(name, val) {
-      var alpha = val / 100;
-      var shadow = "0 1px 4px rgba(0, 0, 0, " + alpha.toFixed(2) + ")";
-      document.documentElement.style.setProperty(name, shadow);
-    }
-
-    function loadFromStorage() {
-      try {
-        var savedDark = localStorage.getItem("shadowDark");
-        var savedLight = localStorage.getItem("shadowLight");
-        if (savedDark !== null && darkSlider) {
-          darkSlider.value = savedDark;
-          setShadowVal("--ts-body-dark", savedDark);
-          if (darkVal) darkVal.textContent = savedDark + "%";
-        } else if (darkSlider) {
-          setShadowVal("--ts-body-dark", darkSlider.value);
-          if (darkVal) darkVal.textContent = darkSlider.value + "%";
-        }
-        if (savedLight !== null && lightSlider) {
-          lightSlider.value = savedLight;
-          setShadowVal("--ts-body-light", savedLight);
-          if (lightVal) lightVal.textContent = savedLight + "%";
-        } else if (lightSlider) {
-          setShadowVal("--ts-body-light", lightSlider.value);
-          if (lightVal) lightVal.textContent = lightSlider.value + "%";
-        }
-      } catch (e) { /* localStorage not available */ }
-    }
-
-    if (darkSlider) {
-      darkSlider.addEventListener("input", function () {
-        var v = this.value;
-        setShadowVal("--ts-body-dark", v);
-        if (darkVal) darkVal.textContent = v + "%";
-        try { localStorage.setItem("shadowDark", v); } catch (e) {}
-      });
-    }
-
-    if (lightSlider) {
-      lightSlider.addEventListener("input", function () {
-        var v = this.value;
-        setShadowVal("--ts-body-light", v);
-        if (lightVal) lightVal.textContent = v + "%";
-        try { localStorage.setItem("shadowLight", v); } catch (e) {}
-      });
-    }
-
-    loadFromStorage();
-  }
+  // ── Shadow Intensity Sliders — REMOVED per user request ──
 
   // ── Start Menu ──────────────────────────────────────────────
   function initMenuToggle() {
@@ -526,7 +501,7 @@
     }
     try {
       var seed = Math.floor(Math.random() * 1000);
-      loadWallpaperUrl(d, "https://picsum.photos/seed/" + seed + "/640/360", function () {
+      loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
         setWallpaperFallback(d);
       });
     } catch (e) { systemLog("[wallpaper] Error: " + e.message); setWallpaperFallback(d); }
@@ -599,28 +574,9 @@
   function animateBar(bar) {
     var base = parseInt(bar.getAttribute("data-value"), 10) || 50;
     var label = bar.closest(".skill-bar-item") && bar.closest(".skill-bar-item").querySelector(".skill-pct");
-    var start = null, dur = 1100;
-    function ease(t) { return 1 - Math.pow(1 - t, 4); }
-    function step(ts) {
-      if (!start) start = ts;
-      var p = Math.min((ts - start) / dur, 1), v = ease(p) * base;
-      bar.style.width = v.toFixed(1) + "%";
-      if (label) label.textContent = Math.round(v) + "%";
-      if (p < 1) requestAnimationFrame(step);
-      else startWave(bar, base, label);
-    }
-    setTimeout(function () { requestAnimationFrame(step); }, 100);
-  }
-
-  function startWave(bar, base, label) {
-    var cur = base, tgt = base, R = 3;
-    (function wave() {
-      cur += (tgt - cur) * 0.04;
-      bar.style.width = cur.toFixed(2) + "%";
-      if (label) label.textContent = Math.round(cur) + "%";
-      if (Math.abs(cur - tgt) < 0.25) tgt = Math.max(base - R, Math.min(base + R, base + Math.random() * R * 2 - R));
-      requestAnimationFrame(wave);
-    })();
+    // Animate from 0% to data-value once using CSS transition
+    bar.style.width = base + "%";
+    if (label) label.textContent = base + "%";
   }
 
 
@@ -651,43 +607,41 @@
     initClock(); // Re-render clock for date format
     initCalendar(); // Re-render calendar for month names
     initFlyoutCalendar(); // Update flyout calendar labels
+    initTextFx(); // Re-apply TextFX animations to translated text
   }
 
   function applyLanguage(lang) {
     document.querySelectorAll("[data-" + lang + "]").forEach(function (el) {
       var val = el.getAttribute("data-" + lang);
-      if (val !== null && el.tagName !== "INPUT" && el.tagName !== "TEXTAREA") {
-        el.textContent = val;
-      }
+      if (val === null) return;
+      var tag = el.tagName;
+      // Skip inputs, textareas, accordion buttons (Bootstrap managed), and select
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (el.classList.contains("accordion-button")) return;
+      if (el.classList.contains("txt-fx")) return;  // TextFX manages its own DOM
+      el.textContent = val;
     });
+    // Update placeholders
     document.querySelectorAll("[data-placeholder-" + lang + "]").forEach(function (el) {
       var ph = el.getAttribute("data-placeholder-" + lang);
       if (ph !== null) el.placeholder = ph;
+    });
+    // Update accordion button data attributes (they store the button text)
+    document.querySelectorAll("[data-" + lang + "].accordion-button").forEach(function (el) {
+      var val = el.getAttribute("data-" + lang);
+      if (val !== null) el.textContent = val;
+    });
+    // Update accordion body data attributes
+    document.querySelectorAll("[data-" + lang + "].accordion-body").forEach(function (el) {
+      var val = el.getAttribute("data-" + lang);
+      if (val !== null) el.textContent = val;
     });
     document.documentElement.setAttribute("lang", lang);
   }
 
 
   /* ============================================================
-     F. SWIPER SLIDERS
-     ============================================================ */
-  function initSliders() {
-    if (typeof Swiper === "undefined") return;
-    try {
-      if (document.querySelector(".swiper.hero-slider-bg")) {
-        new Swiper(".swiper.hero-slider-bg", {
-          slidesPerView: 1, speed: 1200, effect: "fade",
-          allowTouchMove: false,
-          autoplay: { delay: 6000, disableOnInteraction: false },
-          fadeEffect: { crossFade: true }
-        });
-      }
-    } catch (e) { systemLog("[swiper] Hero slider error: " + e.message); }
-  }
-
-
-  /* ============================================================
-     G. TEXT FX (letter-by-letter animation)
+     F. TEXT FX (letter-by-letter animation) [was G, Swiper removed]
      ============================================================ */
   function initTextFx() {
     var stagger = 14, delay = 150;
@@ -827,28 +781,16 @@
 
   /* ============================================================
      L. WEATHER API (Open-Meteo)
+     Simplificado: siempre muestra Villarrica, sin detección por IP
      ============================================================ */
-  async function getCity() {
-    try {
-      const controller = new AbortController();
-      const timeout = setTimeout(function () { controller.abort(); }, 3000);
-      const res = await fetch("https://ipapi.co/json/", { signal: controller.signal });
-      clearTimeout(timeout);
-      if (!res.ok) throw new Error("HTTP " + res.status);
-      const data = await res.json();
-      return data.city || "Villarrica";
-    } catch (e) {
-      systemLog("[weather] City detection failed: " + e.message);
-      return "Villarrica";
-    }
-  }
-
-  async function initWeather() {
+  function initWeather() {
     const tempEl = document.getElementById("flyout-weather-temp");
     const descEl = document.getElementById("flyout-weather-desc");
+    const locEl = document.getElementById("flyout-weather-location");
     if (!tempEl) return;
+    if (locEl) locEl.textContent = "Villarrica";
+    if (descEl) descEl.textContent = "Cargando...";
 
-    const city = await getCity();
     const controller = new AbortController();
     const timeout = setTimeout(function () { controller.abort(); }, 5000);
 
@@ -861,7 +803,7 @@
         clearTimeout(timeout);
         if (data && data.current_weather) {
           tempEl.textContent = Math.round(data.current_weather.temperature) + "°C";
-          if (descEl) descEl.textContent = city + ", CL";
+          if (descEl) descEl.textContent = "Villarrica";
         } else {
           throw new Error("Empty response");
         }
@@ -870,7 +812,7 @@
         clearTimeout(timeout);
         systemLog("[weather] Forecast failed: " + e.message);
         tempEl.textContent = "18°C";
-        if (descEl) descEl.textContent = "Villarrica, CL";
+        if (descEl) descEl.textContent = "Villarrica";
       });
   }
 
@@ -928,20 +870,24 @@
 
   function onYTStateChange(event) {
     var playIconImg = document.getElementById("flyout-music-play-icon");
+    var winPlayIconImg = document.getElementById("window-music-play-icon");
 
     if (event.data === YT.PlayerState.PLAYING) {
       ytPlaying = true;
       if (playIconImg) playIconImg.src = "images/icons/pause.png";
+      if (winPlayIconImg) winPlayIconImg.src = "images/icons/pause.png";
       startProgressLoop();
       systemLog("[music] Playing: " + ytPlaylist[ytCurrentTrack].name);
-    } else if (event.data === YT.PlayerState.PAUSED ||
-      event.data === YT.PlayerState.BUFFERING) {
+      window.showToast(ytPlaylist[ytCurrentTrack].name, ytPlaylist[ytCurrentTrack].artist);
+    } else if (event.data === YT.PlayerState.PAUSED) {
       ytPlaying = false;
       if (playIconImg) playIconImg.src = "images/icons/play.png";
-      if (event.data === YT.PlayerState.PAUSED) {
-        stopProgressLoop();
-        systemLog("[music] Paused");
-      }
+      if (winPlayIconImg) winPlayIconImg.src = "images/icons/play.png";
+      stopProgressLoop();
+      systemLog("[music] Paused");
+    } else if (event.data === YT.PlayerState.BUFFERING) {
+      if (playIconImg) playIconImg.src = "images/icons/pause.png";
+      if (winPlayIconImg) winPlayIconImg.src = "images/icons/pause.png";
     } else if (event.data === YT.PlayerState.ENDED) {
       ytCurrentTrack = (ytCurrentTrack + 1) % ytPlaylist.length;
       loadYTTrack(ytCurrentTrack, true);
@@ -977,21 +923,17 @@
     if (artistEl) artistEl.textContent = track.artist;
   }
 
-  function formatMusicTime(s) {
-    if (!s || isNaN(s) || s < 0) return "0:00";
-    var m = Math.floor(s / 60);
-    var sec = Math.floor(s % 60);
-    return m + ":" + (sec < 10 ? "0" : "") + sec;
-  }
-
   function startProgressLoop() {
     stopProgressLoop();
     ytProgressTimer = setInterval(function () {
       if (!ytPlayer || !ytPlayer.getCurrentTime) return;
       var cur = ytPlayer.getCurrentTime() || 0;
       var dur = ytPlayer.getDuration() || 0;
-      var fill = document.getElementById("flyout-progress-fill");
-      if (fill && dur > 0) fill.style.width = ((cur / dur) * 100) + "%";
+      var flyoutFill = document.getElementById("flyout-progress-fill");
+      var winFill = document.getElementById("window-progress-fill");
+      var pct = (dur > 0) ? ((cur / dur) * 100) + "%" : "0%";
+      if (flyoutFill) flyoutFill.style.width = pct;
+      if (winFill) winFill.style.width = pct;
     }, 500);
   }
 
@@ -1068,15 +1010,18 @@
   }
 
 
-  // ── Flyout Toggle ─────────────────────────────────────────────
-  window.toggleFlyout = function (e) {
+  // ── Flyout Toggle (Clock Dropdown) ────────────────────────────
+  window.toggleFlyout = function () {
     var flyout = document.getElementById("flyout-panel");
+    var clock = document.getElementById("taskbar-clock");
     if (!flyout) return;
     var isOpen = !flyout.classList.contains("d-none");
     if (isOpen) {
       flyout.classList.add("d-none");
+      if (clock) clock.classList.remove("active-dropdown");
     } else {
       flyout.classList.remove("d-none");
+      if (clock) clock.classList.add("active-dropdown");
       systemLog("[flyout] Panel opened");
     }
   };
@@ -1085,6 +1030,8 @@
     var flyout = document.getElementById("flyout-panel");
     var closeBtn = document.getElementById("flyout-close-btn");
     var clockArea = document.getElementById("taskbar-clock");
+
+    if (!flyout) return;
 
     if (clockArea) {
       clockArea.style.cursor = "pointer";
@@ -1103,99 +1050,120 @@
 
     document.addEventListener("click", function (e) {
       if (!flyout || flyout.classList.contains("d-none")) return;
-      if (e.target === clockArea || clockArea.contains(e.target)) return;
+      if (clockArea && (e.target === clockArea || clockArea.contains(e.target))) return;
       if (flyout.contains(e.target)) return;
       flyout.classList.add("d-none");
+      if (clockArea) clockArea.classList.remove("active-dropdown");
     });
 
-    systemLog("[flyout] Notification panel initialized");
+    systemLog("[flyout] Clock dropdown initialized");
   }
 
   // ── Calculator ──────────────────────────────────────────────
   function initCalculator() {
     var display = document.getElementById("calc-display");
     var sub = document.getElementById("calc-sub");
-    if (!display) return;
-    var cur = "0", op = null, prev = null, reset = false;
+    var grid = document.querySelector(".calc-grid");
+    if (!display || !grid) return;
+    var cur = "0", op = null, prev = null, reset = false, isError = false;
+
     function updateDisplay() {
       display.textContent = cur.length > 14 ? parseFloat(cur).toExponential(6) : cur;
     }
-    document.querySelectorAll(".calc-btn").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var v = btn.getAttribute("data-v");
-        if (btn.classList.contains("num")) {
-          if (reset || cur === "0") { cur = ""; reset = false; }
-          if (v === "." && cur.includes(".")) return;
-          cur += v;
-          updateDisplay();
-        } else if (v === "C") {
-          cur = "0"; op = null; prev = null; reset = false;
+
+    // Event delegation on grid container — robust against DOM timing
+    grid.addEventListener("click", function (e) {
+      var btn = e.target.closest(".calc-btn");
+      if (!btn) return;
+      var v = btn.getAttribute("data-v");
+
+      if (btn.classList.contains("num")) {
+        if (isError) {
+          cur = "0"; op = null; prev = null; reset = false; isError = false;
           if (sub) sub.textContent = "";
-          updateDisplay();
-        } else if (v === "±") {
-          cur = String(parseFloat(cur) * -1);
-          updateDisplay();
-        } else if (v === "%") {
-          cur = String(parseFloat(cur) / 100);
-          updateDisplay();
-        } else if (v === "=") {
-          if (op && prev !== null) {
-            var a = parseFloat(prev), b = parseFloat(cur), r;
-            if (op === "+") r = a + b;
-            else if (op === "-") r = a - b;
-            else if (op === "×") r = a * b;
-            else if (op === "÷") r = b !== 0 ? a / b : "Error";
-            else if (op === "%") r = a % b;
-            if (sub) sub.textContent = prev + " " + op + " " + cur + " =";
-            cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
-            op = null; prev = null; reset = true;
-            updateDisplay();
-          }
-        } else if (["+","-","×","÷"].includes(v)) {
-          if (op && prev !== null && !reset) {
-            var a = parseFloat(prev), b = parseFloat(cur), r;
-            if (op === "+") r = a + b;
-            else if (op === "-") r = a - b;
-            else if (op === "×") r = a * b;
-            else if (op === "÷") r = b !== 0 ? a / b : "Error";
-            cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
-            updateDisplay();
-          }
-          prev = cur; op = v; reset = true;
-          if (sub) sub.textContent = prev + " " + op;
         }
-        systemLog("[calc] " + v + " = " + cur);
-      });
+        if (reset || cur === "0") { cur = ""; reset = false; }
+        if (v === "." && cur.indexOf(".") !== -1) return;
+        cur += v;
+        updateDisplay();
+      } else if (v === "C") {
+        cur = "0"; op = null; prev = null; reset = false; isError = false;
+        if (sub) sub.textContent = "";
+        updateDisplay();
+      } else if (v === "\u00B1") {
+        if (isError) return;
+        cur = String(parseFloat(cur) * -1);
+        updateDisplay();
+      } else if (v === "%") {
+        if (isError) return;
+        cur = String(parseFloat(cur) / 100);
+        updateDisplay();
+      } else if (v === "=") {
+        if (isError) return;
+        if (op && prev !== null) {
+          var a = parseFloat(prev), b = parseFloat(cur), r;
+          if (op === "+") r = a + b;
+          else if (op === "-") r = a - b;
+          else if (op === "\u00D7") r = a * b;
+          else if (op === "\u00F7") r = b !== 0 ? a / b : "Error";
+          if (sub) sub.textContent = prev + " " + op + " " + cur + " =";
+          if (r === "Error" || r === Infinity || (typeof r === "number" && !isFinite(r))) {
+            cur = "Error"; isError = true; op = null; prev = null; reset = true;
+            display.textContent = "Error";
+            return;
+          }
+          cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
+          op = null; prev = null; reset = true;
+          updateDisplay();
+        }
+      } else if (["+","-","\u00D7","\u00F7"].indexOf(v) !== -1) {
+        if (isError) return;
+        if (op && prev !== null && !reset) {
+          var a = parseFloat(prev), b = parseFloat(cur), r;
+          if (op === "+") r = a + b;
+          else if (op === "-") r = a - b;
+          else if (op === "\u00D7") r = a * b;
+          else if (op === "\u00F7") r = b !== 0 ? a / b : "Error";
+          if (r === "Error" || r === Infinity || (typeof r === "number" && !isFinite(r))) {
+            cur = "Error"; isError = true; op = null; prev = null; reset = true;
+            display.textContent = "Error";
+            return;
+          }
+          cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
+          updateDisplay();
+        }
+        prev = cur; op = v; reset = true;
+        if (sub) sub.textContent = prev + " " + op;
+      }
+      systemLog("[calc] " + v + " = " + cur);
     });
-    systemLog("[calculator] Initialized");
+    systemLog("[calculator] Initialized (event delegation)");
   }
 
-  // ── Toast Notification (60s delay) ──────────────────────────
-  var toastTimer = null;
-  var toastAutoHideTimer = null;
-  function initToastNotification() {
+  // ── Toast Notification (manual trigger via music play) ────
+  var toastHideTimer = null;
+  window.showToast = function (title, msg) {
     var toast = document.getElementById("toast-notification");
-    var closeBtn = document.getElementById("toast-close-btn");
     if (!toast) return;
-    function cancelToastTimers() {
-      if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
-      if (toastAutoHideTimer) { clearTimeout(toastAutoHideTimer); toastAutoHideTimer = null; }
-    }
-    toastTimer = setTimeout(function () {
-      toast.classList.remove("d-none");
-      systemLog("[toast] Notification shown after 60s");
-      toastAutoHideTimer = setTimeout(function () {
-        toast.classList.add("d-none");
-        toastAutoHideTimer = null;
-      }, 20000);
-    }, 60000);
+    var titleEl = toast.querySelector(".toast-title");
+    var msgEl = toast.querySelector(".toast-msg");
+    if (titleEl && title) titleEl.textContent = title;
+    if (msgEl && msg) msgEl.textContent = msg;
+    toast.classList.remove("d-none");
+    if (toastHideTimer) { clearTimeout(toastHideTimer); toastHideTimer = null; }
+    toastHideTimer = setTimeout(function () {
+      toast.classList.add("d-none");
+    }, 4000);
+  };
+  function initToastDismiss() {
+    var closeBtn = document.getElementById("toast-close-btn");
     if (closeBtn) {
       closeBtn.addEventListener("click", function () {
-        toast.classList.add("d-none");
-        cancelToastTimers();
+        var toast = document.getElementById("toast-notification");
+        if (toast) toast.classList.add("d-none");
+        if (toastHideTimer) { clearTimeout(toastHideTimer); toastHideTimer = null; }
       });
     }
-    systemLog("[toast] Notification scheduled in 60s");
   }
 
   // ── Flyout Quick Calendar ───────────────────────────────────
@@ -1222,28 +1190,51 @@
     systemLog("[flyout-cal] Rendered");
   }
 
-  // ── UTM / UF Fetch ──────────────────────────────────────────
+  // ── UTM / UF / Dólar Fetch ───────────────────────────────────
   function initIndicators() {
     var utmEl = document.getElementById("ind-utm");
     var ufEl = document.getElementById("ind-uf");
     var dolarEl = document.getElementById("ind-dolar");
     if (!utmEl) return;
-    fetch("https://gambito700.github.io/scraperUTM/api/indicators.json")
-      .then(function (r) {
+    // Try to fetch from scraperUTM repo on GitHub Pages first,
+    // then fallback to local api/indicators.json
+    var urls = [
+      "scraperUTM/dashboard_data.json",
+      "api/indicators.json"
+    ];
+    function tryFetch(i) {
+      if (i >= urls.length) throw new Error("All URLs failed");
+      return fetch(urls[i]).then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
-      })
+      });
+    }
+    tryFetch(0).catch(function () { return tryFetch(1); })
       .then(function (data) {
-        if (data.utm && utmEl) utmEl.textContent = "$" + Number(data.utm).toLocaleString("es-CL");
-        if (data.uf && ufEl) ufEl.textContent = "$" + Number(data.uf).toLocaleString("es-CL");
-        if (data.dolar && dolarEl) dolarEl.textContent = "$" + Number(data.dolar).toLocaleString("es-CL");
+        var utm, uf, dolar;
+        if (data.previred) {
+          utm = data.previred.utm_mayo;
+          uf = data.previred.uf_mayo;
+        } else {
+          utm = data.utm;
+          uf = data.uf;
+        }
+        if (data.sii && data.sii.dolar_diario && data.sii.dolar_diario.length) {
+          var ultimo = data.sii.dolar_diario[data.sii.dolar_diario.length - 1];
+          dolar = ultimo.valor;
+        } else {
+          dolar = data.dolar;
+        }
+        if (utm && utmEl) utmEl.textContent = "$" + Number(utm).toLocaleString("es-CL");
+        if (uf && ufEl) ufEl.textContent = "$" + Number(uf).toLocaleString("es-CL");
+        if (dolar && dolarEl) dolarEl.textContent = "$" + Number(dolar).toLocaleString("es-CL");
         systemLog("[indicators] UTM/UF loaded");
       })
       .catch(function () {
         if (utmEl) utmEl.textContent = "No disponible";
         if (ufEl) ufEl.textContent = "No disponible";
         if (dolarEl) dolarEl.textContent = "No disponible";
-        systemLog("[indicators] Fetch failed");
+        systemLog("[indicators] Fetch failed, showing N/A");
       });
   }
 
@@ -1341,10 +1332,7 @@
     console.log("%c PORTAFOLIO ALEX MARTÍNEZ 2026 ", "background:#0078d4;color:#fff;font-weight:bold;font-size:13px;padding:6px 14px;");
     console.log("%c HTML5 · CSS3 · JavaScript · Villarrica, Chile", "color:#888;font-size:10px;");
 
-    // AOS animations
-    if (typeof AOS !== "undefined") {
-      AOS.init({ duration: 850, easing: "ease-out-quart", once: false, offset: 60 });
-    }
+    // AOS animations removed
 
     // OS Core
     initTheme();
@@ -1359,21 +1347,19 @@
     initClock();
     initSkillBars();
     initLangToggle();
-    initSliders();
     initTextFx();
     initContactForm();
     initCalendar();
     initWeather();
     initMusicPlayer();
     initObfuscatedContacts();
-    initShadowSliders();
 
     // Flyout toggle on clock click
     initFlyout();
 
     // New features
     initCalculator();
-    initToastNotification();
+    initToastDismiss();
     initFlyoutCalendar();
     initIndicators();
     initTimer();

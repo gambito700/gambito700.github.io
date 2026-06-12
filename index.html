@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="light" lang="es">
+<html data-theme="dark" lang="es">
 
 <head>
   <meta charset="utf-8" />
@@ -8,7 +8,7 @@
   <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
     name="description" />
   <!-- CSP (GitHub Pages no deja poner headers HTTP, usamos meta) -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://*.picsum.photos https://fastly.picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co https://formspree.io; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; upgrade-insecure-requests;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://*.picsum.photos https://fastly.picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co https://formspree.io https://gambito700.github.io; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; upgrade-insecure-requests;">
   <meta name="referrer" content="no-referrer-when-downgrade">
   <!-- Open Graph / Twitter Cards -->
   <meta property="og:title" content="Alex Martínez – Front-End Developer &amp; Digital Marketing">
@@ -20,8 +20,7 @@
   <meta name="twitter:description" content="Portafolio profesional – UI/UX · Marketing Digital · Villarrica, Chile">
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Alex Michel Martínez Díaz","jobTitle":"Front-End Developer & UI/UX","url":"https://gambito700.github.io/","address":{"@type":"PostalAddress","addressLocality":"Villarrica","addressRegion":"La Araucanía","addressCountry":"CL"},"knowsAbout":["HTML5","CSS3","JavaScript","WordPress","SEO","Growth Hacking"],"alumniOf":["AIEP","CFT Andrés Bello"]}</script>
-  <!-- Vendor CSS (Chocolat + AOS + Swiper + Jarallax) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+  <!-- AOS CSS removed -->
   <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <!-- Font Awesome 6 -->
@@ -83,31 +82,32 @@
      ================================================================ -->
   <div class="win11-taskbar">
     <div class="taskbar-inner">
-      <!-- LEFT: Spacer -->
+      <!-- LEFT: Spacer (Win11 style) -->
       <div class="tb-left"></div>
-      <!-- CENTER: Start Button + Dynamic App Icons -->
+      <!-- CENTER: Start Button + Dynamic App Icons (Win11 centered) -->
       <div class="tb-center">
         <button class="tb-btn tb-start" id="start-btn" title="Inicio" aria-label="Inicio">
           <i class="fab fa-windows"></i>
         </button>
         <div id="taskbar-icons" class="taskbar-apps"><!-- App icons added by JS --></div>
       </div>
-      <!-- RIGHT: System Tray + Clock -->
+      <!-- RIGHT: System Tray + Clock (Win11 aligned) -->
       <div class="tb-right">
-        <button class="tb-btn" id="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
-          <i class="fas fa-moon"></i>
-        </button>
-        <button class="tb-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma">EN</button>
         <div class="tb-system-tray">
-        <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo"><i class="fas fa-image"></i></button>
-        <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo"><i class="fas fa-window-restore"></i></button>
-        <i class="fas fa-wifi"></i>
-        <i class="fas fa-volume-up"></i>
-        <i class="fas fa-battery-three-quarters"></i>
-      </div>
+          <button class="tb-tray-btn" id="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button class="tb-tray-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma">EN</button>
+          <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo"><i class="fas fa-image"></i></button>
+          <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo"><i class="fas fa-window-restore"></i></button>
+          <i class="fas fa-wifi"></i>
+          <i class="fas fa-volume-up"></i>
+          <i class="fas fa-battery-three-quarters"></i>
+        </div>
         <div class="tb-clock" id="taskbar-clock">
           <span id="clock-time">--:--</span>
           <span id="clock-date">--/--/----</span>
+          <i class="fas fa-chevron-up clock-dropdown-arrow"></i>
         </div>
       </div>
     </div>
@@ -294,7 +294,7 @@
         </div>
         <div class="window-content">
           <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="about">
-            <div class="row align-items-center mb-5" data-aos="fade-up">
+            <div class="row align-items-center mb-5">
               <div class="col-lg-4 text-center text-lg-start mb-4 mb-lg-0">
                 <div class="avatar-container">
                   <div id="about-avatar"
@@ -315,7 +315,7 @@
                 </p>
               </div>
             </div>
-            <div class="row d-flex flex-wrap" data-aos="fade-up">
+            <div class="row d-flex flex-wrap">
               <!-- Formación -->
               <div class="col-lg-6 pb-5">
                 <span class="introduction mb-3 d-block" data-en="ACADEMIC PROFILE" data-es="PERFIL ACADÉMICO">PERFIL
@@ -403,7 +403,7 @@
         <div class="window-content">
           <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="experience">
             <div class="row mb-5">
-              <div class="col-lg-6" data-aos="fade-up">
+              <div class="col-lg-6">
                 <span class="introduction mb-3 d-block" data-en="PROFESSIONAL JOURNEY"
                   data-es="TRAYECTORIA PROFESIONAL">TRAYECTORIA PROFESIONAL</span>
                 <h2 class="name mb-4 txt-fx text-uppercase" data-en="Experience" data-es="Experiencia">Experiencia</h2>
@@ -414,7 +414,7 @@
             </div>
             <div class="row">
               <div class="col-lg-6">
-                <div class="info-element py-4" data-aos="fade-up">
+                <div class="info-element py-4">
                   <table class="table personal-table">
                     <tbody>
                       <tr>
@@ -452,8 +452,8 @@
                 </div>
               </div>
               <div class="col-lg-6">
-                <div class="experience-timeline py-4" data-aos="fade-up">
-                  <div class="timeline-item" data-aos="fade-left">
+                <div class="experience-timeline py-4">
+                  <div class="timeline-item">
                     <div class="tl-date">ACTUALIDAD</div>
                     <div class="tl-content">
                       <h4 data-en="Chatarra Cinema Club" data-es="Cine Club Chatarra">Cine Club Chatarra</h4>
@@ -462,35 +462,35 @@
                         Proyecto cultural. Gestión, promoción y difusión de obras cinematográficas independientes.</p>
                     </div>
                   </div>
-                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="100">
+                  <div class="timeline-item">
                     <span class="tl-date">2024</span>
                     <div class="tl-content">
                       <h4 data-en="Sales – Tricot" data-es="Vendedor – Tricot">Vendedor – Tricot</h4>
                       <p>Villarrica</p>
                     </div>
                   </div>
-                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="150">
+                  <div class="timeline-item">
                     <span class="tl-date">2023–24</span>
                     <div class="tl-content">
                       <h4 data-en="Property Security" data-es="Seguridad en Parcela">Seguridad en Parcela</h4>
                       <p>Neltume</p>
                     </div>
                   </div>
-                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="200">
+                  <div class="timeline-item">
                     <span class="tl-date">2023</span>
                     <div class="tl-content">
                       <h4 data-en="Waiter – Bigllarrica" data-es="Garzón – Bigllarrica">Garzón – Bigllarrica</h4>
                       <p>Villarrica</p>
                     </div>
                   </div>
-                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="250">
+                  <div class="timeline-item">
                     <span class="tl-date">2015–18</span>
                     <div class="tl-content">
                       <h4 data-en="Sales – Hiper Lider" data-es="Vendedor – Hiper Lider">Vendedor – Hiper Lider</h4>
                       <p>Santiago</p>
                     </div>
                   </div>
-                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="300">
+                  <div class="timeline-item">
                     <span class="tl-date">2011</span>
                     <div class="tl-content">
                       <h4 data-en="Security Guard – Hiper Lider 88" data-es="Guardia – Hiper Lider 88">Guardia – Hiper
@@ -499,7 +499,7 @@
                       </p>
                     </div>
                   </div>
-                  <div class="timeline-item" data-aos="fade-left" data-aos-delay="350">
+                  <div class="timeline-item">
                     <span class="tl-date">2010</span>
                     <div class="tl-content">
                       <h4 data-en="Croupier – Casino Enjoy Pucón" data-es="Crupier – Casino Enjoy Pucón">Crupier –
@@ -527,14 +527,14 @@
         <div class="window-content">
           <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="skills">
             <div class="row mb-5">
-              <div class="col-lg-6" data-aos="fade-up">
+              <div class="col-lg-6">
                 <span class="introduction mb-3 d-block" data-en="TECH STACK" data-es="STACK TECNOLÓGICO">STACK
                   TECNOLÓGICO</span>
                 <h2 class="name mb-4 txt-fx text-uppercase" data-en="Skills" data-es="Habilidades">Habilidades</h2>
               </div>
             </div>
             <div class="row">
-              <div class="col-lg-6" data-aos="fade-up">
+              <div class="col-lg-6">
                 <div class="skill-chart py-4">
                   <ul class="skill-chart-list list-unstyled">
                     <li class="skill-bar-item">
@@ -575,7 +575,7 @@
                   </ul>
                 </div>
               </div>
-              <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+              <div class="col-lg-6">
                 <div class="skill-chart py-4">
                   <ul class="skill-chart-list list-unstyled">
                     <li class="skill-bar-item">
@@ -622,7 +622,7 @@
                 </div>
               </div>
             </div>
-            <div class="tech-tags mt-4" data-aos="fade-up" data-aos-delay="300">
+            <div class="tech-tags mt-4">
               <span class="tech-tag">HTML5</span>
               <span class="tech-tag">CSS3</span>
               <span class="tech-tag">JavaScript</span>
@@ -651,7 +651,7 @@
         </div>
         <div class="window-content">
           <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="portfolio">
-            <div class="section-header my-4" data-aos="fade-up">
+            <div class="section-header my-4">
               <span class="introduction mb-3 d-block" data-en="RECENT PROJECTS" data-es="PROYECTOS RECIENTES">PROYECTOS
                 RECIENTES</span>
               <h2 class="name mb-2 txt-fx text-uppercase" data-en="Portfolio" data-es="Portafolio">Portafolio</h2>
@@ -660,7 +660,7 @@
                 web, marketing y desarrollo.</p>
             </div>
             <!-- Project cards -->
-            <div class="row g-4" data-aos="fade-up">
+            <div class="row g-4">
               <div class="col-md-6">
                 <a href="https://gambito700.github.io/" target="_blank" style="text-decoration:none;">
                   <div class="proj-card">
@@ -751,7 +751,7 @@
         <div class="window-content">
           <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="contact">
             <div class="row mb-5">
-              <div class="col-lg-6" data-aos="fade-up">
+              <div class="col-lg-6">
                 <span class="introduction mb-3 d-block" data-en="LET'S WORK TOGETHER"
                   data-es="TRABAJEMOS JUNTOS">TRABAJEMOS JUNTOS</span>
                 <h2 class="name mb-4 txt-fx text-uppercase" data-en="Contact" data-es="Contacto">Contacto</h2>
@@ -762,7 +762,7 @@
             </div>
             <div class="row d-flex g-5">
               <!-- FAQ Accordion -->
-              <div class="col-lg-7" data-aos="fade-up">
+              <div class="col-lg-7">
                 <h3 class="mb-4" data-en="Frequently Asked Questions" data-es="Preguntas Frecuentes">Preguntas
                   Frecuentes</h3>
                 <div class="accordion" id="faqAccordion">
@@ -810,7 +810,7 @@
               </div>
               <!-- Contact Form -->
               <div class="col-lg-5">
-                <div class="right-content" data-aos="fade-up">
+                <div class="right-content">
                   <div class="element-header mb-4">
                     <h3 data-en="Send me a direct message." data-es="Envíame un mensaje directo.">Envíame un mensaje
                       directo.</h3>
@@ -863,25 +863,25 @@
       <!-- ======================== FLYOUT PANEL (Notificaciones) ======================== -->
       <div id="flyout-panel" class="notif-flyout d-none">
         <div class="flyout-header">
-          <span>Notificaciones</span>
+          <span data-es="Notificaciones" data-en="Notifications">Notificaciones</span>
           <button class="flyout-close" id="flyout-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
         </div>
         <div class="flyout-body">
           <!-- Clima -->
           <div class="flyout-widget flyout-weather">
-            <div class="flyout-widget-title"><i class="fas fa-cloud-sun"></i> Clima</div>
+            <div class="flyout-widget-title"><i class="fas fa-cloud-sun"></i> <span data-es="Clima" data-en="Weather">Clima</span></div>
             <div class="flyout-weather-content">
               <i id="flyout-weather-icon" class="fas fa-cloud-sun flyout-weather-main-icon"></i>
               <div class="flyout-weather-info">
                 <span id="flyout-weather-temp" class="flyout-weather-temp">--°C</span>
                 <span id="flyout-weather-desc" class="flyout-weather-desc">Cargando...</span>
-                <span class="flyout-weather-location"><i class="fas fa-map-marker-alt"></i> Villarrica, CL</span>
+                <span class="flyout-weather-location" id="flyout-weather-location"><i class="fas fa-map-marker-alt"></i> Villarrica</span>
               </div>
             </div>
           </div>
           <!-- Calendario rápido -->
           <div class="flyout-widget flyout-quick-cal">
-            <div class="flyout-widget-title"><i class="fas fa-calendar-alt"></i> Calendario</div>
+            <div class="flyout-widget-title"><i class="fas fa-calendar-alt"></i> <span data-es="Calendario" data-en="Calendar">Calendario</span></div>
             <div class="flyout-cal-content">
               <div class="flyout-cal-month" id="flyout-cal-month"></div>
               <div class="flyout-cal-days" id="flyout-cal-days"></div>
@@ -889,7 +889,7 @@
           </div>
           <!-- UTM / UF -->
           <div class="flyout-widget flyout-indicators">
-            <div class="flyout-widget-title"><i class="fas fa-chart-line"></i> Indicadores</div>
+            <div class="flyout-widget-title"><i class="fas fa-chart-line"></i> <span data-es="Indicadores" data-en="Indicators">Indicadores</span></div>
             <div class="flyout-ind-content">
               <div class="ind-row"><span class="ind-label">UTM</span><span class="ind-value" id="ind-utm">--</span></div>
               <div class="ind-row"><span class="ind-label">UF</span><span class="ind-value" id="ind-uf">--</span></div>
@@ -898,7 +898,7 @@
           </div>
           <!-- Temporizador -->
           <div class="flyout-widget flyout-timer">
-            <div class="flyout-widget-title"><i class="fas fa-stopwatch"></i> Temporizador</div>
+            <div class="flyout-widget-title"><i class="fas fa-stopwatch"></i> <span data-es="Temporizador" data-en="Timer">Temporizador</span></div>
             <div class="flyout-timer-content">
               <div class="timer-display" id="timer-display">00:00:00</div>
               <div class="timer-controls">
@@ -929,7 +929,7 @@
               <button id="cal-next" class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
             <div class="cal-days-header">
-              <span>Dom</span><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span>
+              <span data-es="Dom" data-en="Sun">Dom</span><span data-es="Lun" data-en="Mon">Lun</span><span data-es="Mar" data-en="Tue">Mar</span><span data-es="Mié" data-en="Wed">Mié</span><span data-es="Jue" data-en="Thu">Jue</span><span data-es="Vie" data-en="Fri">Vie</span><span data-es="Sáb" data-en="Sat">Sáb</span>
             </div>
             <div id="cal-body" class="cal-body"></div>
           </div>
@@ -948,14 +948,7 @@
           </div>
         </div>
         <div class="window-content" style="display:flex; flex-direction:column; padding:0;">
-          <div class="log-shadow-controls">
-            <div class="log-shadow-label"><i class="fas fa-moon"></i> Sombra oscuro</div>
-            <input type="range" id="shadow-dark-slider" class="log-shadow-slider" min="0" max="100" value="70">
-            <span class="log-shadow-val" id="shadow-dark-val">70%</span>
-            <div class="log-shadow-label"><i class="fas fa-sun"></i> Sombra claro</div>
-            <input type="range" id="shadow-light-slider" class="log-shadow-slider" min="0" max="100" value="70">
-            <span class="log-shadow-val" id="shadow-light-val">70%</span>
-          </div>
+          <!-- Shadow sliders removed per user request -->
           <div id="log-output-area"
             style="flex:1; padding:10px; overflow-y:auto; background:#000; color:#00FF00; font-family:monospace; font-size:0.8rem;">
             <div>[SYSTEM INIT] - Virtual Log Viewer Initialized</div>
@@ -1053,26 +1046,19 @@
     <div class="toast-content">
       <div class="toast-icon"><i class="fas fa-headphones"></i></div>
       <div class="toast-body">
-        <div class="toast-title">Música disponible</div>
-        <div class="toast-msg">Hay música lista para reproducir en tu reproductor.</div>
+        <div class="toast-title" data-es="Música disponible" data-en="Music available">Música disponible</div>
+        <div class="toast-msg" data-es="Hay música lista para reproducir en tu reproductor." data-en="Music is ready to play in your player.">Hay música lista para reproducir en tu reproductor.</div>
       </div>
       <button class="toast-close" id="toast-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
     </div>
   </div>
 
   <!-- ================================================================
-     SCRIPTS (load order matters)
-     1. jQuery (required by plugins.js)
-     2. plugins.js (Swiper, AOS, Chocolat, Jarallax)
-     3. Bootstrap bundle (includes Popper)
-     4. script.js (portfolio logic)
-<!-- Scripts — orden importante -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
+     SCRIPTS
+     ================================================================ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="js/script.js" defer></script>
-  <!-- YouTube IFrame API: stub global antes de que la API cargue -->
-  <script>window.onYouTubeIframeAPIReady = window.onYouTubeIframeAPIReady || function(){};</script>
+  <!-- YouTube IFrame API: onYouTubeIframeAPIReady definido en script.js -->
   <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 
