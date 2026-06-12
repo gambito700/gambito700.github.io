@@ -458,9 +458,10 @@
     var darkVal = document.getElementById("shadow-dark-val");
     var lightVal = document.getElementById("shadow-light-val");
 
-    function setShadowVar(name, val) {
-      var normalized = val / 100;
-      document.documentElement.style.setProperty(name, normalized);
+    function setShadowVal(name, val) {
+      var alpha = val / 100;
+      var shadow = "0 1px 4px rgba(0, 0, 0, " + alpha.toFixed(2) + ")";
+      document.documentElement.style.setProperty(name, shadow);
     }
 
     function loadFromStorage() {
@@ -469,12 +470,12 @@
         var savedLight = localStorage.getItem("shadowLight");
         if (savedDark !== null && darkSlider) {
           darkSlider.value = savedDark;
-          setShadowVar("--shadow-dark", savedDark);
+          setShadowVal("--ts-body-dark", savedDark);
           if (darkVal) darkVal.textContent = savedDark + "%";
         }
         if (savedLight !== null && lightSlider) {
           lightSlider.value = savedLight;
-          setShadowVar("--shadow-light", savedLight);
+          setShadowVal("--ts-body-light", savedLight);
           if (lightVal) lightVal.textContent = savedLight + "%";
         }
       } catch (e) { /* localStorage not available */ }
@@ -483,7 +484,7 @@
     if (darkSlider) {
       darkSlider.addEventListener("input", function () {
         var v = this.value;
-        setShadowVar("--shadow-dark", v);
+        setShadowVal("--ts-body-dark", v);
         if (darkVal) darkVal.textContent = v + "%";
         try { localStorage.setItem("shadowDark", v); } catch (e) {}
       });
@@ -492,7 +493,7 @@
     if (lightSlider) {
       lightSlider.addEventListener("input", function () {
         var v = this.value;
-        setShadowVar("--shadow-light", v);
+        setShadowVal("--ts-body-light", v);
         if (lightVal) lightVal.textContent = v + "%";
         try { localStorage.setItem("shadowLight", v); } catch (e) {}
       });
@@ -828,8 +829,8 @@
   }
 
   async function initWeather() {
-    const tempEl = document.getElementById("weather-temp");
-    const descEl = document.getElementById("weather-desc");
+    const tempEl = document.getElementById("flyout-weather-temp");
+    const descEl = document.getElementById("flyout-weather-desc");
     if (!tempEl) return;
 
     const city = await getCity();
@@ -905,32 +906,28 @@
 
   function onYTReady(event) {
     updateMusicUI(ytCurrentTrack);
-    var vol = document.getElementById("music-volume");
+    var vol = document.getElementById("flyout-music-volume");
     if (vol) event.target.setVolume(parseInt(vol.value, 10));
     systemLog("[music] YouTube player listo");
   }
 
   function onYTStateChange(event) {
-    var playIconImg = document.getElementById("music-play-icon-img"); // Changed to img
-    var disc = document.getElementById("music-disc");
+    var playIconImg = document.getElementById("flyout-music-play-icon");
 
     if (event.data === YT.PlayerState.PLAYING) {
       ytPlaying = true;
-      if (playIconImg) playIconImg.src = "images/icons/pause.png"; // Use img src
-      if (disc) disc.style.animationPlayState = "running";
+      if (playIconImg) playIconImg.src = "images/icons/pause.png";
       startProgressLoop();
       systemLog("[music] Playing: " + ytPlaylist[ytCurrentTrack].name);
     } else if (event.data === YT.PlayerState.PAUSED ||
       event.data === YT.PlayerState.BUFFERING) {
       ytPlaying = false;
-      if (playIconImg) playIconImg.src = "images/icons/play.png"; // Use img src
-      if (disc) disc.style.animationPlayState = "paused";
+      if (playIconImg) playIconImg.src = "images/icons/play.png";
       if (event.data === YT.PlayerState.PAUSED) {
         stopProgressLoop();
         systemLog("[music] Paused");
       }
     } else if (event.data === YT.PlayerState.ENDED) {
-      // Auto-siguiente al terminar la canción
       ytCurrentTrack = (ytCurrentTrack + 1) % ytPlaylist.length;
       loadYTTrack(ytCurrentTrack, true);
     }
@@ -959,14 +956,10 @@
 
   function updateMusicUI(index) {
     var track = ytPlaylist[index];
-    var nameEl = document.getElementById("music-track-name");
-    var artistEl = document.getElementById("music-track-artist");
-    var artBg = document.getElementById("music-art-bg");
-    var colors = ["#1a1a2e", "#0f2027", "#16213e", "#1a1a2e", "#0d1b2a"];
+    var nameEl = document.getElementById("flyout-music-name");
+    var artistEl = document.getElementById("flyout-music-artist");
     if (nameEl) nameEl.textContent = track.name;
     if (artistEl) artistEl.textContent = track.artist;
-    if (artBg) artBg.style.background =
-      "linear-gradient(135deg, " + (colors[index % colors.length]) + ", #000)";
   }
 
   function formatMusicTime(s) {
@@ -982,12 +975,8 @@
       if (!ytPlayer || !ytPlayer.getCurrentTime) return;
       var cur = ytPlayer.getCurrentTime() || 0;
       var dur = ytPlayer.getDuration() || 0;
-      var fill = document.getElementById("music-progress-fill");
-      var curEl = document.getElementById("music-time-current");
-      var totEl = document.getElementById("music-time-total");
+      var fill = document.getElementById("flyout-progress-fill");
       if (fill && dur > 0) fill.style.width = ((cur / dur) * 100) + "%";
-      if (curEl) curEl.textContent = formatMusicTime(cur);
-      if (totEl) totEl.textContent = formatMusicTime(dur);
     }, 500);
   }
 
@@ -996,20 +985,16 @@
   }
 
   function resetProgress() {
-    var fill = document.getElementById("music-progress-fill");
-    var curEl = document.getElementById("music-time-current");
-    var totEl = document.getElementById("music-time-total");
+    var fill = document.getElementById("flyout-progress-fill");
     if (fill) fill.style.width = "0%";
-    if (curEl) curEl.textContent = "0:00";
-    if (totEl) totEl.textContent = "0:00";
   }
 
   function initMusicPlayer() {
-    var playBtn = document.getElementById("music-btn-play");
-    var prevBtn = document.getElementById("music-btn-prev");
-    var nextBtn = document.getElementById("music-btn-next");
-    var progressBar = document.getElementById("music-progress-bar");
-    var volumeSlider = document.getElementById("music-volume");
+    var playBtn = document.getElementById("flyout-music-play");
+    var prevBtn = document.getElementById("flyout-music-prev");
+    var nextBtn = document.getElementById("flyout-music-next");
+    var progressBar = document.getElementById("flyout-progress-bar");
+    var volumeSlider = document.getElementById("flyout-music-volume");
 
     // ── Play / Pause ─────────────────────────────────────────
     if (playBtn) {
@@ -1068,6 +1053,49 @@
   }
 
 
+  // ── Flyout Toggle ─────────────────────────────────────────────
+  window.toggleFlyout = function (e) {
+    var flyout = document.getElementById("flyout-panel");
+    if (!flyout) return;
+    var isOpen = !flyout.classList.contains("d-none");
+    if (isOpen) {
+      flyout.classList.add("d-none");
+    } else {
+      flyout.classList.remove("d-none");
+      systemLog("[flyout] Panel opened");
+    }
+  };
+
+  function initFlyout() {
+    var flyout = document.getElementById("flyout-panel");
+    var closeBtn = document.getElementById("flyout-close-btn");
+    var clockArea = document.getElementById("taskbar-clock");
+
+    if (clockArea) {
+      clockArea.style.cursor = "pointer";
+      clockArea.addEventListener("click", function (e) {
+        e.stopPropagation();
+        window.toggleFlyout();
+      });
+    }
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        window.toggleFlyout();
+      });
+    }
+
+    document.addEventListener("click", function (e) {
+      if (!flyout || flyout.classList.contains("d-none")) return;
+      if (e.target === clockArea || clockArea.contains(e.target)) return;
+      if (flyout.contains(e.target)) return;
+      flyout.classList.add("d-none");
+    });
+
+    systemLog("[flyout] Notification panel initialized");
+  }
+
   /* ============================================================
      J. DOMContentLoaded — Main Init
      ============================================================ */
@@ -1104,11 +1132,8 @@
     initObfuscatedContacts();
     initShadowSliders();
 
-    // Auto-open widgets
-    setTimeout(() => {
-      openWindow("window-weather");
-      openWindow("window-music");
-    }, 1000);
+    // Flyout toggle on clock click
+    initFlyout();
 
     reclampAllWindows();
     systemLog("OS Initialized successfully — Windows 11 Overhaul Mode");

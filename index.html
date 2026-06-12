@@ -61,8 +61,8 @@
       <div class="sm-grid-item" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Skills</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proy.</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contact</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-weather')"><img src="images/icons/weather.png"><span>Clima</span></div>
+      <div class="sm-grid-item" onclick="toggleFlyout()"><img src="images/icons/music.png"><span>Música</span></div>
+      <div class="sm-grid-item" onclick="toggleFlyout()"><img src="images/icons/weather.png"><span>Clima</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
     </div>
@@ -156,12 +156,12 @@
         <span data-en="Contact" data-es="Contacto">Contacto</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-music')">
+      <div class="desktop-icon" onclick="toggleFlyout()">
         <img alt="Música" class="desktop-png-icon" src="images/icons/music.png" />
         <span data-en="Music" data-es="Música">Música</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-weather')">
+      <div class="desktop-icon" onclick="toggleFlyout()">
         <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" />
         <span data-en="Weather" data-es="Clima">Clima</span>
       </div>
@@ -854,90 +854,62 @@
         </div>
       </div>
 
-      <div class="widgets">
-        <!-- ======================== MÚSICA (YouTube IFrame API) ======================== -->
-        <div class="win11-window win11-widget d-none" id="window-music">
-          <div class="window-header">
-            <div class="window-title"><i class="fas fa-headphones"></i> Music Player</div>
-            <div class="window-controls">
-              <button class="btn-min" onclick="minimizeWindow('window-music')"><i class="fas fa-minus"></i></button>
-              <button class="btn-close" onclick="closeWindow('window-music')"><i class="fas fa-times"></i></button>
+      <!-- ======================== FLYOUT PANEL (Notificaciones) ======================== -->
+      <div id="flyout-panel" class="notif-flyout d-none">
+        <div class="flyout-header">
+          <span>Notificaciones</span>
+          <button class="flyout-close" id="flyout-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="flyout-body">
+          <!-- Clima -->
+          <div class="flyout-widget flyout-weather">
+            <div class="flyout-widget-title"><i class="fas fa-cloud-sun"></i> Clima</div>
+            <div class="flyout-weather-content">
+              <i id="flyout-weather-icon" class="fas fa-cloud-sun flyout-weather-main-icon"></i>
+              <div class="flyout-weather-info">
+                <span id="flyout-weather-temp" class="flyout-weather-temp">--°C</span>
+                <span id="flyout-weather-desc" class="flyout-weather-desc">Cargando...</span>
+                <span class="flyout-weather-location"><i class="fas fa-map-marker-alt"></i> Villarrica, CL</span>
+              </div>
             </div>
           </div>
-          <div class="window-content music-player-body">
-            <!-- Portada / visualizador -->
-            <div class="music-album-art" id="music-art-bg">
-              <!-- Iframe oculto de YouTube — la API lo controla -->
-              <div id="yt-player-container"
-                style="display:none; position:absolute; width:1px; height:1px; overflow:hidden;">
-                <div id="yt-player"></div>
+          <!-- Música -->
+          <div class="flyout-widget flyout-music">
+            <div class="flyout-widget-title"><i class="fas fa-headphones"></i> Música</div>
+            <div class="flyout-music-content">
+              <div class="flyout-music-info">
+                <div class="flyout-music-track-name" id="flyout-music-name">lofi hip hop radio</div>
+                <div class="flyout-music-track-artist" id="flyout-music-artist">Lofi Girl · YouTube</div>
               </div>
-              <div class="music-disc-wrapper">
-                <div class="music-disc" id="music-disc">
-                  <i class="fas fa-compact-disc"></i>
+              <div class="flyout-music-progress">
+                <div class="flyout-progress-bar" id="flyout-progress-bar">
+                  <div class="flyout-progress-fill" id="flyout-progress-fill"></div>
                 </div>
               </div>
-              <!-- Badge "YT Audio" -->
-              <div class="music-yt-badge"><i class="fab fa-youtube"></i> YouTube Audio</div>
-            </div>
-            <!-- Info de la canción -->
-            <div class="music-track-info">
-              <div class="music-track-name" id="music-track-name">Cargando...</div>
-              <div class="music-track-artist" id="music-track-artist">YouTube · Sin derechos de autor</div>
-            </div>
-            <!-- Barra de progreso clicable -->
-            <div class="music-progress-bar" id="music-progress-bar">
-              <div class="music-progress-fill" id="music-progress-fill"></div>
-            </div>
-            <div class="music-time-row">
-              <span id="music-time-current">0:00</span>
-              <span id="music-time-total">0:00</span>
-            </div>
-            <!-- Controles -->
-            <div class="music-controls">
-              <button class="music-btn music-btn-sm" id="music-btn-prev" title="Anterior">
-                <img src="images/icons/skip-start.png" class="music-btn-icon" alt="Anterior">
-              </button>
-              <button class="music-btn music-btn-lg" id="music-btn-play" title="Reproducir / Pausar">
-                <img src="images/icons/play.png" class="music-btn-icon" id="music-play-icon-img" alt="Play">
-              </button>
-              <button class="music-btn music-btn-sm" id="music-btn-next" title="Siguiente">
-                <img src="images/icons/skip-end.png" class="music-btn-icon" alt="Siguiente">
-              </button>
-            </div>
-            <!-- Volumen -->
-            <div class="music-volume-row">
-              <i class="fas fa-volume-down music-vol-icon"></i>
-              <input type="range" id="music-volume" min="0" max="100" value="70" class="music-volume-slider">
-              <i class="fas fa-volume-up music-vol-icon"></i>
+              <div class="flyout-music-controls">
+                <button class="flyout-music-btn" id="flyout-music-prev" title="Anterior">
+                  <img src="images/icons/skip-start.png" class="flyout-music-btn-icon" alt="Anterior">
+                </button>
+                <button class="flyout-music-btn flyout-music-btn-play" id="flyout-music-play" title="Reproducir / Pausar">
+                  <img src="images/icons/play.png" class="flyout-music-btn-icon" id="flyout-music-play-icon" alt="Play">
+                </button>
+                <button class="flyout-music-btn" id="flyout-music-next" title="Siguiente">
+                  <img src="images/icons/skip-end.png" class="flyout-music-btn-icon" alt="Siguiente">
+                </button>
+              </div>
+              <div class="flyout-music-volume">
+                <i class="fas fa-volume-down"></i>
+                <input type="range" id="flyout-music-volume" min="0" max="100" value="70" class="flyout-volume-slider">
+                <i class="fas fa-volume-up"></i>
+              </div>
             </div>
           </div>
         </div>
-
-        <!-- ======================== CLIMA ======================== -->
-        <div class="win11-window win11-widget d-none" id="window-weather">
-          <div class="window-header">
-            <div class="window-title"><i class="fas fa-cloud-sun"></i> Clima</div>
-            <div class="window-controls">
-              <button class="btn-min" onclick="minimizeWindow('window-weather')"><i class="fas fa-minus"></i></button>
-              <button class="btn-close" onclick="closeWindow('window-weather')"><i class="fas fa-times"></i></button>
-            </div>
-          </div>
-          <div class="window-content weather-widget-body">
-            <div class="weather-widget-inner">
-              <i id="weather-icon" class="fas fa-cloud-sun weather-main-icon"></i>
-              <div class="weather-info">
-                <div class="weather-temp-row">
-                  <span id="weather-temp" class="weather-temp-big">--°C</span>
-                  <span id="weather-desc" class="weather-desc-text">Cargando...</span>
-                </div>
-                <span class="weather-location"><i class="fas fa-map-marker-alt"></i> <span
-                    id="weather-location">Detectando...</span></span>
-              </div>
-            </div>
+        <!-- YouTube player oculto (requerido por la API) -->
+        <div id="yt-player-container" style="display:none; position:absolute; width:1px; height:1px; overflow:hidden;">
+          <div id="yt-player"></div>
         </div>
       </div>
-      </div><!-- /.widgets -->
 
       <!-- ======================== CALENDARIO ======================== -->
       <div class="win11-window d-none" id="window-calendar">
@@ -1004,9 +976,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
-  <!-- YouTube IFrame API (antes de script.js) -->
-  <script src="https://www.youtube.com/iframe_api"></script>
   <script src="js/script.js" defer></script>
+  <!-- YouTube IFrame API (después de script.js para que onYouTubeIframeAPIReady exista) -->
+  <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 
 </html>
