@@ -60,8 +60,8 @@
   /* ── Clamp una ventana dentro de los límites ─────────── */
   function clampWindowToBounds(win) {
     var bounds = getDesktopBounds();
-    var left = parseInt(win.style.left) || 0;
-    var top = parseInt(win.style.top) || 0;
+    var left = win.offsetLeft || 0;
+    var top = win.offsetTop || 0;
     var maxLeft = Math.max(0, bounds.maxX - win.offsetWidth);
     var maxTop = Math.max(0, bounds.maxY - win.offsetHeight);
 
@@ -89,7 +89,8 @@
     if (sm) sm.classList.remove("show-sm");
 
     saveOpenWindows();
-    systemLog("Window opened: " + id);
+    var rect = win.getBoundingClientRect();
+    systemLog("Window opened: " + id + " at (" + Math.round(rect.left) + "," + Math.round(rect.top) + ") " + Math.round(rect.width) + "x" + Math.round(rect.height));
   };
 
   window.closeWindow = function (id) {
@@ -112,6 +113,7 @@
     var icon = document.querySelector(`.tb-app[data-win="${id}"]`);
     if (icon) icon.classList.remove("active-win");
     saveOpenWindows();
+    systemLog("Window minimized: " + id);
   };
 
   window.maximizeWindow = function (id) {
@@ -285,6 +287,7 @@
         initTop = win.offsetTop;
         bringToFront(win);
         e.preventDefault();
+        systemLog("[drag] Started: " + win.id);
       });
     });
 
@@ -302,14 +305,24 @@
     });
 
     document.addEventListener("mouseup", function () {
+      if (isDragging && activeWin) {
+        systemLog("Drag ended: " + activeWin.id + " at (" + activeWin.offsetLeft + "," + activeWin.offsetTop + ")");
+      }
       isDragging = false;
       activeWin = null;
     });
+
+    systemLog("[drag] Drag system initialized with " + document.querySelectorAll(".window-header").length + " window headers");
   }
 
   // Reajustar ventanas al cambiar tamaño del navegador
+  var resizeTimer;
   window.addEventListener("resize", function () {
     reclampAllWindows();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      systemLog("[resize] Viewport: " + window.innerWidth + "x" + window.innerHeight);
+    }, 500);
   });
 
   // ── Initial State & Auto-Open ────────────────────────────────
@@ -345,6 +358,10 @@
         var div = document.createElement("div");
         div.textContent = line;
         area.appendChild(div);
+        // FIFO: keep max 200 entries
+        while (area.children.length > 200) {
+          area.removeChild(area.firstChild);
+        }
         area.scrollTop = area.scrollHeight;
       }
     } catch (e) { }
@@ -434,6 +451,56 @@
     });
   }
 
+  // ── Shadow Intensity Sliders ────────────────────────────
+  function initShadowSliders() {
+    var darkSlider = document.getElementById("shadow-dark-slider");
+    var lightSlider = document.getElementById("shadow-light-slider");
+    var darkVal = document.getElementById("shadow-dark-val");
+    var lightVal = document.getElementById("shadow-light-val");
+
+    function setShadowVar(name, val) {
+      var normalized = val / 100;
+      document.documentElement.style.setProperty(name, normalized);
+    }
+
+    function loadFromStorage() {
+      try {
+        var savedDark = localStorage.getItem("shadowDark");
+        var savedLight = localStorage.getItem("shadowLight");
+        if (savedDark !== null && darkSlider) {
+          darkSlider.value = savedDark;
+          setShadowVar("--shadow-dark", savedDark);
+          if (darkVal) darkVal.textContent = savedDark + "%";
+        }
+        if (savedLight !== null && lightSlider) {
+          lightSlider.value = savedLight;
+          setShadowVar("--shadow-light", savedLight);
+          if (lightVal) lightVal.textContent = savedLight + "%";
+        }
+      } catch (e) { /* localStorage not available */ }
+    }
+
+    if (darkSlider) {
+      darkSlider.addEventListener("input", function () {
+        var v = this.value;
+        setShadowVar("--shadow-dark", v);
+        if (darkVal) darkVal.textContent = v + "%";
+        try { localStorage.setItem("shadowDark", v); } catch (e) {}
+      });
+    }
+
+    if (lightSlider) {
+      lightSlider.addEventListener("input", function () {
+        var v = this.value;
+        setShadowVar("--shadow-light", v);
+        if (lightVal) lightVal.textContent = v + "%";
+        try { localStorage.setItem("shadowLight", v); } catch (e) {}
+      });
+    }
+
+    loadFromStorage();
+  }
+
   // ── Start Menu ──────────────────────────────────────────────
   function initMenuToggle() {
     initStartMenu();
@@ -494,6 +561,7 @@
       }
     }
     tick();
+    systemLog("[clock] Digital clock started");
     setInterval(tick, 1000);
   }
 
@@ -733,10 +801,11 @@
       }
     }
 
-    if (prevBtn) prevBtn.addEventListener("click", function () { month--; if (month < 0) { month = 11; year--; } render(); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { month++; if (month > 11) { month = 0; year++; } render(); });
+    if (prevBtn) prevBtn.addEventListener("click", function () { month--; if (month < 0) { month = 11; year--; } render(); systemLog("[calendar] Navigated to " + months[month] + " " + year); });
+    if (nextBtn) nextBtn.addEventListener("click", function () { month++; if (month > 11) { month = 0; year++; } render(); systemLog("[calendar] Navigated to " + months[month] + " " + year); });
 
     render();
+    systemLog("[calendar] Rendered: " + months[month] + " " + year);
   }
 
 
@@ -1033,6 +1102,7 @@
     initWeather();
     initMusicPlayer();
     initObfuscatedContacts();
+    initShadowSliders();
 
     // Auto-open widgets
     setTimeout(() => {

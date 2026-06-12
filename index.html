@@ -937,6 +937,7 @@
             </div>
         </div>
       </div>
+      </div><!-- /.widgets -->
 
       <!-- ======================== CALENDARIO ======================== -->
       <div class="win11-window d-none" id="window-calendar">
@@ -974,9 +975,19 @@
             <button class="btn-close" onclick="closeWindow('window-logs')"><i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="window-content" id="log-output-area"
-          style="padding:10px; overflow-y:auto; background:#000; color:#00FF00; font-family:monospace; font-size:0.8rem;">
-          <div>[SYSTEM INIT] - Virtual Log Viewer Initialized</div>
+        <div class="window-content" style="display:flex; flex-direction:column; padding:0;">
+          <div class="log-shadow-controls">
+            <div class="log-shadow-label"><i class="fas fa-moon"></i> Sombra oscuro</div>
+            <input type="range" id="shadow-dark-slider" class="log-shadow-slider" min="0" max="100" value="70">
+            <span class="log-shadow-val" id="shadow-dark-val">70%</span>
+            <div class="log-shadow-label"><i class="fas fa-sun"></i> Sombra claro</div>
+            <input type="range" id="shadow-light-slider" class="log-shadow-slider" min="0" max="100" value="70">
+            <span class="log-shadow-val" id="shadow-light-val">70%</span>
+          </div>
+          <div id="log-output-area"
+            style="flex:1; padding:10px; overflow-y:auto; background:#000; color:#00FF00; font-family:monospace; font-size:0.8rem;">
+            <div>[SYSTEM INIT] - Virtual Log Viewer Initialized</div>
+          </div>
         </div>
       </div>
 
