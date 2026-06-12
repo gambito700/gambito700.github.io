@@ -42,7 +42,7 @@
   <!-- Preload dynamic wallpaper removed (file missing) -->
 </head>
 
-<body class="desktop-mode" data-bs-theme="dark">
+<body class="desktop-mode">
 
   <!-- ================================================================
      START MENU (WINDOWS 11 STYLE)
@@ -65,7 +65,7 @@
       <div class="sm-grid-item" onclick="toggleFlyout()"><img src="images/icons/weather.png"><span>Clima</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
-
+      <div class="sm-grid-item" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
     </div>
   </div>
   <div class="sm-footer">
@@ -127,66 +127,66 @@
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-about')">
-        <img alt="Sobre Mí" class="desktop-png-icon" src="images/icons/about.png" />
+        <img alt="Sobre Mí" class="desktop-png-icon" src="images/icons/about.png" loading="lazy" />
         <span data-en="About" data-es="Sobre Mí">Sobre Mí</span>
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-experience')">
-        <img alt="Experiencia" class="desktop-png-icon" src="images/icons/experience.png" />
+        <img alt="Experiencia" class="desktop-png-icon" src="images/icons/experience.png" loading="lazy" />
         <span data-en="Experience" data-es="Experiencia">Experiencia</span>
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-skills')">
-        <img alt="Habilidades" class="desktop-png-icon" src="images/icons/skills.png" />
+        <img alt="Habilidades" class="desktop-png-icon" src="images/icons/skills.png" loading="lazy" />
         <span data-en="Skills" data-es="Habilidades">Habilidades</span>
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-portfolio')">
-        <img alt="Proyectos" class="desktop-png-icon" src="images/icons/portfolio.png" />
+        <img alt="Proyectos" class="desktop-png-icon" src="images/icons/portfolio.png" loading="lazy" />
         <span data-en="Projects" data-es="Proyectos">Proyectos</span>
       </div>
 
       <!-- DuckDuckGo — abre nueva pestaña con búsqueda -->
       <a class="desktop-icon" href="https://duckduckgo.com" target="_blank" style="text-decoration:none;">
-        <img alt="DuckDuckGo" class="desktop-png-icon" src="images/icons/duckduckgo.png"/>
+        <img alt="DuckDuckGo" class="desktop-png-icon" src="images/icons/duckduckgo.png" loading="lazy"/>
         <span>DuckDuckGo</span>
       </a>
 
       <div class="desktop-icon" onclick="openWindow('window-contact')">
-        <img alt="Contacto" class="desktop-png-icon" src="images/icons/contact.png" />
+        <img alt="Contacto" class="desktop-png-icon" src="images/icons/contact.png" loading="lazy" />
         <span data-en="Contact" data-es="Contacto">Contacto</span>
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-music')">
-        <img alt="Música" class="desktop-png-icon" src="images/icons/music.png" />
+        <img alt="Música" class="desktop-png-icon" src="images/icons/music.png" loading="lazy" />
         <span data-en="Music" data-es="Música">Música</span>
       </div>
 
       <div class="desktop-icon" onclick="toggleFlyout()">
-        <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" />
+        <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" loading="lazy" />
         <span data-en="Weather" data-es="Clima">Clima</span>
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-calendar')">
-        <img alt="Calendario" class="desktop-png-icon" src="images/icons/calendar.png">
+        <img alt="Calendario" class="desktop-png-icon" src="images/icons/calendar.png" loading="lazy">
         <span data-en="Calendar" data-es="Calendario">Calendar</span>
       </div>
 
       <a class="desktop-icon" href="https://gambito700.github.io/scraperUTM/" target="_blank"
          style="text-decoration:none;">
-        <img alt="Indicadores" class="desktop-png-icon" src="images/icons/scraper.png">
+        <img alt="Indicadores" class="desktop-png-icon" src="images/icons/scraper.png" loading="lazy">
         <span>Indicadores</span>
       </a>
 
-      <a class="desktop-icon" href="https://www.instagram.com/cine_chatarra/" target="_blank"
+      <a class="desktop-icon" href="https://www.instagram.com/cine_chatarra/" target="_blank" rel="noopener noreferrer"
          style="text-decoration:none;">
-        <img alt="Cine Chatarra" class="desktop-png-icon" src="images/icons/instagram.png">
+        <img alt="Cine Chatarra" class="desktop-png-icon" src="images/icons/instagram.png" loading="lazy">
         <span>Cine Chatarra</span>
       </a>
 
       <a class="desktop-icon" href="https://wa.me/56945341572?text=Hola%20Alex" style="text-decoration:none;"
         target="_blank">
-        <img alt="WhatsApp" class="desktop-png-icon" src="images/icons/whatsapp.png">
+        <img alt="WhatsApp" class="desktop-png-icon" src="images/icons/whatsapp.png" loading="lazy">
         <span>WhatsApp</span>
       </a>
 
@@ -196,7 +196,7 @@
       </div>
 
       <div class="desktop-icon" onclick="openWindow('window-logs')">
-        <img alt="Log Viewer" class="desktop-png-icon" src="images/icons/logviewer.png" />
+        <img alt="Log Viewer" class="desktop-png-icon" src="images/icons/logviewer.png" loading="lazy" />
         <span data-en="Logs" data-es="Registros">System Logs</span>
       </div>
 
@@ -676,7 +676,7 @@
                 </a>
               </div>
               <div class="col-md-6">
-                <a href="https://www.instagram.com/cine_chatarra/" target="_blank" style="text-decoration:none;">
+                <a href="https://www.instagram.com/cine_chatarra/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
                   <div class="proj-card">
                     <div class="proj-card-icon"><i class="fas fa-film"></i></div>
                     <h5 class="proj-card-title" data-en="Cine Club Chatarra" data-es="Cine Club Chatarra">Cine Club
@@ -917,7 +917,7 @@
           <div class="window-title"><i class="fas fa-calendar-alt"></i> Calendario</div>
           <div class="window-controls">
             <button class="btn-min" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-calendar')"><i class="fas fa-square"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-calendar')"><i class="far fa-square"></i></button>
             <button class="btn-close" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
           </div>
         </div>
@@ -1071,7 +1071,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="js/script.js" defer></script>
-  <!-- YouTube IFrame API (después de script.js para que onYouTubeIframeAPIReady exista) -->
+  <!-- YouTube IFrame API: stub global antes de que la API cargue -->
+  <script>window.onYouTubeIframeAPIReady = window.onYouTubeIframeAPIReady || function(){};</script>
   <script src="https://www.youtube.com/iframe_api"></script>
 </body>
 

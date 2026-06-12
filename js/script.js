@@ -81,6 +81,9 @@
     win.classList.remove("d-none", "minimized");
     bringToFront(win);
 
+    // Re-trigger lazy feature initializations when window becomes visible
+    win.dispatchEvent(new CustomEvent("window-show"));
+
     // Update Taskbar Icon
     updateTaskbarIcon(id, true);
 
@@ -234,83 +237,74 @@
       }
     }
 
-    if (navigator.getBattery) {
-      navigator.getBattery().then(function (battery) {
-        function updateBattery() {
-          var img = document.getElementById("tray-battery-icon");
-          if (!img) return;
-          if (battery.charging) {
-            img.src = "images/icons/battery-charging.png";
-            img.title = "Cargando — " + Math.round(battery.level * 100) + "%";
-          } else {
-            img.src = "images/icons/battery-full.png";
-            img.title = Math.round(battery.level * 100) + "%";
-          }
-        }
-        battery.addEventListener("chargingchange", updateBattery);
-        battery.addEventListener("levelchange", updateBattery);
-        updateBattery();
-      }).catch(function () {
-        systemLog("[battery] API not available");
-      });
-    } else {
-      var img = document.getElementById("tray-battery-icon");
-      if (img) {
-        img.src = "images/icons/battery-full.png";
-        img.title = "Batería";
-      }
+    // Battery Status API deprecated — usamos icono estatico
+    var img = document.getElementById("tray-battery-icon");
+    if (img) {
+      img.src = "images/icons/battery-full.png";
+      img.title = "Batería";
     }
   }
 
-  // ── Drag & Drop con límites de escritorio ───────────────────
-  // ── Drag & Drop (Global Listener Pattern) ─────────────────
+  // ── Drag & Drop con límites de escritorio (mouse + touch) ──
   function initDrag() {
     var activeWin = null;
     var isDragging = false;
     var startX, startY, initLeft, initTop;
 
+    function getPos(e) {
+      if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      return { x: e.clientX, y: e.clientY };
+    }
+
     document.querySelectorAll(".window-header").forEach(function (header) {
       var win = header.closest(".win11-window");
 
-      // Click anywhere on window → bring to front
-      win.addEventListener("mousedown", function () {
-        bringToFront(win);
-      });
-
-      header.addEventListener("mousedown", function (e) {
+      function startDrag(e) {
         if (e.target.closest("button")) return;
         activeWin = win;
         isDragging = true;
-        startX = e.clientX;
-        startY = e.clientY;
+        var pos = getPos(e);
+        startX = pos.x;
+        startY = pos.y;
         initLeft = win.offsetLeft;
         initTop = win.offsetTop;
         bringToFront(win);
         e.preventDefault();
         systemLog("[drag] Started: " + win.id);
-      });
+      }
+
+      win.addEventListener("mousedown", function () { bringToFront(win); });
+      win.addEventListener("touchstart", function () { bringToFront(win); }, { passive: true });
+
+      header.addEventListener("mousedown", startDrag);
+      header.addEventListener("touchstart", startDrag, { passive: false });
     });
 
-    document.addEventListener("mousemove", function (e) {
+    function moveDrag(e) {
       if (!isDragging || !activeWin) return;
-
+      var pos = getPos(e);
       var bounds = getDesktopBounds();
-      var newLeft = initLeft + (e.clientX - startX);
-      var newTop = initTop + (e.clientY - startY);
+      var newLeft = initLeft + (pos.x - startX);
+      var newTop = initTop + (pos.y - startY);
       var maxLeft = Math.max(0, bounds.maxX - activeWin.offsetWidth);
       var maxTop = Math.max(0, bounds.maxY - activeWin.offsetHeight);
 
       activeWin.style.left = Math.max(bounds.minX, Math.min(newLeft, maxLeft)) + "px";
       activeWin.style.top = Math.max(bounds.minY, Math.min(newTop, maxTop)) + "px";
-    });
+    }
 
-    document.addEventListener("mouseup", function () {
+    function endDrag() {
       if (isDragging && activeWin) {
-        systemLog("Drag ended: " + activeWin.id + " at (" + activeWin.offsetLeft + "," + activeWin.offsetTop + ")");
+        systemLog("Drag ended: " + activeWin.id);
       }
       isDragging = false;
       activeWin = null;
-    });
+    }
+
+    document.addEventListener("mousemove", moveDrag);
+    document.addEventListener("touchmove", moveDrag, { passive: false });
+    document.addEventListener("mouseup", endDrag);
+    document.addEventListener("touchend", endDrag);
 
     systemLog("[drag] Drag system initialized with " + document.querySelectorAll(".window-header").length + " window headers");
   }
@@ -377,22 +371,28 @@
     systemLog("[wallpaper] Using gradient fallback");
   }
 
+  function loadWallpaperUrl(d, url, fallback) {
+    var img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = function () {
+      d.style.backgroundImage = "url('" + url + "')";
+      d.style.backgroundColor = "#0f0f0f";
+      systemLog("[wallpaper] Loaded: " + url.substring(0, 60));
+    };
+    img.onerror = function () {
+      systemLog("[wallpaper] Failed: " + url.substring(0, 60));
+      if (fallback) fallback();
+    };
+    img.src = url;
+  }
+
   window.nextWallpaper = function () {
     var d = document.getElementById("desktop");
     if (!d) return;
     var seed = Math.floor(Math.random() * 1000);
-    var url = "https://picsum.photos/seed/" + seed + "/640/360";
-    var img = new Image();
-    img.onload = function () {
-      d.style.backgroundImage = "url('" + url + "')";
-      d.style.backgroundColor = "#0f0f0f";
-      systemLog("[wallpaper] Next — seed: " + seed);
-    };
-    img.onerror = function () {
-      systemLog("[wallpaper] Next failed — fallback");
+    loadWallpaperUrl(d, "https://picsum.photos/seed/" + seed + "/640/360", function () {
       setWallpaperFallback(d);
-    };
-    img.src = url;
+    });
   };
 
   window.showPowerPopup = function () {
@@ -526,17 +526,9 @@
     }
     try {
       var seed = Math.floor(Math.random() * 1000);
-      var url = "https://picsum.photos/seed/" + seed + "/640/360";
-      var img = new Image();
-      img.onload = function () {
-        d.style.backgroundImage = "url('" + url + "')";
-        systemLog("[wallpaper] Init loaded — seed: " + seed);
-      };
-      img.onerror = function () {
-        systemLog("[wallpaper] Init failed");
+      loadWallpaperUrl(d, "https://picsum.photos/seed/" + seed + "/640/360", function () {
         setWallpaperFallback(d);
-      };
-      img.src = url;
+      });
     } catch (e) { systemLog("[wallpaper] Error: " + e.message); setWallpaperFallback(d); }
   }
 
@@ -582,12 +574,26 @@
   function initSkillBars() {
     var bars = document.querySelectorAll(".skill-fill");
     if (!bars.length) return;
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) { animateBar(entry.target); observer.unobserve(entry.target); }
-      });
-    }, { threshold: 0.3 });
-    bars.forEach(function (b) { b.style.width = "0%"; observer.observe(b); });
+    bars.forEach(function (b) {
+      b.style.width = "0%";
+      var win = b.closest(".win11-window");
+      if (win && win.classList.contains("d-none")) {
+        var mo = new MutationObserver(function () {
+          if (!win.classList.contains("d-none")) {
+            animateBar(b);
+            mo.disconnect();
+          }
+        });
+        mo.observe(win, { attributes: true, attributeFilter: ["class"] });
+      } else {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) { animateBar(entry.target); observer.unobserve(entry.target); }
+          });
+        }, { threshold: 0.3 });
+        observer.observe(b);
+      }
+    });
   }
 
   function animateBar(bar) {
@@ -1166,21 +1172,27 @@
 
   // ── Toast Notification (60s delay) ──────────────────────────
   var toastTimer = null;
+  var toastAutoHideTimer = null;
   function initToastNotification() {
     var toast = document.getElementById("toast-notification");
     var closeBtn = document.getElementById("toast-close-btn");
     if (!toast) return;
+    function cancelToastTimers() {
+      if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+      if (toastAutoHideTimer) { clearTimeout(toastAutoHideTimer); toastAutoHideTimer = null; }
+    }
     toastTimer = setTimeout(function () {
       toast.classList.remove("d-none");
       systemLog("[toast] Notification shown after 60s");
-      setTimeout(function () {
+      toastAutoHideTimer = setTimeout(function () {
         toast.classList.add("d-none");
+        toastAutoHideTimer = null;
       }, 20000);
     }, 60000);
     if (closeBtn) {
       closeBtn.addEventListener("click", function () {
         toast.classList.add("d-none");
-        if (toastTimer) { clearTimeout(toastTimer); toastTimer = null; }
+        cancelToastTimers();
       });
     }
     systemLog("[toast] Notification scheduled in 60s");
