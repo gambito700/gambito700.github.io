@@ -38,17 +38,11 @@
   function getDesktopBounds() {
     var TASKBAR_H = window.innerWidth < 481 ? 40 :
       window.innerWidth < 768 ? 44 : 50;
-
-    /* Zona de iconos — ventanas no deben iniciar encima */
-    var ICON_ZONE_W = window.innerWidth < 481 ? 90 :
-      window.innerWidth < 768 ? 100 : 190;
-
     return {
-      minX: 0,           /* borde izquierdo */
-      minY: 10,          /* borde superior (margen de seguridad) */
-      maxX: window.innerWidth,   /* borde derecho   */
-      maxY: window.innerHeight - TASKBAR_H,  /* sobre taskbar */
-      iconZoneW: ICON_ZONE_W  /* ancho reservado para iconos */
+      minX: 0,
+      minY: 10,
+      maxX: window.innerWidth,
+      maxY: window.innerHeight - TASKBAR_H
     };
   }
 
@@ -266,7 +260,7 @@
     }
 
     function getWinRect(win) {
-      if (win.classList.contains("d-none")) return { left: 240, top: 60 };
+      if (win.classList.contains("d-none")) return { left: 100, top: 60 };
       var r = win.getBoundingClientRect();
       return { left: r.left, top: r.top };
     }
@@ -613,9 +607,14 @@
     var btn = document.getElementById("lang-toggle");
     if (btn) btn.textContent = currentLang === "es" ? "EN" : "ES";
     applyLanguage(currentLang);
-    initClock(); // Re-render clock for date format
-    initCalendar(); // Re-render calendar for month names
-    initTextFx(); // Re-apply TextFX animations to translated text
+    // Update clock format without re-initializing
+    var n = new Date();
+    var timeEl = document.getElementById("clock-time");
+    var dateEl = document.getElementById("clock-date");
+    if (timeEl) timeEl.textContent = String(n.getHours()).padStart(2, "0") + ":" + String(n.getMinutes()).padStart(2, "0");
+    if (dateEl) dateEl.textContent = n.toLocaleDateString(currentLang === "es" ? "es-CL" : "en-US", { day: "2-digit", month: "2-digit", year: "numeric" });
+    // Re-render calendar labels without re-initializing
+    renderCalendar();
   }
 
   function applyLanguage(lang) {
@@ -749,6 +748,9 @@
   /* ============================================================
      I. CALENDAR WIDGET
      ============================================================ */
+  var calMonth = new Date().getMonth();
+  var calYear = new Date().getFullYear();
+
   function initCalendar() {
     var titleEl = document.getElementById("cal-title");
     var bodyEl = document.getElementById("cal-body");
@@ -756,45 +758,113 @@
     var nextBtn = document.getElementById("cal-next");
     if (!titleEl || !bodyEl) return;
 
+    renderCalendar();
+
+    if (prevBtn) prevBtn.addEventListener("click", function () {
+      calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; }
+      renderCalendar();
+      systemLog("[calendar] Navigated to " + titleEl.textContent);
+    });
+    if (nextBtn) nextBtn.addEventListener("click", function () {
+      calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; }
+      renderCalendar();
+      systemLog("[calendar] Navigated to " + titleEl.textContent);
+    });
+    systemLog("[calendar] Initialized");
+  }
+
+  function renderCalendar() {
+    var titleEl = document.getElementById("cal-title");
+    var bodyEl = document.getElementById("cal-body");
+    if (!titleEl || !bodyEl) return;
     var MONTHS_ES = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
     var MONTHS_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth();
-
-    function render() {
-      var months = currentLang === "en" ? MONTHS_EN : MONTHS_ES;
-      titleEl.textContent = months[month] + " " + year;
-      bodyEl.innerHTML = "";
-      var first = new Date(year, month, 1).getDay();
-      var days = new Date(year, month + 1, 0).getDate();
-      var today = new Date();
-
-      for (var i = 0; i < first; i++) {
-        var empty = document.createElement("span"); empty.className = "cal-empty"; bodyEl.appendChild(empty);
-      }
-      for (var d = 1; d <= days; d++) {
-        var cell = document.createElement("span");
-        cell.textContent = d;
-        cell.className = "cal-day";
-        if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) cell.classList.add("cal-today");
-        bodyEl.appendChild(cell);
-      }
+    var months = currentLang === "en" ? MONTHS_EN : MONTHS_ES;
+    titleEl.textContent = months[calMonth] + " " + calYear;
+    bodyEl.innerHTML = "";
+    var first = new Date(calYear, calMonth, 1).getDay();
+    var days = new Date(calYear, calMonth + 1, 0).getDate();
+    var today = new Date();
+    for (var i = 0; i < first; i++) {
+      var empty = document.createElement("span"); empty.className = "cal-empty"; bodyEl.appendChild(empty);
     }
-
-    if (prevBtn) prevBtn.addEventListener("click", function () { month--; if (month < 0) { month = 11; year--; } render(); systemLog("[calendar] Navigated to " + months[month] + " " + year); });
-    if (nextBtn) nextBtn.addEventListener("click", function () { month++; if (month > 11) { month = 0; year++; } render(); systemLog("[calendar] Navigated to " + months[month] + " " + year); });
-
-    render();
-    systemLog("[calendar] Rendered: " + months[month] + " " + year);
+    for (var d = 1; d <= days; d++) {
+      var cell = document.createElement("span");
+      cell.textContent = d;
+      cell.className = "cal-day";
+      if (d === today.getDate() && calMonth === today.getMonth() && calYear === today.getFullYear()) cell.classList.add("cal-today");
+      bodyEl.appendChild(cell);
+    }
   }
 
 
   /* ============================================================
      L. WEATHER API (Open-Meteo)
-     Simplificado: siempre muestra Villarrica, sin detección por IP
      ============================================================ */
+  function initWeather() {
+    var tempEl = document.getElementById("weather-temp");
+    var descEl = document.getElementById("weather-desc");
+    var humidEl = document.getElementById("weather-humidity");
+    var windEl = document.getElementById("weather-wind");
+    var errEl = document.getElementById("weather-error");
+    if (!tempEl) return;
+
+    // Villarrica, Chile coordinates
+    var lat = -39.2833;
+    var lon = -72.2333;
+    var url = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode&timezone=America%2FSantiago&forecast_days=1";
+
+    fetch(url)
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function (data) {
+        var cw = data.current_weather;
+        var desc = weatherCodeDesc(cw.weathercode, currentLang);
+        tempEl.textContent = Math.round(cw.temperature) + "°C";
+        descEl.textContent = desc;
+        descEl.setAttribute("data-es", weatherCodeDesc(cw.weathercode, "es"));
+        descEl.setAttribute("data-en", weatherCodeDesc(cw.weathercode, "en"));
+        if (humidEl && data.hourly) {
+          var idx = data.hourly.time.findIndex(function (t) { return t >= cw.time; });
+          if (idx >= 0) humidEl.innerHTML = '<i class="fas fa-tint"></i> ' + data.hourly.relative_humidity_2m[idx] + "%";
+        }
+        if (windEl) windEl.innerHTML = '<i class="fas fa-wind"></i> ' + Math.round(cw.windspeed) + " km/h";
+        if (errEl) errEl.classList.add("d-none");
+        systemLog("[weather] Data loaded for Villarrica");
+      })
+      .catch(function (err) {
+        if (errEl) { errEl.classList.remove("d-none"); errEl.textContent = currentLang === "es" ? "No se pudo cargar el clima" : "Could not load weather"; }
+        systemLog("[weather] Error: " + err.message);
+      });
+  }
+
+  function weatherCodeDesc(code, lang) {
+    lang = lang || currentLang;
+    var codes = {
+      0: { es: "Despejado", en: "Clear sky" },
+      1: { es: "Mayormente despejado", en: "Mainly clear" },
+      2: { es: "Parcialmente nublado", en: "Partly cloudy" },
+      3: { es: "Nublado", en: "Overcast" },
+      45: { es: "Niebla", en: "Foggy" },
+      48: { es: "Niebla con escarcha", en: "Depositing rime fog" },
+      51: { es: "Llovizna ligera", en: "Light drizzle" },
+      53: { es: "Llovizna moderada", en: "Moderate drizzle" },
+      55: { es: "Llovizna densa", en: "Dense drizzle" },
+      61: { es: "Lluvia ligera", en: "Slight rain" },
+      63: { es: "Lluvia moderada", en: "Moderate rain" },
+      65: { es: "Lluvia intensa", en: "Heavy rain" },
+      71: { es: "Nevada ligera", en: "Slight snow" },
+      73: { es: "Nevada moderada", en: "Moderate snow" },
+      75: { es: "Nevada intensa", en: "Heavy snow" },
+      80: { es: "Chubascos ligeros", en: "Slight rain showers" },
+      81: { es: "Chubascos moderados", en: "Moderate rain showers" },
+      82: { es: "Chubascos violentos", en: "Violent rain showers" },
+      95: { es: "Tormenta", en: "Thunderstorm" },
+      96: { es: "Tormenta con granizo ligero", en: "Thunderstorm with slight hail" },
+      99: { es: "Tormenta con granizo intenso", en: "Thunderstorm with heavy hail" }
+    };
+    var entry = codes[code];
+    return entry ? entry[lang] : (lang === "es" ? "Estado desconocido" : "Unknown");
+  }
 
 
   /* ============================================================
@@ -1148,6 +1218,7 @@
 
     // New features
     safeInit(initCalculator, "initCalculator");
+    safeInit(initWeather, "initWeather");
     safeInit(initToastDismiss, "initToastDismiss");
 
     // Auto-open music window on startup

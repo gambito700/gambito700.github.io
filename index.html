@@ -158,7 +158,7 @@
         <span data-en="Music" data-es="Música">Música</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-calendar')">
+      <div class="desktop-icon" onclick="openWindow('window-weather')">
         <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" loading="lazy" />
         <span data-en="Weather" data-es="Clima">Clima</span>
       </div>
@@ -996,6 +996,29 @@
           <div class="ind-row"><span class="ind-label">UTM</span><span class="ind-value" id="ind-utm">--</span></div>
           <div class="ind-row"><span class="ind-label">UF</span><span class="ind-value" id="ind-uf">--</span></div>
           <div class="ind-row"><span class="ind-label">Dólar</span><span class="ind-value" id="ind-dolar">--</span></div>
+        </div>
+      </div>
+
+      <!-- ======================== CLIMA ======================== -->
+      <div class="win11-window d-none" id="window-weather" style="width:320px; height:240px;">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-cloud-sun"></i> <span data-es="Clima" data-en="Weather">Clima</span></div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-weather')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-weather')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-weather')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:16px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div class="weather-main" id="weather-main">
+            <div class="weather-temp" id="weather-temp">--°C</div>
+            <div class="weather-desc" id="weather-desc" data-es="Cargando..." data-en="Loading...">Cargando...</div>
+          </div>
+          <div class="weather-details" id="weather-details">
+            <span class="weather-humidity" id="weather-humidity"><i class="fas fa-tint"></i> --%</span>
+            <span class="weather-wind" id="weather-wind"><i class="fas fa-wind"></i> -- km/h</span>
+          </div>
+          <div class="weather-error d-none" id="weather-error" data-es="No se pudo cargar el clima" data-en="Could not load weather"></div>
         </div>
       </div>
 
