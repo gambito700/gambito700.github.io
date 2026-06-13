@@ -61,7 +61,7 @@
       <div class="sm-grid-item" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proy.</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contact</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
-      <div class="sm-grid-item" onclick="toggleFlyout()"><img src="images/icons/weather.png"><span>Clima</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-indicators')"><img src="images/icons/scraper.png"><span>Ind.</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
       <div class="sm-grid-item" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
@@ -104,7 +104,6 @@
         <div class="tb-clock" id="taskbar-clock">
           <span id="clock-time">--:--</span>
           <span id="clock-date">--/--/----</span>
-          <i class="fas fa-chevron-up clock-dropdown-arrow"></i>
         </div>
       </div>
     </div>
@@ -159,7 +158,7 @@
         <span data-en="Music" data-es="Música">Música</span>
       </div>
 
-      <div class="desktop-icon" onclick="toggleFlyout()">
+      <div class="desktop-icon" onclick="openWindow('window-calendar')">
         <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" loading="lazy" />
         <span data-en="Weather" data-es="Clima">Clima</span>
       </div>
@@ -169,11 +168,10 @@
         <span data-en="Calendar" data-es="Calendario">Calendar</span>
       </div>
 
-      <a class="desktop-icon" href="https://gambito700.github.io/scraperUTM/" target="_blank"
-         style="text-decoration:none;">
+      <div class="desktop-icon" onclick="openWindow('window-indicators')">
         <img alt="Indicadores" class="desktop-png-icon" src="images/icons/scraper.png" loading="lazy">
-        <span>Indicadores</span>
-      </a>
+        <span data-en="Indicators" data-es="Indicadores">Indicadores</span>
+      </div>
 
       <a class="desktop-icon" href="https://www.instagram.com/cine_chatarra/" target="_blank" rel="noopener noreferrer"
          style="text-decoration:none;">
@@ -857,87 +855,7 @@
         </div>
       </div>
 
-      <!-- ======================== FLYOUT PANEL (Notificaciones) ======================== -->
-      <div id="flyout-panel" class="notif-flyout d-none">
-        <div class="flyout-header">
-          <span data-es="Notificaciones" data-en="Notifications">Notificaciones</span>
-          <button class="flyout-close" id="flyout-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="flyout-body">
-          <!-- Clima -->
-          <div class="flyout-widget flyout-weather">
-            <div class="flyout-widget-title"><i class="fas fa-cloud-sun"></i> <span data-es="Clima" data-en="Weather">Clima</span></div>
-            <div class="flyout-weather-content">
-              <i id="flyout-weather-icon" class="fas fa-cloud-sun flyout-weather-main-icon"></i>
-              <div class="flyout-weather-info">
-                <span id="flyout-weather-temp" class="flyout-weather-temp">--°C</span>
-                <span id="flyout-weather-desc" class="flyout-weather-desc">Cargando...</span>
-                <span class="flyout-weather-location" id="flyout-weather-location"><i class="fas fa-map-marker-alt"></i> Villarrica</span>
-              </div>
-            </div>
-          </div>
-          <!-- Calendario rápido -->
-          <div class="flyout-widget flyout-quick-cal">
-            <div class="flyout-widget-title"><i class="fas fa-calendar-alt"></i> <span data-es="Calendario" data-en="Calendar">Calendario</span></div>
-            <div class="flyout-cal-content">
-              <div class="flyout-cal-month" id="flyout-cal-month"></div>
-              <div class="flyout-cal-days" id="flyout-cal-days"></div>
-            </div>
-          </div>
-          <!-- UTM / UF -->
-          <div class="flyout-widget flyout-indicators">
-            <div class="flyout-widget-title"><i class="fas fa-chart-line"></i> <span data-es="Indicadores" data-en="Indicators">Indicadores</span></div>
-            <div class="flyout-ind-content">
-              <div class="ind-row"><span class="ind-label">UTM</span><span class="ind-value" id="ind-utm">--</span></div>
-              <div class="ind-row"><span class="ind-label">UF</span><span class="ind-value" id="ind-uf">--</span></div>
-              <div class="ind-row"><span class="ind-label">Dólar</span><span class="ind-value" id="ind-dolar">--</span></div>
-            </div>
-          </div>
-          <!-- Temporizador -->
-          <div class="flyout-widget flyout-timer">
-            <div class="flyout-widget-title"><i class="fas fa-stopwatch"></i> <span data-es="Temporizador" data-en="Timer">Temporizador</span></div>
-            <div class="flyout-timer-content">
-              <div class="timer-display" id="timer-display">00:00:00</div>
-              <div class="timer-controls">
-                <button class="timer-btn" id="timer-start"><i class="fas fa-play"></i></button>
-                <button class="timer-btn" id="timer-pause"><i class="fas fa-pause"></i></button>
-                <button class="timer-btn" id="timer-reset"><i class="fas fa-undo"></i></button>
-              </div>
-            </div>
-          </div>
-          <!-- MUSIC PLAYER WIDGET (Flyout) -->
-          <div class="flyout-widget flyout-music">
-            <div class="flyout-widget-title"><i class="fas fa-headphones"></i> <span data-es="Musica" data-en="Music">Musica</span></div>
-            <div class="flyout-music-content">
-              <div class="flyout-music-info">
-                <div class="flyout-music-track-name" id="flyout-music-name">lofi hip hop radio</div>
-                <div class="flyout-music-track-artist" id="flyout-music-artist">Lofi Girl · YouTube</div>
-              </div>
-              <div class="flyout-music-progress">
-                <div class="flyout-progress-bar" id="flyout-progress-bar">
-                  <div class="flyout-progress-fill" id="flyout-progress-fill"></div>
-                </div>
-              </div>
-              <div class="flyout-music-controls">
-                <button class="flyout-music-btn" id="flyout-music-prev" aria-label="Anterior">
-                  <img src="images/icons/skip-start.png" class="flyout-music-btn-icon" alt="Anterior">
-                </button>
-                <button class="flyout-music-btn flyout-music-btn-play" id="flyout-music-play" aria-label="Play/Pause">
-                  <img src="images/icons/play.png" class="flyout-music-btn-icon" id="flyout-music-play-icon" alt="Play">
-                </button>
-                <button class="flyout-music-btn" id="flyout-music-next" aria-label="Siguiente">
-                  <img src="images/icons/skip-end.png" class="flyout-music-btn-icon" alt="Siguiente">
-                </button>
-              </div>
-              <div class="flyout-music-volume">
-                <i class="fas fa-volume-down"></i>
-                <input type="range" class="flyout-volume-slider" id="flyout-music-volume" min="0" max="100" value="70">
-                <i class="fas fa-volume-up"></i>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
 
       <!-- ======================== CALENDARIO ======================== -->
       <div class="win11-window d-none" id="window-calendar">
@@ -1061,6 +979,23 @@
             <button class="calc-btn num" data-v=".">.</button>
             <button class="calc-btn eq" data-v="=" style="background:var(--accent, #0078d4); color:#fff;">=</button>
           </div>
+        </div>
+      </div>
+
+      <!-- ======================== INDICADORES UTM/UF ======================== -->
+      <div class="win11-window d-none" id="window-indicators" style="width:300px; height:220px;">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-chart-line"></i> Indicadores</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-indicators')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-indicators')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-indicators')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:16px; display:flex; flex-direction:column; justify-content:center;">
+          <div class="ind-row"><span class="ind-label">UTM</span><span class="ind-value" id="ind-utm">--</span></div>
+          <div class="ind-row"><span class="ind-label">UF</span><span class="ind-value" id="ind-uf">--</span></div>
+          <div class="ind-row"><span class="ind-label">Dólar</span><span class="ind-value" id="ind-dolar">--</span></div>
         </div>
       </div>
 

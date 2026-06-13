@@ -479,9 +479,55 @@
     updateLanguage();
   }
 
+  // ── Indicators (UTM / UF / Dólar) ─────────────────────────
+  function initIndicators() {
+    var utmEl = document.getElementById("ind-utm");
+    var ufEl = document.getElementById("ind-uf");
+    var dolarEl = document.getElementById("ind-dolar");
+    if (!utmEl) return;
+    var urls = [
+      "scraperUTM/dashboard_data.json",
+      "api/indicators.json"
+    ];
+    function tryFetch(i) {
+      if (i >= urls.length) throw new Error("All URLs failed");
+      return fetch(urls[i]).then(function (r) {
+        if (!r.ok) throw new Error("HTTP " + r.status);
+        return r.json();
+      });
+    }
+    tryFetch(0).catch(function () { return tryFetch(1); })
+      .then(function (data) {
+        var utm, uf, dolar;
+        if (data.previred) {
+          utm = data.previred.utm_mayo;
+          uf = data.previred.uf_mayo;
+        } else {
+          utm = data.utm;
+          uf = data.uf;
+        }
+        if (data.sii && data.sii.dolar_diario && data.sii.dolar_diario.length) {
+          var ultimo = data.sii.dolar_diario[data.sii.dolar_diario.length - 1];
+          dolar = ultimo.valor;
+        } else {
+          dolar = data.dolar;
+        }
+        if (utm && utmEl) utmEl.textContent = "$" + Number(utm).toLocaleString("es-CL");
+        if (uf && ufEl) ufEl.textContent = "$" + Number(uf).toLocaleString("es-CL");
+        if (dolar && dolarEl) dolarEl.textContent = "$" + Number(dolar).toLocaleString("es-CL");
+        systemLog("[indicators] UTM/UF loaded");
+      })
+      .catch(function () {
+        if (utmEl) utmEl.textContent = "No disponible";
+        if (ufEl) ufEl.textContent = "No disponible";
+        if (dolarEl) dolarEl.textContent = "No disponible";
+        systemLog("[indicators] Fetch failed, showing N/A");
+      });
+  }
+
 
   /* ============================================================
-     B. DIGITAL CLOCK (Time + Date)
+     J. DOMContentLoaded — Main Init
      ============================================================ */
   var clockInterval = null;
   function initClock() {
@@ -569,7 +615,6 @@
     applyLanguage(currentLang);
     initClock(); // Re-render clock for date format
     initCalendar(); // Re-render calendar for month names
-    initFlyoutCalendar(); // Update flyout calendar labels
     initTextFx(); // Re-apply TextFX animations to translated text
   }
 
@@ -750,38 +795,7 @@
      L. WEATHER API (Open-Meteo)
      Simplificado: siempre muestra Villarrica, sin detección por IP
      ============================================================ */
-  function initWeather() {
-    const tempEl = document.getElementById("flyout-weather-temp");
-    const descEl = document.getElementById("flyout-weather-desc");
-    const locEl = document.getElementById("flyout-weather-location");
-    if (!tempEl) return;
-    if (locEl) locEl.textContent = "Villarrica";
-    if (descEl) descEl.textContent = "Cargando...";
 
-    const controller = new AbortController();
-    const timeout = setTimeout(function () { controller.abort(); }, 5000);
-
-    fetch("https://api.open-meteo.com/v1/forecast?latitude=-39.28&longitude=-72.23&current_weather=true", { signal: controller.signal })
-      .then(function (r) {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.json();
-      })
-      .then(function (data) {
-        clearTimeout(timeout);
-        if (data && data.current_weather) {
-          tempEl.textContent = Math.round(data.current_weather.temperature) + "°C";
-          if (descEl) descEl.textContent = "Villarrica";
-        } else {
-          throw new Error("Empty response");
-        }
-      })
-      .catch(function (e) {
-        clearTimeout(timeout);
-        systemLog("[weather] Forecast failed: " + e.message);
-        tempEl.textContent = "18°C";
-        if (descEl) descEl.textContent = "Villarrica";
-      });
-  }
 
   /* ============================================================
      M. MUSIC PLAYER — YouTube IFrame API
@@ -831,30 +845,26 @@
 
   function onYTReady(event) {
     updateMusicUI(ytCurrentTrack);
-    var vol = document.getElementById("flyout-music-volume");
+    var vol = document.getElementById("window-music-volume");
     if (vol) event.target.setVolume(parseInt(vol.value, 10));
     systemLog("[music] YouTube player listo");
   }
 
   function onYTStateChange(event) {
-    var playIconImg = document.getElementById("flyout-music-play-icon");
     var winPlayIconImg = document.getElementById("window-music-play-icon");
 
     if (event.data === YT.PlayerState.PLAYING) {
       ytPlaying = true;
-      if (playIconImg) playIconImg.src = "images/icons/pause.png";
       if (winPlayIconImg) winPlayIconImg.src = "images/icons/pause.png";
       startProgressLoop();
       systemLog("[music] Playing: " + ytPlaylist[ytCurrentTrack].name);
       window.showToast(ytPlaylist[ytCurrentTrack].name, ytPlaylist[ytCurrentTrack].artist);
     } else if (event.data === YT.PlayerState.PAUSED) {
       ytPlaying = false;
-      if (playIconImg) playIconImg.src = "images/icons/play.png";
       if (winPlayIconImg) winPlayIconImg.src = "images/icons/play.png";
       stopProgressLoop();
       systemLog("[music] Paused");
     } else if (event.data === YT.PlayerState.BUFFERING) {
-      if (playIconImg) playIconImg.src = "images/icons/pause.png";
       if (winPlayIconImg) winPlayIconImg.src = "images/icons/pause.png";
     } else if (event.data === YT.PlayerState.ENDED) {
       ytCurrentTrack = (ytCurrentTrack + 1) % ytPlaylist.length;
@@ -885,10 +895,6 @@
 
   function updateMusicUI(index) {
     var track = ytPlaylist[index];
-    var nameEl = document.getElementById("flyout-music-name");
-    var artistEl = document.getElementById("flyout-music-artist");
-    if (nameEl) nameEl.textContent = track.name;
-    if (artistEl) artistEl.textContent = track.artist;
     var winName = document.getElementById("window-music-name");
     var winArtist = document.getElementById("window-music-artist");
     if (winName) winName.textContent = track.name;
@@ -901,10 +907,8 @@
       if (!ytPlayer || !ytPlayer.getCurrentTime) return;
       var cur = ytPlayer.getCurrentTime() || 0;
       var dur = ytPlayer.getDuration() || 0;
-      var flyoutFill = document.getElementById("flyout-progress-fill");
       var winFill = document.getElementById("window-progress-fill");
       var pct = (dur > 0) ? ((cur / dur) * 100) + "%" : "0%";
-      if (flyoutFill) flyoutFill.style.width = pct;
       if (winFill) winFill.style.width = pct;
     }, 500);
   }
@@ -914,16 +918,16 @@
   }
 
   function resetProgress() {
-    var fill = document.getElementById("flyout-progress-fill");
+    var fill = document.getElementById("window-progress-fill");
     if (fill) fill.style.width = "0%";
   }
 
   function initMusicPlayer() {
-    var playBtn = document.getElementById("flyout-music-play");
-    var prevBtn = document.getElementById("flyout-music-prev");
-    var nextBtn = document.getElementById("flyout-music-next");
-    var progressBar = document.getElementById("flyout-progress-bar");
-    var volumeSlider = document.getElementById("flyout-music-volume");
+    var playBtn = document.getElementById("window-music-play");
+    var prevBtn = document.getElementById("window-music-prev");
+    var nextBtn = document.getElementById("window-music-next");
+    var progressBar = document.getElementById("window-progress-bar");
+    var volumeSlider = document.getElementById("window-music-volume");
 
     // ── Play / Pause ─────────────────────────────────────────
     if (playBtn) {
@@ -993,54 +997,7 @@
   }
 
 
-  // ── Flyout Toggle (Clock Dropdown) ────────────────────────────
-  window.toggleFlyout = function () {
-    var flyout = document.getElementById("flyout-panel");
-    var clock = document.getElementById("taskbar-clock");
-    if (!flyout) return;
-    var isOpen = !flyout.classList.contains("d-none");
-    if (isOpen) {
-      flyout.classList.add("d-none");
-      if (clock) clock.classList.remove("active-dropdown");
-    } else {
-      flyout.classList.remove("d-none");
-      if (clock) clock.classList.add("active-dropdown");
-      systemLog("[flyout] Panel opened");
-    }
-  };
 
-  function initFlyout() {
-    var flyout = document.getElementById("flyout-panel");
-    var closeBtn = document.getElementById("flyout-close-btn");
-    var clockArea = document.getElementById("taskbar-clock");
-
-    if (!flyout) return;
-
-    if (clockArea) {
-      clockArea.style.cursor = "pointer";
-      clockArea.addEventListener("click", function (e) {
-        e.stopPropagation();
-        window.toggleFlyout();
-      });
-    }
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        window.toggleFlyout();
-      });
-    }
-
-    document.addEventListener("click", function (e) {
-      if (!flyout || flyout.classList.contains("d-none")) return;
-      if (clockArea && (e.target === clockArea || clockArea.contains(e.target))) return;
-      if (flyout.contains(e.target)) return;
-      flyout.classList.add("d-none");
-      if (clockArea) clockArea.classList.remove("active-dropdown");
-    });
-
-    systemLog("[flyout] Clock dropdown initialized");
-  }
 
   // ── Calculator ──────────────────────────────────────────────
   function initCalculator() {
@@ -1149,162 +1106,11 @@
     }
   }
 
-  // ── Flyout Quick Calendar ───────────────────────────────────
-  function initFlyoutCalendar() {
-    var monthEl = document.getElementById("flyout-cal-month");
-    var daysEl = document.getElementById("flyout-cal-days");
-    if (!monthEl || !daysEl) return;
-    var MONTHS_ES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
-    var MONTHS_EN = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    var now = new Date();
-    var months = currentLang === "en" ? MONTHS_EN : MONTHS_ES;
-    monthEl.textContent = months[now.getMonth()] + " " + now.getFullYear();
-    var weekdayLabels = currentLang === "en" ? ["Su","Mo","Tu","We","Th","Fr","Sa"] : ["Do","Lu","Ma","Mi","Ju","Vi","Sa"];
-    var html = "";
-    weekdayLabels.forEach(function (l) { html += "<span class='cal-weekday'>" + l + "</span>"; });
-    var first = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
-    var days = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    for (var i = 0; i < first; i++) { html += "<span></span>"; }
-    for (var d = 1; d <= days; d++) {
-      var cls = (d === now.getDate()) ? "cal-today" : "";
-      html += "<span class='" + cls + "'>" + d + "</span>";
-    }
-    daysEl.innerHTML = html;
-    systemLog("[flyout-cal] Rendered");
-  }
 
-  // ── UTM / UF / Dólar Fetch ───────────────────────────────────
-  function initIndicators() {
-    var utmEl = document.getElementById("ind-utm");
-    var ufEl = document.getElementById("ind-uf");
-    var dolarEl = document.getElementById("ind-dolar");
-    if (!utmEl) return;
-    // Try to fetch from scraperUTM repo on GitHub Pages first,
-    // then fallback to local api/indicators.json
-    var urls = [
-      "scraperUTM/dashboard_data.json",
-      "api/indicators.json"
-    ];
-    function tryFetch(i) {
-      if (i >= urls.length) throw new Error("All URLs failed");
-      return fetch(urls[i]).then(function (r) {
-        if (!r.ok) throw new Error("HTTP " + r.status);
-        return r.json();
-      });
-    }
-    tryFetch(0).catch(function () { return tryFetch(1); })
-      .then(function (data) {
-        var utm, uf, dolar;
-        if (data.previred) {
-          utm = data.previred.utm_mayo;
-          uf = data.previred.uf_mayo;
-        } else {
-          utm = data.utm;
-          uf = data.uf;
-        }
-        if (data.sii && data.sii.dolar_diario && data.sii.dolar_diario.length) {
-          var ultimo = data.sii.dolar_diario[data.sii.dolar_diario.length - 1];
-          dolar = ultimo.valor;
-        } else {
-          dolar = data.dolar;
-        }
-        if (utm && utmEl) utmEl.textContent = "$" + Number(utm).toLocaleString("es-CL");
-        if (uf && ufEl) ufEl.textContent = "$" + Number(uf).toLocaleString("es-CL");
-        if (dolar && dolarEl) dolarEl.textContent = "$" + Number(dolar).toLocaleString("es-CL");
-        systemLog("[indicators] UTM/UF loaded");
-      })
-      .catch(function () {
-        if (utmEl) utmEl.textContent = "No disponible";
-        if (ufEl) ufEl.textContent = "No disponible";
-        if (dolarEl) dolarEl.textContent = "No disponible";
-        systemLog("[indicators] Fetch failed, showing N/A");
-      });
-  }
 
-  // ── Timer ───────────────────────────────────────────────────
-  var timerState = { running: false, seconds: 0, interval: null };
-  function initTimer() {
-    var display = document.getElementById("timer-display");
-    var startBtn = document.getElementById("timer-start");
-    var pauseBtn = document.getElementById("timer-pause");
-    var resetBtn = document.getElementById("timer-reset");
-    if (!display) return;
-    function formatTime(s) {
-      var h = Math.floor(s / 3600);
-      var m = Math.floor((s % 3600) / 60);
-      var sec = s % 60;
-      return String(h).padStart(2,"0") + ":" + String(m).padStart(2,"0") + ":" + String(sec).padStart(2,"0");
-    }
-    function updateDisplay() { display.textContent = formatTime(timerState.seconds); }
-    if (startBtn) {
-      startBtn.addEventListener("click", function () {
-        if (timerState.running) return;
-        timerState.running = true;
-        timerState.interval = setInterval(function () {
-          timerState.seconds++;
-          updateDisplay();
-        }, 1000);
-      });
-    }
-    if (pauseBtn) {
-      pauseBtn.addEventListener("click", function () {
-        timerState.running = false;
-        if (timerState.interval) { clearInterval(timerState.interval); timerState.interval = null; }
-      });
-    }
-    if (resetBtn) {
-      resetBtn.addEventListener("click", function () {
-        timerState.running = false;
-        if (timerState.interval) { clearInterval(timerState.interval); timerState.interval = null; }
-        timerState.seconds = 0;
-        updateDisplay();
-      });
-    }
-    systemLog("[timer] Initialized");
-  }
 
-  // ── Bind Music Player to both flyout AND window ────────────
-  function bindWindowMusicControls() {
-    var winPlay = document.getElementById("window-music-play");
-    var winPrev = document.getElementById("window-music-prev");
-    var winNext = document.getElementById("window-music-next");
-    var winProgress = document.getElementById("window-progress-bar");
-    var winVolume = document.getElementById("window-music-volume");
 
-    if (winPlay) {
-      winPlay.addEventListener("click", function () {
-        if (!ytPlayer || !ytPlayer.getPlayerState) return;
-        var state = ytPlayer.getPlayerState();
-        if (state === YT.PlayerState.PLAYING) ytPlayer.pauseVideo();
-        else ytPlayer.playVideo();
-      });
-    }
-    if (winPrev) {
-      winPrev.addEventListener("click", function () {
-        var prev = (ytCurrentTrack - 1 + ytPlaylist.length) % ytPlaylist.length;
-        loadYTTrack(prev, ytPlaying);
-      });
-    }
-    if (winNext) {
-      winNext.addEventListener("click", function () {
-        var next = (ytCurrentTrack + 1) % ytPlaylist.length;
-        loadYTTrack(next, ytPlaying);
-      });
-    }
-    if (winProgress) {
-      winProgress.addEventListener("click", function (e) {
-        if (!ytPlayer || !ytPlayer.getDuration) return;
-        var rect = winProgress.getBoundingClientRect();
-        var pct = (e.clientX - rect.left) / rect.width;
-        ytPlayer.seekTo(pct * ytPlayer.getDuration(), true);
-      });
-    }
-    if (winVolume) {
-      winVolume.addEventListener("input", function () {
-        if (ytPlayer && ytPlayer.setVolume) ytPlayer.setVolume(parseInt(this.value, 10));
-      });
-    }
-  }
+
 
   /* ============================================================
      J. DOMContentLoaded — Main Init
@@ -1336,20 +1142,13 @@
     safeInit(initTextFx, "initTextFx");
     safeInit(initContactForm, "initContactForm");
     safeInit(initCalendar, "initCalendar");
-    safeInit(initWeather, "initWeather");
+    safeInit(initIndicators, "initIndicators");
     safeInit(initMusicPlayer, "initMusicPlayer");
     safeInit(initObfuscatedContacts, "initObfuscatedContacts");
-
-    // Flyout toggle on clock click
-    safeInit(initFlyout, "initFlyout");
 
     // New features
     safeInit(initCalculator, "initCalculator");
     safeInit(initToastDismiss, "initToastDismiss");
-    safeInit(initFlyoutCalendar, "initFlyoutCalendar");
-    safeInit(initIndicators, "initIndicators");
-    safeInit(initTimer, "initTimer");
-    safeInit(bindWindowMusicControls, "bindWindowMusicControls");
 
     // Auto-open music window on startup
     setTimeout(function () {

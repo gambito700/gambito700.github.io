@@ -310,19 +310,6 @@ a:hover {
   white-space: nowrap;
 }
 
-.clock-dropdown-arrow {
-  font-size: 0.5rem;
-  margin-left: 4px;
-  opacity: 0.5;
-  transition: transform 0.2s;
-}
-.tb-clock:hover .clock-dropdown-arrow {
-  opacity: 0.9;
-}
-.tb-clock.active-dropdown .clock-dropdown-arrow {
-  transform: rotate(180deg);
-}
-
 /* -------------------------------------------------------
    7. START MENU (W11 STYLE)
    ------------------------------------------------*/
@@ -602,9 +589,11 @@ a:hover {
 }
 
 .btn-special {
-  background: var(--accent);
-  color: #ffffff;
-  border: none;
+  background: var(--surface);
+  backdrop-filter: var(--glass);
+  -webkit-backdrop-filter: var(--glass);
+  border: 1px solid var(--border);
+  color: var(--heading);
   font-family: var(--font-display);
   font-size: 0.9rem;
   font-weight: 600;
@@ -613,12 +602,12 @@ a:hover {
   cursor: pointer;
   overflow: hidden;
   border-radius: 30px;
-  box-shadow: 0 4px 15px rgba(0, 120, 212, 0.4);
   transition: all var(--t-fast);
 }
 
 .btn-special:hover {
-  background: #0071e3;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--heading);
   transform: scale(1.05);
 }
 
@@ -1346,43 +1335,44 @@ body.desktop-mode {
 }
 
 .desktop-icon {
-  width: 90px;
-  height: 100px;
+  width: 80px;
+  height: 88px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  padding: 10px;
+  padding: 8px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.15s, border 0.15s;
   color: white;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-  gap: 6px;
+  gap: 4px;
+  border: 1px solid transparent;
 }
 
 .desktop-icon:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .desktop-icon img {
-  width: 44px;
-  height: 44px;
-  margin-bottom: 6px;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 4px;
   object-fit: contain;
 }
 
 .desktop-icon .win-icon-fa {
-  font-size: 38px;
+  font-size: 32px;
   color: #60cdff;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .desktop-icon span {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   text-align: center;
-  line-height: 1.2;
+  line-height: 1.15;
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1474,240 +1464,7 @@ body.desktop-mode {
 }
 
 /* ── Flyout Panel (Notification Center) ── */
-.notif-flyout {
-  position: fixed;
-  bottom: 56px;
-  right: 10px;
-  width: 340px;
-  max-height: 460px;
-  background: rgba(32, 32, 32, 0.92);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-  z-index: 200;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  animation: flyoutSlideUp 0.2s ease;
-  pointer-events: auto;
-}
 
-@keyframes flyoutSlideUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.flyout-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 16px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.flyout-close {
-  background: transparent;
-  border: none;
-  color: #888;
-  cursor: pointer;
-  padding: 4px 8px;
-  border-radius: 6px;
-  transition: background 0.2s;
-}
-
-.flyout-close:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.flyout-body {
-  padding: 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.flyout-widget {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 10px;
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  transition: border-color 0.2s;
-}
-.flyout-widget:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-}
-
-.flyout-widget-title {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: rgba(255,255,255,0.4);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.flyout-widget-title i {
-  color: var(--accent, #0078d4);
-  font-size: 0.7rem;
-}
-
-/* ── Weather inside flyout (Rainmeter style) ── */
-.flyout-weather-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.flyout-weather-main-icon {
-  font-size: 2.6rem;
-  color: #60cdff;
-  filter: drop-shadow(0 2px 8px rgba(96, 205, 255, 0.3));
-}
-
-.flyout-weather-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.flyout-weather-temp {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: -0.5px;
-}
-
-.flyout-weather-desc {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-}
-
-.flyout-weather-location {
-  font-size: 0.65rem;
-  color: rgba(255, 255, 255, 0.35);
-  margin-top: 2px;
-}
-
-/* ── Music inside flyout ── */
-.flyout-music-info {
-  text-align: center;
-  margin-bottom: 8px;
-}
-
-.flyout-music-track-name {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.flyout-music-track-artist {
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.5);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.flyout-music-progress {
-  margin-bottom: 8px;
-}
-
-.flyout-progress-bar {
-  width: 100%;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 2px;
-  cursor: pointer;
-  position: relative;
-}
-
-.flyout-progress-fill {
-  height: 100%;
-  width: 0%;
-  background: var(--accent, #0078d4);
-  border-radius: 2px;
-  transition: width 0.3s;
-}
-
-.flyout-music-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 8px;
-}
-
-.flyout-music-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 50%;
-  transition: background 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flyout-music-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.flyout-music-btn-play {
-  width: 44px;
-  height: 44px;
-  background: var(--accent, #0078d4) !important;
-}
-
-.flyout-music-btn-play:hover {
-  opacity: 0.85;
-}
-
-.flyout-music-btn-icon {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  filter: invert(1);
-}
-
-.flyout-music-volume {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.7rem;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.flyout-volume-slider {
-  flex: 1;
-  height: 3px;
-  accent-color: var(--accent, #0078d4);
-  cursor: pointer;
-}
-
-/* ── Show flyout ── */
-.notif-flyout.d-none {
-  display: none !important;
-}
-
-.notif-flyout:not(.d-none) {
-  display: flex !important;
-}
 
 /* Shadow intensity controls removed per user request */
 
@@ -2264,16 +2021,44 @@ body.desktop-mode {
   /* Taskbar compacta */
   .win11-taskbar { height: 40px; padding: 0 6px; }
   .taskbar-inner { gap: 4px; }
-  .tb-system-tray { display: none; } /* ocultar tray en móvil */
+  .tb-system-tray { display: none; }
   .tb-btn { width: 32px; height: 32px; font-size: 0.9rem; }
   .tb-clock { font-size: 0.55rem; }
 
+  /* Iconos: barra horizontal scrollable encima del taskbar */
   .desktop-icons {
-    max-width: 95px;
-    padding: 8px 4px;
+    position: fixed;
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 40px;
+    max-width: 100vw;
+    height: auto;
+    padding: 4px 6px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-content: center;
+    justify-content: flex-start;
+    gap: 2px;
+    z-index: 1;
+  }
+  .desktop-icon {
+    width: 52px;
+    height: 56px;
+    padding: 4px;
+    flex-shrink: 0;
     gap: 2px;
   }
-  .desktop-icon { width: 80px; height: 80px; }
+  .desktop-icon img {
+    width: 28px;
+    height: 28px;
+    margin-bottom: 2px;
+  }
+  .desktop-icon span {
+    font-size: 0.55rem;
+  }
 
   /* Ventanas ocupan casi toda la pantalla */
   .win11-window {
@@ -2303,12 +2088,40 @@ body.desktop-mode {
   .win11-taskbar { height: 44px; }
   .tb-system-tray { display: none; }
 
-  /* Iconos: auto-fill manejado por width */
+  /* Iconos: barra horizontal scrollable encima del taskbar */
   .desktop-icons {
-    max-width: 100px;
-    padding: 10px 6px;
+    position: fixed;
+    top: auto;
+    right: 0;
+    left: 0;
+    bottom: 44px;
+    max-width: 100vw;
+    height: auto;
+    padding: 6px 8px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-content: center;
+    justify-content: center;
+    gap: 4px;
+    z-index: 1;
   }
-  .desktop-icon { width: 88px; height: 96px; }
+  .desktop-icon {
+    width: 60px;
+    height: 64px;
+    padding: 6px;
+    flex-shrink: 0;
+    gap: 2px;
+  }
+  .desktop-icon img {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 2px;
+  }
+  .desktop-icon span {
+    font-size: 0.6rem;
+  }
 
   /* Ventanas casi pantalla completa */
   .win11-window {
@@ -2486,93 +2299,25 @@ body.desktop-mode {
 .calc-btn.eq:hover { opacity: 0.85; }
 
 /* ─────────────────────────────────────────────────────────
-   FLYOUT — Quick Calendar (Rainmeter style)
+   INDICATORS WINDOW (UTM / UF / Dólar)
    ─────────────────────────────────────────────────────────── */
-.flyout-cal-content { text-align: center; }
-.flyout-cal-month {
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 8px;
-  letter-spacing: 0.3px;
-}
-.flyout-cal-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
-  font-size: 0.72rem;
-}
-.flyout-cal-days span {
-  padding: 4px 0;
-  color: rgba(255,255,255,0.5);
-  border-radius: 4px;
-  transition: background 0.15s;
-}
-.flyout-cal-days span:not(.cal-weekday):hover {
-  background: rgba(255,255,255,0.08);
-}
-.flyout-cal-days .cal-today {
-  background: var(--accent,#0078d4);
-  color: #fff;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0,120,212,0.3);
-}
-.flyout-cal-days .cal-weekday {
-  color: rgba(255,255,255,0.3);
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* ─────────────────────────────────────────────────────────
-   FLYOUT — UTM / UF Indicators (Rainmeter style)
-   ─────────────────────────────────────────────────────────── */
-.flyout-ind-content { display: flex; flex-direction: column; gap: 4px; }
-.ind-row {
+#window-indicators .ind-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.72rem;
-  padding: 4px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.ind-row:last-child { border-bottom: none; }
-.ind-label { color: rgba(255,255,255,0.45); font-weight: 500; }
-.ind-value { color: #fff; font-weight: 700; font-family: var(--font-mono); }
-
-/* ─────────────────────────────────────────────────────────
-   FLYOUT — Timer (Rainmeter style)
-   ─────────────────────────────────────────────────────────── */
-.flyout-timer-content { text-align: center; }
-.timer-display {
-  font-family: var(--font-mono);
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 3px;
-  margin-bottom: 8px;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-.timer-controls { display: flex; justify-content: center; gap: 10px; }
-.timer-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: none;
-  background: rgba(255,255,255,0.08);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 0.72rem;
-  transition: background 0.2s, transform 0.15s;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
 }
-.timer-btn:hover {
-  background: rgba(255,255,255,0.2);
-  transform: scale(1.1);
+#window-indicators .ind-row:last-child { border-bottom: none; }
+#window-indicators .ind-label {
+  color: rgba(255,255,255,0.5);
+  font-weight: 600;
+  font-size: 0.85rem;
 }
-.timer-btn:active {
-  transform: scale(0.95);
+#window-indicators .ind-value {
+  color: #fff;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
 }
 
