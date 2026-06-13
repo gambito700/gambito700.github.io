@@ -94,9 +94,6 @@
       <!-- RIGHT: System Tray + Clock (Win11 aligned) -->
       <div class="tb-right">
         <div class="tb-system-tray">
-          <button class="tb-tray-btn" id="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">
-            <i class="fas fa-moon"></i>
-          </button>
           <button class="tb-tray-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma">EN</button>
           <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo"><i class="fas fa-image"></i></button>
           <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo"><i class="fas fa-window-restore"></i></button>
@@ -988,7 +985,7 @@
       </div>
 
       <!-- ======================== MÚSICA / YOUTUBE ======================== -->
-      <div class="win11-window d-none" id="window-music" style="width:340px; height:420px;">
+      <div class="win11-window d-none" id="window-music" style="width:340px; height:215px;">
         <div class="window-header">
           <div class="window-title"><img alt="Música" class="win-img" src="images/icons/music.png" /> Música</div>
           <div class="window-controls">
@@ -997,31 +994,31 @@
             <button class="btn-close" onclick="closeWindow('window-music')"><i class="fas fa-times"></i></button>
           </div>
         </div>
-        <div class="window-content" style="display:flex; flex-direction:column; padding:12px;">
-          <div style="text-align:center; margin-bottom:8px;">
-            <div class="music-title" id="window-music-name" style="font-size:0.95rem; font-weight:600;">lofi hip hop radio</div>
-            <div class="music-artist" id="window-music-artist" style="font-size:0.75rem; color:#999;">Lofi Girl · YouTube</div>
+        <div class="window-content" style="display:flex; flex-direction:column; padding:8px 12px; gap:4px;">
+          <div style="text-align:center; line-height:1.2;">
+            <div class="music-title" id="window-music-name" style="font-size:0.85rem; font-weight:600;">Midnight Vibes</div>
+            <div class="music-artist" id="window-music-artist" style="font-size:0.65rem; color:#999;">Track 1</div>
           </div>
-          <div class="music-progress" style="margin-bottom:8px;">
-            <div class="music-progress-bar" id="window-progress-bar" style="width:100%; height:4px; background:rgba(255,255,255,0.12); border-radius:2px; cursor:pointer; position:relative;">
+          <div class="music-progress" style="margin:2px 0;">
+            <div class="music-progress-bar" id="window-progress-bar" style="width:100%; height:3px; background:rgba(255,255,255,0.12); border-radius:2px; cursor:pointer; position:relative;">
               <div class="music-progress-fill" id="window-progress-fill" style="height:100%; width:0%; background:var(--accent, #0078d4); border-radius:2px; transition:width 0.3s;"></div>
             </div>
           </div>
-          <div class="music-controls" style="display:flex; justify-content:center; align-items:center; gap:16px; margin-bottom:8px;">
-            <button class="music-btn" id="window-music-prev" style="background:transparent; border:none; cursor:pointer; padding:8px; border-radius:50%;">
-              <img src="images/icons/skip-start.png" style="width:22px; height:22px; filter:invert(1);" alt="Anterior">
+          <div class="music-controls" style="display:flex; justify-content:center; align-items:center; gap:12px;">
+            <button class="music-btn" id="window-music-prev" style="background:transparent; border:none; cursor:pointer; padding:4px; border-radius:50%;">
+              <img src="images/icons/skip-start.png" style="width:18px; height:18px; filter:invert(1);" alt="Anterior">
             </button>
-            <button class="music-btn music-btn-play" id="window-music-play" style="width:48px; height:48px; border-radius:50%; border:none; background:var(--accent, #0078d4); cursor:pointer; display:flex; align-items:center; justify-content:center;">
-              <img src="images/icons/play.png" style="width:22px; height:22px; filter:invert(1);" id="window-music-play-icon" alt="Play">
+            <button class="music-btn music-btn-play" id="window-music-play" style="width:40px; height:40px; border-radius:50%; border:none; background:var(--accent, #0078d4); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+              <img src="images/icons/play.png" style="width:18px; height:18px; filter:invert(1);" id="window-music-play-icon" alt="Play">
             </button>
-            <button class="music-btn" id="window-music-next" style="background:transparent; border:none; cursor:pointer; padding:8px; border-radius:50%;">
-              <img src="images/icons/skip-end.png" style="width:22px; height:22px; filter:invert(1);" alt="Siguiente">
+            <button class="music-btn" id="window-music-next" style="background:transparent; border:none; cursor:pointer; padding:4px; border-radius:50%;">
+              <img src="images/icons/skip-end.png" style="width:18px; height:18px; filter:invert(1);" alt="Siguiente">
             </button>
           </div>
-          <div class="music-volume" style="display:flex; align-items:center; gap:8px; font-size:0.75rem; color:#888;">
-            <i class="fas fa-volume-down"></i>
+          <div class="music-volume" style="display:flex; align-items:center; gap:6px; font-size:0.65rem; color:#888;">
+            <i class="fas fa-volume-down" style="font-size:0.6rem;"></i>
             <input type="range" id="window-music-volume" min="0" max="100" value="70" style="flex:1; height:3px; accent-color:var(--accent, #0078d4); cursor:pointer;">
-            <i class="fas fa-volume-up"></i>
+            <i class="fas fa-volume-up" style="font-size:0.6rem;"></i>
           </div>
           <!-- YouTube player oculto (requerido por la API) -->
           <div id="yt-player-container" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute;">

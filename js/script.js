@@ -249,40 +249,8 @@
 
     var img = document.getElementById("tray-battery-icon");
     if (img) {
-      img.src = "images/icons/battery-full.png";
-      img.title = "Batería";
-    }
-
-    // Battery Status API — dinamico si el navegador lo soporta
-    if (navigator.getBattery) {
-      navigator.getBattery().then(function (battery) {
-        function updateBatteryIcon() {
-          var bi = document.getElementById("tray-battery-icon");
-          if (!bi) return;
-          var level = Math.round(battery.level * 100);
-          var charging = battery.charging;
-          var iconName;
-          if (charging) {
-            iconName = level > 80 ? "battery-charging-full" :
-                       level > 50 ? "battery-charging-half" :
-                       level > 20 ? "battery-charging-low" : "battery-charging-empty";
-          } else {
-            iconName = level > 80 ? "battery-full" :
-                       level > 50 ? "battery-three-quarters" :
-                       level > 20 ? "battery-half" : "battery-low";
-          }
-          bi.src = "images/icons/" + iconName + ".png";
-          bi.title = level + "%" + (charging ? " (cargando)" : "");
-          systemLog("[battery] Level: " + level + "%, Charging: " + charging);
-        }
-        updateBatteryIcon();
-        battery.addEventListener("levelchange", updateBatteryIcon);
-        battery.addEventListener("chargingchange", updateBatteryIcon);
-      }).catch(function () {
-        systemLog("[battery] API not available, using static icon");
-      });
-    } else {
-      systemLog("[battery] navigator.getBattery not supported");
+      img.src = "images/icons/battery-charging-full.png";
+      img.title = "Batería (simulada)";
     }
   }
 
@@ -478,38 +446,6 @@
           window.open(href, "_blank");
         }
       });
-    });
-  }
-
-  var ICON_DARK = "images/icons/theme-dark.png";   // modo oscuro activo
-  var ICON_LIGHT = "images/icons/theme-light.png"; // modo claro activo
-
-  function initTheme() {
-    var btn = document.getElementById("theme-toggle");
-    if (!btn) return;
-
-    function updateThemeBtn(isLight) {
-      btn.innerHTML = '<img src="' + (isLight ? ICON_LIGHT : ICON_DARK) + '" style="width:20px;height:20px;" alt="tema">';
-      btn.title = isLight ? "Cambiar a modo oscuro" : "Cambiar a modo claro";
-    }
-
-    // Default to Dark Mode on every load (no localStorage)
-    document.body.classList.remove("light-mode");
-    document.documentElement.dataset.theme = "dark";
-    updateThemeBtn(false);
-
-    btn.addEventListener("click", function () {
-      document.body.classList.toggle("light-mode");
-      var isLight = document.body.classList.contains("light-mode");
-      updateThemeBtn(isLight);
-      document.documentElement.dataset.theme = isLight ? "light" : "dark";
-
-      var desktop = document.getElementById("desktop");
-      if (desktop) {
-        desktop.style.backgroundColor = isLight ? "#e8e8e8" : "#0f0f0f";
-      }
-
-      systemLog("Theme toggled: " + (isLight ? "Light" : "Dark"));
     });
   }
 
@@ -854,13 +790,14 @@
      reproducción, progreso y volumen vía la API oficial de YT.
      ============================================================ */
 
-  // Playlist: IDs de YouTube de música sin copyright
+  // Playlist: canciones atractivas seleccionadas (embedding permitido)
   var ytPlaylist = [
-    { id: "jfKfPfyJRdk", name: "lofi hip hop radio", artist: "Lofi Girl · YouTube" },
-    { id: "5qap5aO4i9A", name: "lofi hip hop beats", artist: "Lofi Girl · YouTube" },
-    { id: "Na0w3Mz46GA", name: "Chillhop Essentials", artist: "Chillhop Music · YouTube" },
-    { id: "FDMq9ie0ih0", name: "Dark & Darker Lofi", artist: "Lofi Girl · YouTube" },
-    { id: "DWcJFNfaw9c", name: "Study Music — Deep Focus", artist: "Yellow Brick Cinema · YouTube" }
+    { id: "lPlmFBYqzF0", name: "Midnight Vibes", artist: "Track 1" },
+    { id: "RGlIdPb7QTA", name: "Electric Dreams", artist: "Track 2" },
+    { id: "6aouLxiL4Cw", name: "Urban Flow", artist: "Track 3" },
+    { id: "TQvXEza4fPc", name: "Neon Lights", artist: "Track 4" },
+    { id: "hPt1gUE1zAc", name: "Sunset Drive", artist: "Track 5" },
+    { id: "5QdtKpZgtmU", name: "Starlight", artist: "Track 6" }
   ];
   var ytPlayer = null;   // instancia YT.Player
   var ytReady = false;  // API cargada
@@ -1385,7 +1322,6 @@
     // AOS animations removed
 
     // OS Core
-    safeInit(initTheme, "initTheme");
     safeInit(initAutoLang, "initAutoLang");
     safeInit(initMenuToggle, "initMenuToggle");
     safeInit(initDrag, "initDrag");
