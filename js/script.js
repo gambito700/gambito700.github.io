@@ -247,11 +247,42 @@
       }
     }
 
-    // Battery Status API deprecated — usamos icono estatico
     var img = document.getElementById("tray-battery-icon");
     if (img) {
       img.src = "images/icons/battery-full.png";
       img.title = "Batería";
+    }
+
+    // Battery Status API — dinamico si el navegador lo soporta
+    if (navigator.getBattery) {
+      navigator.getBattery().then(function (battery) {
+        function updateBatteryIcon() {
+          var bi = document.getElementById("tray-battery-icon");
+          if (!bi) return;
+          var level = Math.round(battery.level * 100);
+          var charging = battery.charging;
+          var iconName;
+          if (charging) {
+            iconName = level > 80 ? "battery-charging-full" :
+                       level > 50 ? "battery-charging-half" :
+                       level > 20 ? "battery-charging-low" : "battery-charging-empty";
+          } else {
+            iconName = level > 80 ? "battery-full" :
+                       level > 50 ? "battery-three-quarters" :
+                       level > 20 ? "battery-half" : "battery-low";
+          }
+          bi.src = "images/icons/" + iconName + ".png";
+          bi.title = level + "%" + (charging ? " (cargando)" : "");
+          systemLog("[battery] Level: " + level + "%, Charging: " + charging);
+        }
+        updateBatteryIcon();
+        battery.addEventListener("levelchange", updateBatteryIcon);
+        battery.addEventListener("chargingchange", updateBatteryIcon);
+      }).catch(function () {
+        systemLog("[battery] API not available, using static icon");
+      });
+    } else {
+      systemLog("[battery] navigator.getBattery not supported");
     }
   }
 
@@ -277,7 +308,7 @@
 
       function startDrag(e) {
         if (e.target.closest("button")) return;
-        if (win.classList.contains("d-none") || win.classList.contains("minimized")) return;
+        if (win.classList.contains("d-none") || win.classList.contains("minimized") || win.classList.contains("maximized")) return;
         activeWin = win;
         isDragging = true;
         var pos = getPos(e);
@@ -403,7 +434,8 @@
     d.style.backgroundImage = "none";
     d.style.backgroundColor = "#1a1a2e";
     var img = new Image();
-    img.crossOrigin = "anonymous";
+    // No usar crossOrigin: solo es background-image (no canvas),
+    // y crossOrigin causa fallos con los redirects de picsum.photos
     img.onload = function () {
       d.style.backgroundImage = "url('" + url + "')";
       d.style.backgroundColor = "#0f0f0f";
@@ -494,11 +526,6 @@
     var d = document.getElementById("desktop");
     if (!d) return;
     d.style.backgroundColor = "#0f0f0f";
-    if (!navigator.onLine) {
-      systemLog("[wallpaper] Offline");
-      setWallpaperFallback(d);
-      return;
-    }
     try {
       var seed = Math.floor(Math.random() * 1000);
       loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
@@ -618,7 +645,11 @@
       // Skip inputs, textareas, accordion buttons (Bootstrap managed), and select
       if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
       if (el.classList.contains("accordion-button")) return;
-      if (el.classList.contains("txt-fx")) return;  // TextFX manages its own DOM
+      // txt-fx elements: actualizar textContent (initTextFx reconstruye el DOM interno)
+      if (el.classList.contains("txt-fx")) {
+        el.textContent = val;
+        return;
+      }
       el.textContent = val;
     });
     // Update placeholders
@@ -921,6 +952,10 @@
     var artistEl = document.getElementById("flyout-music-artist");
     if (nameEl) nameEl.textContent = track.name;
     if (artistEl) artistEl.textContent = track.artist;
+    var winName = document.getElementById("window-music-name");
+    var winArtist = document.getElementById("window-music-artist");
+    if (winName) winName.textContent = track.name;
+    if (winArtist) winArtist.textContent = track.artist;
   }
 
   function startProgressLoop() {
@@ -1004,6 +1039,17 @@
     if (typeof YT !== "undefined" && YT.Player && !ytPlayer) {
       window.onYouTubeIframeAPIReady();
     }
+
+    // Polling: si YT.Player aun no esta disponible, reintentar cada 500ms
+    (function pollYT() {
+      if (typeof YT !== "undefined" && YT.Player && !ytPlayer) {
+        systemLog("[music] Fallback: YT.Player detected via polling, creating player");
+        window.onYouTubeIframeAPIReady();
+      } else if (!ytPlayer) {
+        systemLog("[music] Polling: YT.Player not ready yet, retrying in 500ms");
+        setTimeout(pollYT, 500);
+      }
+    })();
 
     updateMusicUI(ytCurrentTrack);
     systemLog("[music] Player inicializado — modo YouTube IFrame API");
@@ -1326,6 +1372,10 @@
   /* ============================================================
      J. DOMContentLoaded — Main Init
      ============================================================ */
+  function safeInit(fn, name) {
+    try { fn(); } catch (e) { systemLog("[error] " + name + " failed: " + e.message); console.error(name, e); }
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
 
     // Console welcome
@@ -1335,35 +1385,35 @@
     // AOS animations removed
 
     // OS Core
-    initTheme();
-    initAutoLang();
-    initMenuToggle();
-    initDrag();
-    restoreOS();
-    initWallpaper();
-    initSystemTray();
+    safeInit(initTheme, "initTheme");
+    safeInit(initAutoLang, "initAutoLang");
+    safeInit(initMenuToggle, "initMenuToggle");
+    safeInit(initDrag, "initDrag");
+    safeInit(restoreOS, "restoreOS");
+    safeInit(initWallpaper, "initWallpaper");
+    safeInit(initSystemTray, "initSystemTray");
 
     // UI features
-    initClock();
-    initSkillBars();
-    initLangToggle();
-    initTextFx();
-    initContactForm();
-    initCalendar();
-    initWeather();
-    initMusicPlayer();
-    initObfuscatedContacts();
+    safeInit(initClock, "initClock");
+    safeInit(initSkillBars, "initSkillBars");
+    safeInit(initLangToggle, "initLangToggle");
+    safeInit(initTextFx, "initTextFx");
+    safeInit(initContactForm, "initContactForm");
+    safeInit(initCalendar, "initCalendar");
+    safeInit(initWeather, "initWeather");
+    safeInit(initMusicPlayer, "initMusicPlayer");
+    safeInit(initObfuscatedContacts, "initObfuscatedContacts");
 
     // Flyout toggle on clock click
-    initFlyout();
+    safeInit(initFlyout, "initFlyout");
 
     // New features
-    initCalculator();
-    initToastDismiss();
-    initFlyoutCalendar();
-    initIndicators();
-    initTimer();
-    bindWindowMusicControls();
+    safeInit(initCalculator, "initCalculator");
+    safeInit(initToastDismiss, "initToastDismiss");
+    safeInit(initFlyoutCalendar, "initFlyoutCalendar");
+    safeInit(initIndicators, "initIndicators");
+    safeInit(initTimer, "initTimer");
+    safeInit(bindWindowMusicControls, "bindWindowMusicControls");
 
     // Auto-open music window on startup
     setTimeout(function () {

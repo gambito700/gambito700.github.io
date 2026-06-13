@@ -1559,16 +1559,6 @@ body.desktop-mode {
 }
 
 
-#windows-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: calc(100vh - 50px);
-  pointer-events: none;
-  z-index: 5;
-}
-
 /* Las ventanas SÍ capturan eventos */
 .win11-window {
   pointer-events: auto;
@@ -1691,10 +1681,10 @@ body.desktop-mode {
   100% { opacity: 0; transform: scale(0.8) translateY(30px); }
 }
 
-/* Maximize/restore animation */
+/* Maximize/restore animation (excluir left/top para no interferir con drag) */
 .win11-window.maximized,
 .win11-window:not(.maximized) {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-radius 0.3s ease, opacity 0.3s ease, transform 0.3s ease;
 }
 
 .win11-window.maximized {
