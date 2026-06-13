@@ -70,8 +70,8 @@ body {
   line-height: 1.6;
   font-size: 1rem;
   overflow-x: hidden;
-  /* Cursor nativo por defecto */
-  cursor: default;
+  /* Cursor personalizado Win11 */
+  cursor: url('../images/icons/icons8-cursor-50.png'), default;
   transition: background 0.4s ease, color 0.4s ease;
   -webkit-font-smoothing: antialiased;
   background-size: cover;
@@ -80,7 +80,7 @@ body {
   text-shadow: var(--ts-body-dark);
 }
 
-/* Cursor pointer en elementos interactivos */
+/* Cursor pointer en elementos interactivos (personalizado Win11) */
 button,
 a,
 label,
@@ -92,7 +92,7 @@ select,
 .sm-power-btn,
 [onclick],
 [role="button"] {
-  cursor: pointer !important;
+  cursor: url('../images/icons/icons8-cursor-de-mano-50.png'), pointer !important;
 }
 label,
 select,
@@ -104,7 +104,7 @@ select,
 .sm-power-btn,
 [onclick],
 [role="button"] {
-  cursor: pointer !important;
+  cursor: url('../images/icons/icons8-cursor-de-mano-50.png'), pointer !important;
 }
 
 /* Cursor text en inputs */
@@ -1314,7 +1314,7 @@ body.desktop-mode {
   z-index: 1;
   padding: 8px 4px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, 76px);
+  grid-template-columns: repeat(2, 76px);
   gap: 2px;
   align-content: start;
   justify-content: start;
@@ -1460,11 +1460,11 @@ body.desktop-mode {
 }
 
 #window-calendar {
-  position: absolute !important;
-  top: 80px !important;
-  left: 100px !important;
-  width: 340px !important;
-  height: 360px !important;
+  position: absolute;
+  top: 80px;
+  left: 100px;
+  width: 340px;
+  height: 360px;
 }
 
 /* ── Flyout Panel (Notification Center) ── */
@@ -2001,12 +2001,12 @@ body.desktop-mode {
 .desktop-mode button,
 .desktop-mode .desktop-icon,
 .desktop-mode .cal-nav-btn {
-  cursor: pointer !important;
+  cursor: url('../images/icons/icons8-cursor-de-mano-50.png'), pointer !important;
 }
 
 .win11-window .btn-special,
 .win11-window .btn-outline-custom {
-  cursor: pointer !important;
+  cursor: url('../images/icons/icons8-cursor-de-mano-50.png'), pointer !important;
 }
 
 /* WEATHER WIDGET COMPACTO */
@@ -2151,7 +2151,7 @@ body.desktop-mode {
   /* Iconos: grid izquierda */
   .desktop-icons {
     left: 8px;
-    grid-template-columns: repeat(auto-fill, 72px);
+    grid-template-columns: repeat(2, 72px);
     gap: 2px;
     padding: 8px 4px;
   }
@@ -2172,7 +2172,7 @@ body.desktop-mode {
 
   /* Iconos: grid izquierda */
   .desktop-icons {
-    grid-template-columns: repeat(auto-fill, 76px);
+    grid-template-columns: repeat(2, 76px);
     gap: 2px;
   }
 
@@ -2189,7 +2189,7 @@ body.desktop-mode {
 
   /* Layout completo — grid izquierda */
   .desktop-icons {
-    grid-template-columns: repeat(auto-fill, 76px);
+    grid-template-columns: repeat(2, 76px);
     gap: 2px;
   }
 

@@ -243,7 +243,7 @@
 
     var img = document.getElementById("tray-battery-icon");
     if (img) {
-      img.src = "images/icons/battery-charging-full.png";
+      img.src = "images/icons/battery-charging.png";
       img.title = "Batería (simulada)";
     }
   }
@@ -925,7 +925,7 @@
 
     if (event.data === YT.PlayerState.PLAYING) {
       ytPlaying = true;
-      if (winPlayIconImg) winPlayIconImg.src = "images/icons/pause.png";
+      if (winPlayIconImg) winPlayIconImg.src = "images/icons/pausa.png";
       startProgressLoop();
       systemLog("[music] Playing: " + ytPlaylist[ytCurrentTrack].name);
       window.showToast(ytPlaylist[ytCurrentTrack].name, ytPlaylist[ytCurrentTrack].artist);
@@ -935,7 +935,7 @@
       stopProgressLoop();
       systemLog("[music] Paused");
     } else if (event.data === YT.PlayerState.BUFFERING) {
-      if (winPlayIconImg) winPlayIconImg.src = "images/icons/pause.png";
+      if (winPlayIconImg) winPlayIconImg.src = "images/icons/pausa.png";
     } else if (event.data === YT.PlayerState.ENDED) {
       ytCurrentTrack = (ytCurrentTrack + 1) % ytPlaylist.length;
       loadYTTrack(ytCurrentTrack, true);
