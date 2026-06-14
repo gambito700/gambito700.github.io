@@ -8,22 +8,21 @@
    1. VARIABLES GLOBALES
    ------------------------------------------------------- */
 :root {
-  /* Paleta Windows 11 Minimalista Dark */
-  --bg: #050523;
-  --surface: rgba(255, 255, 255, 0.05);
+  /* Paleta Windows 11 Minimalista Dark con mejor contraste */
+  --bg: #0a0a14;
+  --surface: rgba(255, 255, 255, 0.08);
   /* Acrylic base */
   --surface-opaque: #2b2b2b;
-  --border: rgba(255, 255, 255, 0.08);
-  /* Sutil */
-  --text: #aaa4b7;
-  --muted: #4e5a73;
-  --heading: #f0e2f6;
-  --accent: #f0e2f6;
-  /* Lavanda brillante para stands out */
-  --accent2: #0078d4;
+  --border: rgba(255, 255, 255, 0.16);  /* Más visible para borders */
+  /* Mejor contraste de texto */
+  --text: #e0e0e0;
+  --muted: #7a8294;
+  --heading: #ffffff;
+  --accent: #00b4ff;  /* Azul claro accesible */
   /* Azul Windows 11 */
-  --accent-soft: rgba(0, 120, 212, 0.15);
-  --sidebar-bg: rgba(32, 32, 32, 0.6);
+  --accent2: #0078d4;  
+  --accent-soft: rgba(0, 180, 255, 0.2);
+  --sidebar-bg: rgba(32, 32, 32, 0.8);
   --sidebar-w: 280px;
   --glass: blur(30px);
   --radius: 8px;
@@ -167,17 +166,18 @@ a:hover {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 50px;
+  height: clamp(40px, 6vh, 50px);
+  min-height: 40px;
   display: flex;
   align-items: center;
-  padding: 0 12px;
-  background: rgba(32, 32, 32, 0.82);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  z-index: 10000;
-  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
+  padding: 0 calc(max(8px, 0.5vw));
+  background: rgba(32, 32, 32, 0.88);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 80;
+  box-shadow: 0 -1px min(12px, 2vw) rgba(0, 0, 0, 0.35);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  }
 
 /* Three-zone inner layout: left | center | right */
 .taskbar-inner {
@@ -212,7 +212,7 @@ a:hover {
 .taskbar-apps {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
 }
 
 /* RIGHT: tray, lang, clock */
@@ -227,14 +227,16 @@ a:hover {
 .tb-btn {
   background: transparent;
   border: none;
-  width: 40px;
-  height: 40px;
+  width: clamp(32px, 4vw, 48px);
+  height: clamp(32px, 4vw, 48px);
+  min-width: 32px;
+  min-height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
   font-size: 1.1rem;
-  border-radius: 6px;
+  border-radius: max(4px, 0.3vw);
   transition: background 0.2s, transform 0.1s;
   cursor: pointer;
   position: relative;
@@ -854,7 +856,7 @@ section {
 }
 
 .skill-bar-item {
-  margin-bottom: 22px;
+  margin-bottom: 1rem;
 }
 
 .chart-header {
@@ -874,13 +876,14 @@ section {
   letter-spacing: 0.05em;
 }
 
-/* Contenedor de la barra */
+/* Contenedor de la barra - optimizado */
 .chart-border {
   height: 3px;
   background: var(--border);
   position: relative;
   overflow: hidden;
   border-radius: 2px;
+  will-change: transform;
 }
 
 /* Barra de progreso – JS asigna el width, animado con CSS transition */
@@ -981,14 +984,14 @@ section {
 .hover-overlay-win {
   position: absolute;
   inset: 0;
-  background: rgba(32, 32, 32, 0.4);
+  background: rgba(32, 32, 32, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity var(--t-fast);
-  backdrop-filter: blur(4px);
-}
+  will-change: opacity;
+  }
 
 .image-holder:hover .hover-overlay-win {
   opacity: 1;
@@ -1255,6 +1258,13 @@ section {
 ::selection {
   background: var(--accent);
   color: #0a0a0a;
+  text-shadow: none !important;
+}
+
+/* Mejor contraste de texto según WCAG */
+h1, h2, h3, h4, h5, h6, p, span, div {
+  color: var(--text) !important;
+  text-shadow: none;
 }
 
 /* -------------------------------------------------------
@@ -1293,8 +1303,9 @@ body.desktop-mode {
 
 .desktop,
 .win11-desktop {
-  width: 100%;
-  height: 100vh;
+  width: clamp(320px, 100vw, 1920px);
+  height: calc(100vh - 60px);
+  max-height: calc(100vh - 60px);
   overflow: hidden;
   position: absolute;
   top: 0;
@@ -1302,20 +1313,25 @@ body.desktop-mode {
   background-color: #050523;
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
+  /* Optimize background rendering */
+  will-change: background-image;
+  /* Smooth transition for wallpaper changes */
+  transition: background-image 0.4s ease-out, background-color 0.3s ease;
 }
 
 .desktop-icons {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 1rem;
+  left: 1rem;
   right: auto;
   width: auto;
-  height: calc(100vh - 50px);
-  z-index: 1;
-  padding: 8px 4px;
+  height: calc(100vh - 60px - 1rem);
+  z-index: 10;
+  padding: 1rem;
   display: grid;
-  grid-template-columns: repeat(2, 76px);
-  gap: 2px;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 1rem;
   align-content: start;
   justify-content: start;
   pointer-events: none;
@@ -1474,15 +1490,17 @@ body.desktop-mode {
 
 /* Window Header */
 .window-header {
-  height: 34px;
+  height: clamp(28px, 3vh, 34px);
+  min-height: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   user-select: none;
   background: rgba(255, 255, 255, 0.025);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  padding-left: 12px;
-}
+  padding-left: max(8px, 0.5vw);
+  gap: 0.5rem;
+  }
 
 /* Win11-style window controls */
 .window-controls {
@@ -1492,14 +1510,16 @@ body.desktop-mode {
 }
 
 .window-controls button {
-  width: 46px;
+  width: clamp(28px, 3vw, 46px);
+  min-width: 28px;
   height: 100%;
+  min-height: 28px;
   border: none;
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: clamp(0.5rem, 1.8vw, 0.75rem);
   color: #fff;
   transition: background 0.08s ease;
   flex-shrink: 0;
@@ -1511,6 +1531,11 @@ body.desktop-mode {
   font-size: 0.6rem;
   line-height: 1;
 }
+/* Reduce z-index para evitar GPU overload (límites según criterios de aceptación) */
+.win11-window {
+  z-index: 100 !important;
+}
+
 .window-controls button:hover {
   background: rgba(255,255,255,0.08);
 }
@@ -1528,11 +1553,12 @@ body.desktop-mode {
 }
 
 .window-content {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   background: rgba(18, 18, 18, 0.7);
   position: relative;
+  overscroll-behavior: contain;
 }
 
 .window-title i {
@@ -1546,7 +1572,8 @@ body.desktop-mode {
 }
 
 .window-inner-section {
-  padding: 30px;
+  padding: 1.5rem;
+  overscroll-behavior: none;
 }
 
 /* CV Window custom styles (replaces inline styles) */
@@ -1690,18 +1717,29 @@ body.desktop-mode {
   padding: 8px 18px;
 }
 
-/* Focus visible for keyboard accessibility */
+/* WCAG 2.1 - Focus visible for keyboard accessibility */
 :focus-visible {
-  outline: 2px solid var(--accent) !important;
-  outline-offset: 2px !important;
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(0, 180, 255, 0.3);
 }
 
 .desktop-icon:focus-visible,
 .tb-btn:focus-visible,
 .sm-grid-item:focus-visible,
-.sm-power-btn:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+.sm-power-btn:focus-visible,
+.window-controls button:focus-visible,
+.cal-nav-btn:focus-visible,
+.btn-min:focus-visible,
+.btn-max:focus-visible,
+.btn-close:focus-visible,
+.btn-submit:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(0, 180, 255, 0.3);
+
+  /* Asegurar padding para evitar overlap con bordes */
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* Old nav-overlay (Win98) styles removed */
@@ -2214,18 +2252,17 @@ body.desktop-mode {
    ─────────────────────────────────────────────────────────── */
 .win-toast {
   position: fixed;
-  bottom: 70px;
-  right: 16px;
+  bottom: max(2rem, 5vh);
+  right: 1rem;
   z-index: 99999;
-  background: rgba(32, 32, 32, 0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   min-width: 280px;
-  max-width: 360px;
+  max-width: clamp(280px, 90vw, 360px);
   animation: toastSlideIn 0.3s ease;
+  will-change: transform, opacity;
 }
 @keyframes toastSlideIn {
   from { opacity: 0; transform: translateX(40px); }

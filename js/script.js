@@ -27,10 +27,13 @@
   // zIndex counter ensures each opened/clicked window comes to front
   var zIndexCounter = 100;
 
-  function bringToFront(win) {
-    zIndexCounter++;
-    win.style.zIndex = zIndexCounter;
+function bringToFront(win) {
+  zIndexCounter = Math.min(zIndexCounter + 2, 150);
+  win.style.zIndex = zIndexCounter;
+  if (zIndexCounter >= 140) {
+    zIndexCounter = 100;
   }
+}
 
   /* ── Límites dinámicos según breakpoint actual ──────────
      Devuelve el área segura donde las ventanas pueden moverse.
@@ -219,11 +222,15 @@
   }
 
   // ── Re-clamp Windows (Dynamic boundaries) ─────────────────
-  function reclampAllWindows() {
+function reclampAllWindows() {
+  try {
     document.querySelectorAll(".win11-window:not(.maximized):not(.d-none)").forEach(win => {
       clampWindowToBounds(win);
     });
+  } catch (e) {
+    console.warn("Error reclamping windows:", e);
   }
+}
 
   // ── System Tray (Battery, etc) ──────────────────────────────
   function initSystemTray() {
@@ -385,29 +392,58 @@
   }
 
   function getWallpaperUrl(seed) {
-    // Use viewport dimensions for crisp wallpaper, capped at 1920x1080
-    var w = Math.min(window.innerWidth, 1920);
-    var h = Math.min(window.innerHeight, 1080);
-    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h;
+    // Reduced max size for background images (1280x720) - much faster loading, less bandwidth
+    // Using WebP format via picsum.photos format parameter
+    var w = Math.min(window.innerWidth, 1280);
+    var h = Math.min(window.innerHeight, 720);
+    // Ensure minimum dimensions to avoid tiny images on small viewports
+    w = Math.max(w, 800);
+    h = Math.max(h, 450);
+    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h + "?format=webp";
   }
 
   function loadWallpaperUrl(d, url, fallback) {
-    // Show loading placeholder
+    // Show blur placeholder while loading
     d.style.backgroundImage = "none";
-    d.style.backgroundColor = "#1a1a2e";
+    d.style.backgroundColor = "#0f0f0f";
+    d.style.filter = "blur(0)";
+    d.style.transition = "filter 0.6s ease-out, background-color 0.3s ease";
+
     var img = new Image();
-    // No usar crossOrigin: solo es background-image (no canvas),
-    // y crossOrigin causa fallos con los redirects de picsum.photos
+    img.decoding = "async"; // Allow async decoding for better performance
+    img.loading = "lazy"; // Hint for lazy loading (though not used directly as bg)
+
     img.onload = function () {
+      // Apply loaded image with smooth transition
       d.style.backgroundImage = "url('" + url + "')";
       d.style.backgroundColor = "#0f0f0f";
-      systemLog("[wallpaper] Loaded: " + url.substring(0, 60));
+      // Remove blur after image loads
+      requestAnimationFrame(function () {
+        d.style.filter = "blur(0px)";
+      });
+      systemLog("[wallpaper] Loaded: " + url.substring(0, 60) + " (" + img.width + "x" + img.height + ")");
     };
     img.onerror = function () {
       systemLog("[wallpaper] Failed: " + url.substring(0, 60));
+      d.style.filter = "blur(0px)";
       if (fallback) fallback();
     };
     img.src = url;
+  }
+
+  // Preload next wallpaper for instant switching
+  function preloadNextWallpaper() {
+    var seed = Math.floor(Math.random() * 1000);
+    var url = getWallpaperUrl(seed);
+    var link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.type = "image/webp";
+    link.href = url;
+    document.head.appendChild(link);
+    // Clean up after load
+    link.onload = function () { link.remove(); };
+    link.onerror = function () { link.remove(); };
   }
 
   window.nextWallpaper = function () {
@@ -461,17 +497,22 @@
       loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
         setWallpaperFallback(d);
       });
+      // Preload next wallpaper for faster switching
+      setTimeout(preloadNextWallpaper, 2000);
     } catch (e) { systemLog("[wallpaper] Error: " + e.message); setWallpaperFallback(d); }
   }
 
-  // ── Auto-detect Language ──────────────────────────────────────
-  function initAutoLang() {
-    var nav = navigator.language || "es";
-    var lang = nav.startsWith("es") ? "es" : "en";
-    systemLog("Auto-detected language: " + lang);
-    currentLang = lang;
-    updateLanguage();
-  }
+// ── Auto-detect Language ──────────────────────────────────────
+function initAutoLang() {
+  var nav = navigator.language || "es";
+  var lang = nav.startsWith("es") ? "es" : "en";
+  systemLog("Auto-detected language: " + lang);
+  currentLang = lang;
+  updateLanguage();
+  
+  // Añadir atributos de lenguaje para WCAG 2.1
+  document.documentElement.setAttribute("lang", lang);
+}
 
   // ── Indicators (UTM / UF / Dólar) ─────────────────────────
   function initIndicators() {
