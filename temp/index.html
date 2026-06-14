@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<!-- ============================================================
+  index.html  –  Portafolio estilo Windows 11
+  ============================================================
+  Este archivo es la entrada principal del sitio. Simula un
+  escritorio Windows 11 con ventanas, barra de tareas, menú
+  inicio, iconos y animaciones.
+
+  SECCIONES PRINCIPALES:
+    <head>        – Metadatos, SEO, estilos y librerías externas
+    Start Menu   – Menú Inicio al hacer clic en el botón Windows
+    Taskbar      – Barra inferior con botones, reloj y bandeja
+    Desktop      – Iconos del escritorio y fondo dinámico
+    Windows      – Ventanas del sistema (CV, About, Skills...)
+    Scripts      – Carga de librerías JS al final del body
+  ============================================================ -->
+<html data-theme="dark" lang="es">
+
+<!-- ==============================================================
+  <head>  –  Metadatos, SEO, estilos y librerías externas
+  ================================================================
+  Aquí se definen:
+  - Meta tags (charset, viewport, description)
+  - Content-Security-Policy (CSP) para seguridad
+  - Open Graph / Twitter Cards para redes sociales
+  - JSON-LD (datos estructurados para buscadores)
+  - CSS externo: Bootstrap 5, Font Awesome 6, Google Fonts
+  - CSS propio: style.css, extra.css
+  ============================================================== -->
+<head>
+  <meta charset="utf-8" />
+  <!-- VIEWPORT: controla cómo se ve en móviles -->
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Alex Martínez – Fullstack &amp; Diseño Original 2026</title>
+  <!-- DESCRIPTION: texto que aparece en los resultados de búsqueda -->
+  <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
+    name="description" />
+  <!-- CSP (GitHub Pages no deja poner headers HTTP, usamos meta) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://*.picsum.photos https://fastly.picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co https://formspree.io https://gambito700.github.io https://www.youtube.com; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; upgrade-insecure-requests;">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+  <!-- Open Graph / Twitter Cards -->
+  <meta property="og:title" content="Alex Martínez – Fullstack &amp; Diseño Original 2026">
+  <meta property="og:description" content="Portafolio profesional – Fullstack &amp; Diseño Original">
+  <meta property="og:url" content="https://gambito700.github.io/">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Alex Martínez – Fullstack &amp; Diseño Original 2026">
+  <meta name="twitter:description" content="Portafolio profesional – Fullstack &amp; Diseño Original – Villarrica, Chile">
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Alex Michel Martínez Díaz","jobTitle":"Fullstack & Diseño Original","url":"https://gambito700.github.io/","address":{"@type":"PostalAddress","addressLocality":"Villarrica","addressRegion":"La Araucanía","addressCountry":"CL"},"knowsAbout":["HTML5","CSS3","JavaScript","WordPress","SEO","Growth Hacking"],"alumniOf":["AIEP","CFT Andrés Bello"]}</script>
+  <!-- AOS CSS removed -->
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Font Awesome 6 -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap"
+    rel="stylesheet" />
+  <!-- Preconnect a CDNs -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <!-- Portfolio styles -->
+  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/extra.css" rel="stylesheet" />
+<!-- Preload dynamic wallpaper removed (file missing) -->
+</head>
+
+<body class="desktop-mode">
+
+  <!-- ================================================================
+     START MENU (WINDOWS 11 STYLE)
+     ================================================================
+     Menú Inicio que se despliega al hacer clic en el botón Windows
+     de la barra de tareas. Contiene:
+     - Barra de búsqueda (placeholders bilingües)
+     - Sección "Fijados" con acceso directo a cada ventana
+     - Pie con nombre de usuario y botón de apagado
+
+     CÓMO MODIFICAR:
+     - Para agregar un acceso directo, copia un bloque .sm-grid-item
+       y cambia el onclick="openWindow('window-xxxx')" y la imagen.
+     - Los textos usan data-en / data-es para soporte bilingüe.
+     ================================================================ -->
+<div id="start-menu" class="win11-start-menu">
+  <div class="sm-search-bar">
+    <i class="fas fa-search sm-search-icon"></i>
+    <input type="text" class="sm-search-input" data-placeholder-en="Search apps..." data-placeholder-es="Buscar aplicaciones..." placeholder="Buscar aplicaciones...">
+  </div>
+  <div class="sm-section">
+    <span class="sm-section-title" data-en="Pinned" data-es="Fijados">Fijados</span>
+    <div class="sm-apps-grid">
+      <div class="sm-grid-item" onclick="openWindow('window-cv')"><img src="images/icons/intro.png"><span>CV</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-about')"><img src="images/icons/about.png"><span>About</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-experience')"><img src="images/icons/experience.png"><span>Exp.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Skills</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proy.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contact</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-indicators')"><img src="images/icons/scraper.png"><span>Ind.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
+      <div class="sm-grid-item" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
+    </div>
+  </div>
+  <div class="sm-footer">
+    <span class="sm-user-name">Alex Martínez</span>
+    <div class="sm-power-actions">
+      <button class="sm-power-btn" onclick="showPowerPopup()" title="Apagar" aria-label="Apagar">
+        <i class="fas fa-power-off"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+  <!-- ================================================================
+     WINDOWS 11 TASKBAR
+     ================================================================
+     Barra inferior fija con tres zonas:
+     - Izquierda:  Espaciador (para mantener el centrado)
+     - Centro:     Botón Inicio + iconos de apps abiertas
+     - Derecha:    Bandeja del sistema (idioma, wallpaper, wifi,
+                   volumen, batería) y reloj digital
+
+     CÓMO MODIFICAR:
+     - Los iconos de la bandeja están en .tb-system-tray. Agrega
+       o quita <button> o <i> según necesites.
+     - El reloj se actualiza automáticamente desde js/script.js
+       buscando los elementos #clock-time y #clock-date.
+     ================================================================ -->
+  <div class="win11-taskbar">
+    <div class="taskbar-inner">
+      <!-- LEFT: Spacer (Win11 style) -->
+      <div class="tb-left"></div>
+      <!-- CENTER: Start Button + Dynamic App Icons (Win11 centered) -->
+      <div class="tb-center">
+        <button class="tb-btn tb-start" id="start-btn" title="Inicio" aria-label="Inicio">
+          <i class="fab fa-windows"></i>
+        </button>
+        <div id="taskbar-icons" class="taskbar-apps"><!-- App icons added by JS --></div>
+      </div>
+      <!-- RIGHT: System Tray + Clock (Win11 aligned) -->
+      <div class="tb-right">
+        <div class="tb-system-tray">
+          <button class="tb-tray-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma">EN</button>
+          <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo" aria-label="Cambiar fondo de pantalla"><i class="fas fa-image"></i></button>
+          <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo" aria-label="Cerrar todas las ventanas"><i class="fas fa-window-restore"></i></button>
+          <i class="fas fa-wifi"></i>
+          <img src="images/icons/icons8-volumen-bajo-50.png" style="width:16px;height:16px;object-fit:contain;filter:brightness(10);" alt="Volumen">
+          <i class="fas fa-battery-three-quarters"></i>
+        </div>
+        <div class="tb-clock" id="taskbar-clock">
+          <span id="clock-time">--:--</span>
+          <span id="clock-date">--/--/----</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+     DESKTOP
+     ================================================================
+     Contenedor principal del escritorio. Abarca toda la pantalla y
+     contiene:
+     - .desktop-icons:  Iconos del escritorio (accesos directos)
+     - #moving-letters: Animación de bienvenida (texto flotante)
+     - #windows-container:  Todas las ventanas del sistema
+
+     El fondo de pantalla se controla desde js/script.js mediante
+     Vanta.js (ondas) o imágenes de Picsum.
+     ================================================================ -->
+  <div class="win11-desktop" id="desktop">
+
+    <!-- DESKTOP ICONS
+         ============================================================
+         Cada .desktop-icon es un acceso directo que abre una ventana
+         al hacer clic (onclick="openWindow('window-xxx')").
+
+         CÓMO MODIFICAR:
+         - Para agregar un icono, copia un bloque .desktop-icon,
+           cambia el ID de ventana, la imagen y el texto.
+         - También puede ser un <a> para enlaces externos (ej: DuckDuckGo).
+         - Los atributos data-en / data-es permiten cambiar el texto
+           según el idioma seleccionado.
+         ============================================================ -->
+    <div class="desktop-icons">
+
+      <div class="desktop-icon" onclick="openWindow('window-cv')">
+        <img alt="CV" class="desktop-png-icon" src="images/icons/intro.png" loading="lazy" />
+        <span data-en="Welcome" data-es="Bienvenida">Bienvenida</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-about')">
+        <img alt="Sobre Mí" class="desktop-png-icon" src="images/icons/about.png" loading="lazy" />
+        <span data-en="About" data-es="Sobre Mí">Sobre Mí</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-experience')">
+        <img alt="Experiencia" class="desktop-png-icon" src="images/icons/experience.png" loading="lazy" />
+        <span data-en="Experience" data-es="Experiencia">Experiencia</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-skills')">
+        <img alt="Habilidades" class="desktop-png-icon" src="images/icons/skills.png" loading="lazy" />
+        <span data-en="Skills" data-es="Habilidades">Habilidades</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-portfolio')">
+        <img alt="Proyectos" class="desktop-png-icon" src="images/icons/portfolio.png" loading="lazy" />
+        <span data-en="Projects" data-es="Proyectos">Proyectos</span>
+      </div>
+
+      <!-- DuckDuckGo — abre nueva pestaña con búsqueda -->
+      <a class="desktop-icon" href="https://duckduckgo.com" target="_blank" style="text-decoration:none;">
+        <img alt="DuckDuckGo" class="desktop-png-icon" src="images/icons/duckduckgo.png" loading="lazy"/>
+        <span>DuckDuckGo</span>
+      </a>
+
+      <div class="desktop-icon" onclick="openWindow('window-contact')">
+        <img alt="Contacto" class="desktop-png-icon" src="images/icons/contact.png" loading="lazy" />
+        <span data-en="Contact" data-es="Contacto">Contacto</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-music')">
+        <img alt="Música" class="desktop-png-icon" src="images/icons/music.png" loading="lazy" />
+        <span data-en="Music" data-es="Música">Música</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-weather')">
+        <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" loading="lazy" />
+        <span data-en="Weather" data-es="Clima">Clima</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-calendar')">
+        <img alt="Calendario" class="desktop-png-icon" src="images/icons/calendar.png" loading="lazy">
+        <span data-en="Calendar" data-es="Calendario">Calendar</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-indicators')">
+        <img alt="Indicadores" class="desktop-png-icon" src="images/icons/scraper.png" loading="lazy">
+        <span data-en="Indicators" data-es="Indicadores">Indicadores</span>
+      </div>
+
+      <a class="desktop-icon" href="https://www.instagram.com/cine_chatarra/" target="_blank" rel="noopener noreferrer"
+         style="text-decoration:none;">
+        <img alt="Cine Chatarra" class="desktop-png-icon" src="images/icons/instagram.png" loading="lazy">
+        <span>Cine Chatarra</span>
+      </a>
+
+      <a class="desktop-icon" href="https://wa.me/56945341572?text=Hola%20Alex" style="text-decoration:none;"
+        target="_blank">
+        <img alt="WhatsApp" class="desktop-png-icon" src="images/icons/whatsapp.png" loading="lazy">
+        <span>WhatsApp</span>
+      </a>
+
+      <div class="desktop-icon" onclick="openWindow('window-calculator')">
+        <i class="fas fa-calculator win-icon-fa"></i>
+        <span data-en="Calculator" data-es="Calculadora">Calculadora</span>
+      </div>
+
+      <div class="desktop-icon" onclick="openWindow('window-logs')">
+        <img alt="Log Viewer" class="desktop-png-icon" src="images/icons/logviewer.png" loading="lazy" />
+        <span data-en="Logs" data-es="Registros">System Logs</span>
+      </div>
+
+      <div class="desktop-icon" onclick="window.open('windows11-simulator.pdf','_blank');">
+        <i class="fas fa-file-pdf win-icon-fa" style="font-size:24px;color:#ff4444;"></i>
+        <span data-en="Download PDF" data-es="Descargar PDF">Descargar PDF</span>
+      </div>
+
+    </div><!-- /.desktop-icons -->
+    <div id="moving-letters"></div>
+
+    <!-- ================================================================
+       WINDOWS CONTAINER
+       ================================================================
+       Aquí dentro están TODAS las ventanas del sistema. Cada ventana
+       es un div con clase .win11-window y un ID único (window-cv,
+       window-about, window-skills, etc.).
+
+       ESTRUCTURA DE UNA VENTANA:
+         .win11-window          ← Contenedor principal
+           .window-header       ← Barra de título (con icono y controles)
+             .window-title      ← Ícono + nombre
+             .window-controls   ← Botones: minimizar, maximizar, cerrar
+           .window-content      ← Contenido interno (se desplaza)
+
+       CÓMO AGREGAR UNA VENTANA NUEVA:
+       1. Copia un bloque .win11-window completo.
+       2. Cámbiale el ID (ej: "window-miventana").
+       3. Agrega un .desktop-icon en la sección de iconos que haga
+          onclick="openWindow('window-miventana')".
+       4. Agrega un .sm-grid-item en el Start Menu con el mismo onclick.
+       ================================================================ -->
+    <div id="windows-container">
+
+      <!-- ======================== CV / INICIO ======================== -->
+      <div class="win11-window d-none" id="window-cv" style="width:600px; height:480px;">
+        <div class="window-header">
+          <div class="window-title"><img alt="CV" class="win-img" src="images/icons/intro.png" /> Portafolio — Alex
+            Martínez</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-cv')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-cv')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-cv')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content window-content-cv">
+          <!-- Welcome banner -->
+          <div class="cv-hero-banner">
+            <span class="cv-hero-badge" data-en="FRONT-END &amp; UI/UX DEVELOPER" data-es="DESARROLLADOR FRONT-END &amp; UI/UX">DESARROLLADOR FRONT-END &amp; UI/UX</span>
+            <p class="cv-hero-tagline" data-en="I transform ideas into elegant, functional, and high-performance digital experiences." data-es="Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.">Transformo ideas en experiencias digitales elegantes, funcionales y de alto rendimiento.</p>
+          </div>
+          <!-- Avatar + nombre -->
+          <div class="cv-avatar-row">
+            <div id="cv-avatar" class="cv-avatar-circle">AM</div>
+            <div>
+              <h2 class="cv-name" data-en="Alex Martínez" data-es="Alex Martínez">Alex Martínez</h2>
+              <p class="cv-subtitle" data-en="Front-End Developer &amp; UI/UX · Villarrica, Chile"
+                data-es="Desarrollador Front-End &amp; UI/UX · Villarrica, Chile">Desarrollador Front-End &amp; UI/UX · Villarrica, Chile</p>
+            </div>
+          </div>
+          <hr class="cv-divider" />
+          <h4 class="cv-section-title" data-en="Professional Summary" data-es="Resumen Profesional">Resumen Profesional</h4>
+          <p class="cv-body-text" data-en="Front-End developer passionate about crafting modern digital experiences. Specialized in HTML5, CSS3, JavaScript, with a focus on smooth UX and premium aesthetics."
+            data-es="Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3, JavaScript, con enfoque en UX fluido y estética premium.">
+            Desarrollador Front-End apasionado por crear experiencias digitales modernas. Especializado en HTML5, CSS3,
+            JavaScript, con enfoque en UX fluido y estética premium.
+          </p>
+          <h4 class="cv-section-title" data-en="Key Experience" data-es="Experiencia Clave">Experiencia Clave</h4>
+          <ul class="cv-body-list">
+            <li data-en="Cine Club Chatarra — Cultural Project, Villarrica"
+              data-es="Cine Club Chatarra — Proyecto Cultural, Villarrica">Cine Club Chatarra — Proyecto Cultural, Villarrica</li>
+            <li data-en="Portfolio and website development for independent clients"
+              data-es="Desarrollo de portfolios y sitios para clientes independientes">Desarrollo de portfolios y sitios para clientes independientes</li>
+            <li data-en="Responsive layout and advanced UI development"
+              data-es="Maquetación responsive y desarrollo de UI avanzado">Maquetación responsive y desarrollo de UI avanzado</li>
+          </ul>
+          <h4 class="cv-section-title" data-en="Skills" data-es="Habilidades">Habilidades</h4>
+          <div class="cv-tag-row">
+            <span class="cv-tag">HTML5</span>
+            <span class="cv-tag">CSS3 / SCSS</span>
+            <span class="cv-tag">JavaScript</span>
+            <span class="cv-tag">Bootstrap 5</span>
+            <span class="cv-tag">Figma / UI Design</span>
+            <span class="cv-tag">SEO</span>
+            <span class="cv-tag">WordPress</span>
+          </div>
+          <h4 class="cv-section-title" data-en="Contact" data-es="Contacto">Contacto</h4>
+          <div class="cv-contact-row">
+            <div class="cv-contact-item">
+              <a href="mailto:alexmartinezdiaz91@gmail.com" class="obfuscated-contact cv-contact-link" data-obfuscated="alexmartinezdiaz91@gmail.com">
+                <img src="images/icons/gmail.png" class="cv-contact-icon"><span class="contact-masked">a***@gmail.com</span><span class="contact-revealed d-none">alexmartinezdiaz91@gmail.com</span>
+              </a>
+            </div>
+            <a href="https://wa.me/56945341572" class="obfuscated-contact cv-contact-wa" data-obfuscated="+56945341572" target="_blank"><i class="fab fa-whatsapp cv-contact-icon"></i><span class="contact-masked">+56 *** *** ****</span><span class="contact-revealed d-none">+56 9 4534 1572</span></a>
+            <div class="cv-contact-item">
+              <a href="https://github.com/gambito700" class="cv-contact-gh" target="_blank">
+                <img src="images/icons/github.png" class="cv-contact-icon">GitHub
+              </a>
+            </div>
+          </div>
+          <div class="cv-btn-row">
+            <button class="btn-special cv-btn-sm" onclick="openWindow('window-portfolio'); return false;"
+              data-en="View Projects" data-es="Ver Proyectos">Ver Proyectos</button>
+            <button class="btn-outline-custom cv-btn-sm" onclick="openWindow('window-contact'); return false;"
+              data-en="Contact Me" data-es="Contáctame">Contáctame</button>
+            <button class="btn-outline-custom cv-btn-sm" onclick="window.open('windows11-simulator.pdf','_blank');"
+              data-en="Download PDF" data-es="Descargar PDF">Descargar PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== SOBRE MÍ ======================== -->
+      <div class="win11-window d-none" id="window-about">
+        <div class="window-header">
+          <div class="window-title"><img alt="Sobre Mí" class="win-img" src="images/icons/about.png" /> Sobre Mí</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-about')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-about')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-about')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="about">
+            <div class="row align-items-center mb-5">
+              <div class="col-lg-4 text-center text-lg-start mb-4 mb-lg-0">
+                <div class="avatar-container">
+                  <div id="about-avatar"
+                    style="width:160px;height:160px;border-radius:50%;background:linear-gradient(135deg,#0078d4,#60cdff);display:flex;align-items:center;justify-content:center;font-size:3.5rem;font-weight:700;color:#fff;margin:0 auto;">
+                    AM</div>
+                </div>
+              </div>
+              <div class="col-lg-8">
+                <span class="introduction mb-2 d-block" data-en="HELLO, I'M ALEX" data-es="HOLA, SOY ALEX">HOLA, SOY
+                  ALEX</span>
+                <h2 class="name mb-3" data-en="Developer &amp; Marketer" data-es="Desarrollador &amp; Marketer">
+                  Desarrollador &amp; Marketer</h2>
+                <p class="description w-100"
+                  data-en="Specialized in creating high-impact visual and technical digital solutions. My approach combines minimalist aesthetics with exceptional performance."
+                  data-es="Especializado en crear soluciones digitales de alto impacto visual y técnico. Mi enfoque combina la estética minimalistacon un rendimiento excepcional.">
+                  Especializado en crear soluciones digitales de alto impacto visual y técnico. Mi enfoque combina la
+                  estética minimalistacon un rendimiento excepcional.
+                </p>
+              </div>
+            </div>
+            <div class="row d-flex flex-wrap">
+              <!-- Formación -->
+              <div class="col-lg-6 pb-5">
+                <span class="introduction mb-3 d-block" data-en="ACADEMIC PROFILE" data-es="PERFIL ACADÉMICO">PERFIL
+                  ACADÉMICO</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Education" data-es="Formación">Formación</h2>
+                <div class="data-info py-3">
+                  <span class="meta-date">2025</span>
+                  <h3 class="info-title" data-en="Web Design &amp; Development Diploma"
+                    data-es="Diplomado Diseño &amp; Programación Web">Diplomado Diseño &amp; Programación Web</h3>
+                  <p data-en="AIEP / SENCE / Movistar — 100 hours — Grade 100"
+                    data-es="AIEP / SENCE / Movistar — 100 horas — Nota 100">AIEP / SENCE / Movistar — 100 horas — Nota
+                    100</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025</span>
+                  <h3 class="info-title" data-en="Digital Marketing Diploma" data-es="Diplomado Marketing Digital">
+                    Diplomado Marketing Digital &amp; Gestión Estratégica</h3>
+                  <p>AIEP / SENCE / Movistar — 90 horas — Nota 100</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025</span>
+                  <h3 class="info-title" data-en="Real Estate Brokerage" data-es="Corretaje de Propiedades">Corretaje de
+                    Propiedades</h3>
+                  <p>Learning Group / Fundación Emprenden — 57 horas</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2010</span>
+                  <h3 class="info-title" data-en="IT Technical Degree" data-es="Técnico Superior en Informática">Técnico
+                    Superior en Informática</h3>
+                  <p>CFT Andrés Bello — Incompleto</p>
+                </div>
+              </div>
+              <!-- Certificaciones -->
+              <div class="col-lg-6 pb-5">
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Certifications" data-es="Certificaciones">
+                  Certificaciones</h2>
+                <div class="data-info py-3">
+                  <span class="meta-date">2025 · 40h · Nota 100</span>
+                  <h3 class="info-title">JavaScript</h3>
+                  <p data-en="Programming with JavaScript" data-es="Programación con JavaScript">Programación con
+                    JavaScript</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025 · 30h · Nota 96</span>
+                  <h3 class="info-title">HTML5 + CSS3</h3>
+                  <p data-en="Web Design HTML5+CSS" data-es="Diseño Web HTML5+CSS">Diseño Web HTML5+CSS</p>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025 · 30h · Nota 98</span>
+                  <h3 class="info-title">Growth Hacking</h3>
+                </div>
+                <div class="data-info">
+                  <span class="meta-date">2025 · 30h · Nota 100</span>
+                  <h3 class="info-title" data-en="Cybersecurity" data-es="Ciberseguridad en entornos digitales">
+                    Ciberseguridad en entornos digitales</h3>
+                </div>
+                <div class="cert-stats mt-4">
+                  <div class="stat-item">
+                    <span class="stat-number">497</span>
+                    <span class="stat-label" data-en="Certified Hours" data-es="Horas Certificadas">Horas
+                      Certificadas</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">97.9</span>
+                    <span class="stat-label" data-en="Overall Average" data-es="Promedio General">Promedio
+                      General</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== EXPERIENCIA ======================== -->
+      <div class="win11-window d-none" id="window-experience">
+        <div class="window-header">
+          <div class="window-title"><img alt="Experiencia" class="win-img" src="images/icons/experience.png" /> Experiencia</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-experience')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-experience')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-experience')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="experience">
+            <div class="row mb-5">
+              <div class="col-lg-6">
+                <span class="introduction mb-3 d-block" data-en="PROFESSIONAL JOURNEY"
+                  data-es="TRAYECTORIA PROFESIONAL">TRAYECTORIA PROFESIONAL</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Experience" data-es="Experiencia">Experiencia</h2>
+                <p data-en="Over 14 years across sales, hospitality, security and technology."
+                  data-es="Más de 14 años en ventas, gastronomía, seguridad y tecnología.">Más de 14 años en ventas,
+                  gastronomía, seguridad y tecnología.</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="info-element py-4">
+                  <table class="table personal-table">
+                    <tbody>
+                      <tr>
+                        <th data-en="Name" data-es="Nombre">Nombre</th>
+                        <td>Alex Michel Martínez Díaz</td>
+                      </tr>
+                      <tr>
+                        <th data-en="Age" data-es="Edad">Edad</th>
+                        <td>34</td>
+                      </tr>
+                      <tr>
+                        <th data-en="Location" data-es="Ubicación">Ubicación</th>
+                        <td>Villarrica, Chile</td>
+                      </tr>
+                      <tr>
+                         <th>Email</th>
+                         <td><a href="mailto:alexmartinezdiaz91@gmail.com" class="obfuscated-contact personal-table-link" data-obfuscated="alexmartinezdiaz91@gmail.com"><span class="contact-masked">a***@gmail.com</span><span class="contact-revealed d-none">alexmartinezdiaz91@gmail.com</span></a>
+                         </td>
+                       </tr>
+                       <tr>
+                         <th data-en="Phone" data-es="Teléfono">Teléfono</th>
+                         <td><a href="tel:+56945341572" class="obfuscated-contact personal-table-link" data-obfuscated="+56945341572"><span class="contact-masked">+56 *** *** ****</span><span class="contact-revealed d-none">+56 9 4534 1572</span></a></td>
+                       </tr>
+                      <tr>
+                        <th data-en="Languages" data-es="Idiomas">Idiomas</th>
+                        <td>Español (Nativo) · Inglés (B1+)</td>
+                      </tr>
+                      <tr class="no-border-bottom">
+                        <th data-en="Availability" data-es="Disponibilidad">Disponibilidad</th>
+                        <td data-en="Immediate · Own transport" data-es="Inmediata · Movilidad propia">Inmediata ·
+                          Movilidad propia</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="experience-timeline py-4">
+                  <div class="timeline-item">
+                    <div class="tl-date">ACTUALIDAD</div>
+                    <div class="tl-content">
+                      <h4 data-en="Chatarra Cinema Club" data-es="Cine Club Chatarra">Cine Club Chatarra</h4>
+                      <p data-en="Cultural project — management, promotion and diffusion of independent cinema."
+                        data-es="Proyecto cultural. Gestión, promoción y difusión de obras cinematográficas independientes.">
+                        Proyecto cultural. Gestión, promoción y difusión de obras cinematográficas independientes.</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <span class="tl-date">2024</span>
+                    <div class="tl-content">
+                      <h4 data-en="Sales – Tricot" data-es="Vendedor – Tricot">Vendedor – Tricot</h4>
+                      <p>Villarrica</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <span class="tl-date">2023–24</span>
+                    <div class="tl-content">
+                      <h4 data-en="Property Security" data-es="Seguridad en Parcela">Seguridad en Parcela</h4>
+                      <p>Neltume</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <span class="tl-date">2023</span>
+                    <div class="tl-content">
+                      <h4 data-en="Waiter – Bigllarrica" data-es="Garzón – Bigllarrica">Garzón – Bigllarrica</h4>
+                      <p>Villarrica</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <span class="tl-date">2015–18</span>
+                    <div class="tl-content">
+                      <h4 data-en="Sales – Hiper Lider" data-es="Vendedor – Hiper Lider">Vendedor – Hiper Lider</h4>
+                      <p>Santiago</p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <span class="tl-date">2011</span>
+                    <div class="tl-content">
+                      <h4 data-en="Security Guard – Hiper Lider 88" data-es="Guardia – Hiper Lider 88">Guardia – Hiper
+                        Lider 88</h4>
+                      <p data-en="CCTV · Access control" data-es="CCTV · Control de accesos">CCTV · Control de accesos
+                      </p>
+                    </div>
+                  </div>
+                  <div class="timeline-item">
+                    <span class="tl-date">2010</span>
+                    <div class="tl-content">
+                      <h4 data-en="Croupier – Casino Enjoy Pucón" data-es="Crupier – Casino Enjoy Pucón">Crupier –
+                        Casino Enjoy Pucón</h4>
+                      <p>Baccarat · Ruleta</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== HABILIDADES ======================== -->
+      <div class="win11-window d-none" id="window-skills">
+        <div class="window-header">
+          <div class="window-title"><img alt="Habilidades" class="win-img" src="images/icons/skills.png" /> Habilidades</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-skills')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-skills')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-skills')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="skills">
+            <div class="row mb-5">
+              <div class="col-lg-6">
+                <span class="introduction mb-3 d-block" data-en="TECH STACK" data-es="STACK TECNOLÓGICO">STACK
+                  TECNOLÓGICO</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Skills" data-es="Habilidades">Habilidades</h2>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="skill-chart py-4">
+                  <ul class="skill-chart-list list-unstyled">
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title">HTML5 /
+                          CSS3</span><span class="skill-pct">92%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="92"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span
+                          class="skill-title">JavaScript</span><span class="skill-pct">85%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="85"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span
+                          class="skill-title">WordPress</span><span class="skill-pct">90%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="90"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title">SEO / Google
+                          Analytics</span><span class="skill-pct">88%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="88"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title">Growth
+                          Hacking</span><span class="skill-pct">82%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="82"></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="skill-chart py-4">
+                  <ul class="skill-chart-list list-unstyled">
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Web Analytics" data-es="Analítica Web">Analítica Web</span><span
+                          class="skill-pct">87%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="87"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Cybersecurity" data-es="Ciberseguridad">Ciberseguridad</span><span
+                          class="skill-pct">80%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="80"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Advanced Office" data-es="Ofimática Avanzada">Ofimática Avanzada</span><span
+                          class="skill-pct">95%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="95"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="Sales &amp; Service" data-es="Ventas &amp; Atención">Ventas &amp;
+                          Atención</span><span class="skill-pct">93%</span></div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="93"></div>
+                      </div>
+                    </li>
+                    <li class="skill-bar-item">
+                      <div class="chart-header d-flex justify-content-between"><span class="skill-title"
+                          data-en="English B1+" data-es="Inglés B1+">Inglés B1+</span><span class="skill-pct">65%</span>
+                      </div>
+                      <div class="chart-border">
+                        <div class="skill-fill" data-value="65"></div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="tech-tags mt-4">
+              <span class="tech-tag">HTML5</span>
+              <span class="tech-tag">CSS3</span>
+              <span class="tech-tag">JavaScript</span>
+              <span class="tech-tag">Bootstrap 5</span>
+              <span class="tech-tag">WordPress</span>
+              <span class="tech-tag">SEO</span>
+              <span class="tech-tag">Google Analytics</span>
+              <span class="tech-tag">Growth Hacking</span>
+              <span class="tech-tag">CCTV</span>
+              <span class="tech-tag" data-en="Cybersecurity" data-es="Ciberseguridad">Ciberseguridad</span>
+              <span class="tech-tag" data-en="MS Office" data-es="Ofimática">Ofimática</span>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== PORTAFOLIO ======================== -->
+      <div class="win11-window d-none" id="window-portfolio" style="width:720px;height:560px">
+        <div class="window-header">
+          <div class="window-title"><img alt="Proyectos" class="win-img" src="images/icons/portfolio.png" /> Proyectos</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-portfolio')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-portfolio')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-portfolio')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="portfolio">
+            <div class="section-header my-4">
+              <span class="introduction mb-3 d-block" data-en="RECENT PROJECTS" data-es="PROYECTOS RECIENTES">PROYECTOS
+                RECIENTES</span>
+              <h2 class="name mb-2 txt-fx text-uppercase" data-en="Portfolio" data-es="Portafolio">Portafolio</h2>
+              <p data-en="Selection of works in web design, marketing and development."
+                data-es="Selección de trabajos en diseño web, marketing y desarrollo.">Selección de trabajos en diseño
+                web, marketing y desarrollo.</p>
+            </div>
+            <!-- Project cards -->
+            <div class="row g-4">
+              <div class="col-md-6">
+                <a href="https://gambito700.github.io/" target="_blank" style="text-decoration:none;">
+                  <div class="proj-card">
+                    <div class="proj-card-icon"><i class="fas fa-globe"></i></div>
+                    <h5 class="proj-card-title" data-en="Windows 11 Portfolio" data-es="Portfolio Windows 11">Portfolio
+                      Windows 11</h5>
+                    <p class="proj-card-desc" data-en="This portfolio — Windows 11 desktop simulator in HTML/CSS/JS."
+                      data-es="Este portfolio — Simulador de escritorio Windows 11 en HTML/CSS/JS.">Este portfolio —
+                      Simulador de escritorio Windows 11 en HTML/CSS/JS.</p>
+                    <div class="proj-card-tags"><span class="tech-tag">HTML5</span><span class="tech-tag">CSS3</span><span
+                        class="tech-tag">JavaScript</span></div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-6">
+                <a href="https://www.instagram.com/cine_chatarra/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+                  <div class="proj-card">
+                    <div class="proj-card-icon"><i class="fas fa-film"></i></div>
+                    <h5 class="proj-card-title" data-en="Cine Club Chatarra" data-es="Cine Club Chatarra">Cine Club
+                      Chatarra</h5>
+                    <p class="proj-card-desc"
+                      data-en="Cultural project — promotion and diffusion of independent cinema in Villarrica."
+                      data-es="Proyecto cultural de difusión cinematográfica independiente en Villarrica.">Proyecto
+                      cultural de difusión cinematográfica independiente en Villarrica.</p>
+                    <div class="proj-card-tags"><span class="tech-tag">WordPress</span><span
+                        class="tech-tag">Marketing</span></div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-md-6">
+                <div class="proj-card">
+                  <div class="proj-card-icon"><i class="fas fa-chart-line"></i></div>
+                  <h5 class="proj-card-title" data-en="Digital Marketing Campaigns"
+                    data-es="Campañas de Marketing Digital">Campañas de Marketing Digital</h5>
+                  <p class="proj-card-desc" data-en="SEO, growth hacking and analytics for independent clients."
+                    data-es="SEO, growth hacking y analítica web para clientes independientes.">SEO, growth hacking y
+                    analítica web para clientes independientes.</p>
+                  <div class="proj-card-tags"><span class="tech-tag">SEO</span><span
+                      class="tech-tag">Analytics</span><span class="tech-tag">Growth Hacking</span></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="proj-card">
+                  <div class="proj-card-icon"><i class="fas fa-code"></i></div>
+                  <h5 class="proj-card-title" data-en="Responsive Web Projects" data-es="Proyectos Web Responsivos">
+                    Proyectos Web Responsivos</h5>
+                  <p class="proj-card-desc" data-en="Responsive sites for independent clients — Bootstrap 5, CSS3."
+                    data-es="Sitios responsivos para clientes independientes — Bootstrap 5, CSS3.">Sitios responsivos
+                    para clientes independientes — Bootstrap 5, CSS3.</p>
+                  <div class="proj-card-tags"><span class="tech-tag">Bootstrap</span><span class="tech-tag">CSS3</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <a href="https://gambito700.github.io/scraperUTM/" target="_blank" style="text-decoration:none;">
+                  <div class="proj-card">
+                    <div class="proj-card-icon"><i class="fas fa-chart-line"></i></div>
+                    <h5 class="proj-card-title" data-en="Previsional Dashboard 2026" data-es="Dashboard Previsional 2026">
+                      Dashboard Previsional 2026</h5>
+                    <p class="proj-card-desc"
+                       data-en="UTM, UF, Dólar, IPC, AFP rates — scraper + interactive dashboard with charts and Excel export."
+                       data-es="UTM, UF, Dólar, IPC, tasas AFP — scraper + dashboard interactivo con gráficos y Excel.">
+                      UTM, UF, Dólar, IPC, tasas AFP — scraper + dashboard interactivo con gráficos y Excel.</p>
+                    <div class="proj-card-tags">
+                      <span class="tech-tag">Python</span>
+                      <span class="tech-tag">Scraping</span>
+                      <span class="tech-tag">Chart.js</span>
+                      <span class="tech-tag">GitHub Pages</span>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================== CONTACTO ======================== -->
+      <div class="win11-window d-none" id="window-contact">
+        <div class="window-header">
+          <div class="window-title"><img alt="Contacto" class="win-img" src="images/icons/contact.png" /> Contacto</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-contact')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-contact')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-contact')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content">
+          <section class="pt-4 pt-lg-5 px-4 px-lg-5 window-inner-section" id="contact">
+            <div class="row mb-5">
+              <div class="col-lg-6">
+                <span class="introduction mb-3 d-block" data-en="LET'S WORK TOGETHER"
+                  data-es="TRABAJEMOS JUNTOS">TRABAJEMOS JUNTOS</span>
+                <h2 class="name mb-4 txt-fx text-uppercase" data-en="Contact" data-es="Contacto">Contacto</h2>
+                <p data-en="Have a project in mind? Write me and let's talk."
+                  data-es="¿Tienes un proyecto en mente? Escríbeme y conversamos.">¿Tienes un proyecto en mente?
+                  Escríbeme y conversamos.</p>
+              </div>
+            </div>
+            <div class="row d-flex g-5">
+              <!-- FAQ Accordion -->
+              <div class="col-lg-7">
+                <h3 class="mb-4" data-en="Frequently Asked Questions" data-es="Preguntas Frecuentes">Preguntas
+                  Frecuentes</h3>
+                <div class="accordion" id="faqAccordion">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button" data-bs-target="#faq1" data-bs-toggle="collapse"
+                        data-en="What is your availability?" data-es="¿Cuál es tu disponibilidad?" type="button">¿Cuál
+                        es tu disponibilidad?</button>
+                    </h2>
+                    <div class="accordion-collapse collapse show" data-bs-parent="#faqAccordion" id="faq1">
+                      <div class="accordion-body"
+                        data-en="Immediately available. I have my own transport and can travel as needed."
+                        data-es="Disponibilidad inmediata. Cuento con movilidad propia y puedo desplazarme según requiera el proyecto.">
+                        Disponibilidad inmediata. Cuento con movilidad propia y puedo desplazarme según requiera el
+                        proyecto.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" data-bs-target="#faq2" data-bs-toggle="collapse"
+                        data-en="What type of projects do you take?" data-es="¿Qué tipo de proyectos aceptas?"
+                        type="button">¿Qué tipo de proyectos aceptas?</button>
+                    </h2>
+                    <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq2">
+                      <div class="accordion-body"
+                        data-en="Web design and development, digital marketing, SEO, web audits and content management."
+                        data-es="Diseño y desarrollo web, marketing digital, SEO, auditorías web y gestión de contenidos.">
+                        Diseño y desarrollo web, marketing digital, SEO, auditorías web y gestión de contenidos.</div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <h2 class="accordion-header">
+                      <button class="accordion-button collapsed" data-bs-target="#faq3" data-bs-toggle="collapse"
+                        data-en="Do you work remotely?" data-es="¿Trabajas de forma remota?" type="button">¿Trabajas de
+                        forma remota?</button>
+                    </h2>
+                    <div class="accordion-collapse collapse" data-bs-parent="#faqAccordion" id="faq3">
+                      <div class="accordion-body"
+                        data-en="Yes, both remotely and in-person. I adapt to the team or client needs."
+                        data-es="Sí, trabajo remoto y presencial. Me adapto a las necesidades del equipo o cliente.">Sí,
+                        trabajo remoto y presencial. Me adapto a las necesidades del equipo o cliente.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Contact Form -->
+              <div class="col-lg-5">
+                <div class="right-content">
+                  <div class="element-header mb-4">
+                    <h3 data-en="Send me a direct message." data-es="Envíame un mensaje directo.">Envíame un mensaje
+                      directo.</h3>
+                  </div>
+                  <div class="contact-form py-4">
+                    <div class="alert-success-custom d-none" id="form-success">
+                      <i class="fas fa-check-circle"></i>
+                      <span data-en="Message sent! I'll reply soon."
+                        data-es="¡Mensaje enviado! Te responderé pronto.">¡Mensaje enviado! Te responderé pronto.</span>
+                    </div>
+                    <div class="alert-error-custom d-none" id="form-error">
+                      <i class="fas fa-exclamation-circle"></i>
+                      <span data-en="Error sending. Email me directly."
+                        data-es="Error al enviar. Escríbeme directo al correo.">Error al enviar. Escríbeme directo al
+                        correo.</span>
+                    </div>
+                    <form id="contactForm" action="https://formspree.io/f/xpqeyqqg" method="POST" novalidate>
+                      <div class="pb-3">
+                        <input class="form-control custom-input" data-placeholder-en="Your full name"
+                          data-placeholder-es="Tu nombre completo" id="contact-name" name="name" placeholder="Tu nombre completo"
+                          type="text" required />
+                      </div>
+                      <div class="pb-3">
+                        <input class="form-control custom-input" data-placeholder-en="Your email address"
+                          data-placeholder-es="Tu correo electrónico" id="contact-email" name="email"
+                          placeholder="Tu correo electrónico" type="email" required />
+                      </div>
+                      <div class="pb-3">
+                        <input class="form-control custom-input" data-placeholder-en="Subject"
+                          data-placeholder-es="Asunto" id="contact-subject" name="subject" placeholder="Asunto" type="text" />
+                      </div>
+                      <div class="pb-3">
+                        <textarea class="form-control custom-input" data-placeholder-en="Your message"
+                          data-placeholder-es="Tu mensaje" id="contact-message" name="message" placeholder="Tu mensaje"
+                          rows="5" required></textarea>
+                      </div>
+                      <button class="btn-submit w-100" id="contact-submit" type="submit">
+                        <span class="btn-text" data-en="Send Message" data-es="Enviar Mensaje">Enviar Mensaje</span>
+                        <span class="btn-loading d-none"><i class="fas fa-spinner fa-spin"></i></span>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+
+
+      <!-- ======================== CALENDARIO ======================== -->
+      <div class="win11-window d-none" id="window-calendar">
+        <div class="window-header">
+          <div class="window-title"><img alt="Calendario" class="win-img" src="images/icons/calendar.png" /> Calendario</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-calendar')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:16px; overflow-y:auto;">
+          <div id="calendar-widget">
+            <div class="cal-header">
+              <button id="cal-prev" class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
+              <span id="cal-title" style="font-size:1rem;font-weight:600;"></span>
+              <button id="cal-next" class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="cal-days-header">
+              <span data-es="Dom" data-en="Sun">Dom</span><span data-es="Lun" data-en="Mon">Lun</span><span data-es="Mar" data-en="Tue">Mar</span><span data-es="Mié" data-en="Wed">Mié</span><span data-es="Jue" data-en="Thu">Jue</span><span data-es="Vie" data-en="Fri">Vie</span><span data-es="Sáb" data-en="Sat">Sáb</span>
+            </div>
+            <div id="cal-body" class="cal-body"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== SYSTEM LOGS ======================== -->
+      <div class="win11-window d-none" id="window-logs" style="width:520px;height:360px;">
+        <div class="window-header">
+          <div class="window-title"><img alt="Logs" class="win-img" src="images/icons/logviewer.png" /> System Logs
+            Viewer</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-logs')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-logs')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-logs')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="display:flex; flex-direction:column; padding:0;">
+          <!-- Shadow sliders removed per user request -->
+          <div id="log-output-area"
+            style="flex:1; padding:10px; overflow-y:auto; background:#000; color:#00FF00; font-family:monospace; font-size:0.8rem;">
+            <div>[SYSTEM INIT] - Virtual Log Viewer Initialized</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== MÚSICA / YOUTUBE ======================== -->
+      <div class="win11-window d-none" id="window-music" style="width:340px; height:215px;">
+        <div class="window-header">
+          <div class="window-title"><img alt="Música" class="win-img" src="images/icons/music.png" /> Música</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-music')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-music')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-music')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="display:flex; flex-direction:column; padding:8px 12px; gap:4px;">
+          <div style="text-align:center; line-height:1.2;">
+            <div class="music-title" id="window-music-name" style="font-size:0.85rem; font-weight:600;">Midnight Vibes</div>
+            <div class="music-artist" id="window-music-artist" style="font-size:0.65rem; color:#999;">Track 1</div>
+          </div>
+          <div class="music-progress" style="margin:2px 0;">
+            <div class="music-progress-bar" id="window-progress-bar" style="width:100%; height:3px; background:rgba(255,255,255,0.12); border-radius:2px; cursor:pointer; position:relative;">
+              <div class="music-progress-fill" id="window-progress-fill" style="height:100%; width:0%; background:var(--accent, #0078d4); border-radius:2px; transition:width 0.3s;"></div>
+            </div>
+          </div>
+          <div class="music-controls" style="display:flex; justify-content:center; align-items:center; gap:12px;">
+            <button class="music-btn" id="window-music-prev" style="background:transparent; border:none; cursor:pointer; padding:4px; border-radius:50%;">
+              <img src="images/icons/skip-start.png" style="width:18px; height:18px; filter:invert(1);" alt="Anterior">
+            </button>
+            <button class="music-btn music-btn-play" id="window-music-play" style="width:40px; height:40px; border-radius:50%; border:none; background:var(--accent, #0078d4); cursor:pointer; display:flex; align-items:center; justify-content:center;">
+              <img src="images/icons/play.png" style="width:18px; height:18px; filter:invert(1);" id="window-music-play-icon" alt="Play">
+            </button>
+            <button class="music-btn" id="window-music-next" style="background:transparent; border:none; cursor:pointer; padding:4px; border-radius:50%;">
+              <img src="images/icons/skip-end.png" style="width:18px; height:18px; filter:invert(1);" alt="Siguiente">
+            </button>
+          </div>
+          <div class="music-volume" style="display:flex; align-items:center; gap:6px; font-size:0.65rem; color:#888;">
+            <i class="fas fa-volume-down" style="font-size:0.6rem;"></i>
+            <input type="range" id="window-music-volume" min="0" max="100" value="70" style="flex:1; height:3px; accent-color:var(--accent, #0078d4); cursor:pointer;">
+            <i class="fas fa-volume-up" style="font-size:0.6rem;"></i>
+          </div>
+          <!-- YouTube player oculto (requerido por la API) -->
+          <div id="yt-player-container" style="width:1px; height:1px; overflow:hidden; opacity:0; position:absolute;">
+            <div id="yt-player"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== CALCULADORA ======================== -->
+      <div class="win11-window d-none" id="window-calculator" style="width:280px; height:380px;">
+        <div class="window-header">
+          <div class="window-title"><i class="fas fa-calculator"></i> Calculadora</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-calculator')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-calculator')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-calculator')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="display:flex; flex-direction:column; padding:10px; font-family:var(--font-mono);">
+          <div id="calc-display" style="background:rgba(0,0,0,0.2); border-radius:6px; padding:12px 16px; text-align:right; font-size:1.8rem; font-weight:600; margin-bottom:8px; min-height:50px; overflow:hidden;">0</div>
+          <div id="calc-sub" style="text-align:right; font-size:0.7rem; color:#888; min-height:18px; margin-bottom:4px;"></div>
+          <div class="calc-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:4px; flex:1;">
+            <button class="calc-btn op" data-v="C" style="grid-column:span 1;">C</button>
+            <button class="calc-btn op" data-v="±">±</button>
+            <button class="calc-btn op" data-v="%">%</button>
+            <button class="calc-btn op" data-v="÷">÷</button>
+            <button class="calc-btn num" data-v="7">7</button>
+            <button class="calc-btn num" data-v="8">8</button>
+            <button class="calc-btn num" data-v="9">9</button>
+            <button class="calc-btn op" data-v="×">×</button>
+            <button class="calc-btn num" data-v="4">4</button>
+            <button class="calc-btn num" data-v="5">5</button>
+            <button class="calc-btn num" data-v="6">6</button>
+            <button class="calc-btn op" data-v="-">−</button>
+            <button class="calc-btn num" data-v="1">1</button>
+            <button class="calc-btn num" data-v="2">2</button>
+            <button class="calc-btn num" data-v="3">3</button>
+            <button class="calc-btn op" data-v="+">+</button>
+            <button class="calc-btn num" data-v="0" style="grid-column:span 2;">0</button>
+            <button class="calc-btn num" data-v=".">.</button>
+            <button class="calc-btn eq" data-v="=" style="background:var(--accent, #0078d4); color:#fff;">=</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======================== INDICADORES UTM/UF ======================== -->
+      <div class="win11-window d-none" id="window-indicators" style="width:300px; height:220px;">
+        <div class="window-header">
+          <div class="window-title"><img alt="Indicadores" class="win-img" src="images/icons/scraper.png" /> Indicadores</div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-indicators')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-indicators')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-indicators')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:16px; display:flex; flex-direction:column; justify-content:center;">
+          <div class="ind-row"><span class="ind-label">UTM</span><span class="ind-value" id="ind-utm">--</span></div>
+          <div class="ind-row"><span class="ind-label">UF</span><span class="ind-value" id="ind-uf">--</span></div>
+          <div class="ind-row"><span class="ind-label">Dólar</span><span class="ind-value" id="ind-dolar">--</span></div>
+        </div>
+      </div>
+
+      <!-- ======================== CLIMA ======================== -->
+      <div class="win11-window d-none" id="window-weather" style="width:210px; height:170px; left:calc(100vw - 210px - 15px); top:calc(100vh - 50px - 15px - 170px); z-index:140;">
+        <div class="window-header">
+          <div class="window-title"><img alt="Clima" class="win-img" src="images/icons/weather.png" /> <span data-es="Clima" data-en="Weather">Clima</span></div>
+          <div class="window-controls">
+            <button class="btn-min" onclick="minimizeWindow('window-weather')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" onclick="maximizeWindow('window-weather')"><i class="far fa-square"></i></button>
+            <button class="btn-close" onclick="closeWindow('window-weather')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content" style="padding:16px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div class="weather-main" id="weather-main">
+            <div class="weather-temp" id="weather-temp">--°C</div>
+            <div class="weather-desc" id="weather-desc" data-es="Cargando..." data-en="Loading...">Cargando...</div>
+          </div>
+          <div class="weather-details" id="weather-details">
+            <span class="weather-humidity" id="weather-humidity"><i class="fas fa-tint"></i> --%</span>
+            <span class="weather-wind" id="weather-wind"><i class="fas fa-wind"></i> -- km/h</span>
+          </div>
+          <div class="weather-error d-none" id="weather-error" data-es="No se pudo cargar el clima" data-en="Could not load weather"></div>
+        </div>
+      </div>
+
+    </div><!-- /#windows-container -->
+  </div><!-- /#desktop -->
+
+  <!-- ================================================================
+     TOAST NOTIFICATION
+     ================================================================ -->
+  <div id="toast-notification" class="win-toast d-none">
+    <div class="toast-content">
+      <div class="toast-icon"><i class="fas fa-headphones"></i></div>
+      <div class="toast-body">
+        <div class="toast-title" data-es="Música disponible" data-en="Music available">Música disponible</div>
+        <div class="toast-msg" data-es="Hay música lista para reproducir en tu reproductor." data-en="Music is ready to play in your player.">Hay música lista para reproducir en tu reproductor.</div>
+      </div>
+      <button class="toast-close" id="toast-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <!-- ================================================================
+     SCRIPTS
+     ================================================================
+     Carga de librerías JavaScript. El orden es importante:
+
+     1. YouTube IFrame API  →  Reproductor de música oculto
+     2. Bootstrap JS        →  Acordeones, modales, etc. (con defer)
+     3. Three.js            →  Motor WebGL requerido por Vanta
+     4. Vanta Clouds        →  Nubes animadas 3D de fondo
+     5. anime.js            →  Animaciones de texto (letra por letra)
+     6. script.js (defer)   →  Nuestro código principal
+
+     NOTA: script.js tiene "defer" para ejecutarse después de cargar
+     todo el HTML. Las dependencias (Three.js, Vanta, anime) deben estar
+     disponibles antes de que script.js se ejecute.
+     ================================================================ -->
+  <!-- YouTube IFrame API: debe cargarse ANTES que script.js para evitar race conditions -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.clouds.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+<script src="js/script.js" defer></script>
+</body>
+
+</html>

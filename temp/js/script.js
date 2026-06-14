@@ -48,24 +48,6 @@
   "use strict";
 
   /* ============================================================
-     CONFIG – Constantes centralizadas del sistema
-     Modifica aquí para cambiar email, coordenadas, playlist, etc.
-     No busques "alexmartinez" en el resto del código.
-     ============================================================ */
-  var CONFIG = {
-    contactEmail: "alexmartinezdiaz91@gmail.com",
-    contactPhone: "+56945341572",
-    weatherLat: -39.2833,
-    weatherLon: -72.2333,
-    weatherCity: "Villarrica",
-    indicatorsUrl: "https://gambito700.github.io/scraperUTM/dashboard_data.json",
-    maxLogLines: 200,
-    musicAutoOpenDelay: 800,
-    cvAutoOpenDelay: 500,
-    toastDuration: 4000
-  };
-
-  /* ============================================================
      A. OS CORE – Window Manager, Drag & Drop, Theme, Lang, Wallpaper
      ============================================================
      Esta sección contiene el núcleo del simulador de escritorio:
@@ -292,10 +274,7 @@
         var btn = document.createElement("button");
         btn.className = "tb-btn tb-app active-win";
         btn.setAttribute("data-win", id);
-        var label = id.replace("window-", "");
-        label = label.charAt(0).toUpperCase() + label.slice(1);
-        btn.title = label;
-        btn.setAttribute("aria-label", label);
+        btn.title = id.replace("window-", "").toUpperCase();
         btn.onclick = function () {
           var win = document.getElementById(id);
           if (win.classList.contains("d-none") || win.classList.contains("minimized")) {
@@ -304,10 +283,7 @@
             minimizeWindow(id);
           }
         };
-        var img = document.createElement("img");
-        img.src = iconSrc;
-        img.alt = btn.title;
-        btn.appendChild(img);
+        btn.innerHTML = `<img src="${iconSrc}">`;
         container.appendChild(btn);
       } else {
         existing.classList.add("active-win");
@@ -326,11 +302,12 @@
     var searchInput = document.querySelector(".sm-search-input");
     if (!searchInput) return;
     
-    // Actualizar placeholder basado en currentLang (no en data-theme)
+    // Actualizar placeholder basado en idioma
     function updatePlaceholder() {
+      var lang = document.documentElement.getAttribute("data-theme") === "light" ? "en" : "es";
       var placeholderEn = searchInput.getAttribute("data-placeholder-en") || "Search apps...";
       var placeholderEs = searchInput.getAttribute("data-placeholder-es") || "Buscar aplicaciones...";
-      searchInput.placeholder = currentLang === "en" ? placeholderEn : placeholderEs;
+      searchInput.placeholder = lang === "en" ? placeholderEn : placeholderEs;
     }
     
     updatePlaceholder();
@@ -428,14 +405,6 @@ function reclampAllWindows() {
       return { left: r.left, top: r.top };
     }
 
-    // UX: double-click on window header to maximize/restore (standard Win11 behaviour)
-    document.addEventListener("dblclick", function (e) {
-      var header = e.target.closest(".window-header");
-      if (!header) return;
-      var win = header.closest(".win11-window");
-      if (win) maximizeWindow(win.id);
-    });
-
     document.querySelectorAll(".window-header").forEach(function (header) {
       var win = header.closest(".win11-window");
 
@@ -496,17 +465,6 @@ function reclampAllWindows() {
   // Reajustar ventanas al cambiar tamaño del navegador (con throttle)
   var resizeTimer;
   var resizeThrottled = false;
-  // UX: Escape key closes the topmost (highest z-index) open window
-  document.addEventListener("keydown", function (e) {
-    if (e.key !== "Escape") return;
-    var windows = Array.from(document.querySelectorAll(".win11-window:not(.d-none):not(.minimized)"));
-    if (!windows.length) return;
-    var topWin = windows.reduce(function (top, w) {
-      return (parseInt(w.style.zIndex) || 0) > (parseInt(top.style.zIndex) || 0) ? w : top;
-    });
-    if (topWin && topWin.id) closeWindow(topWin.id);
-  });
-
   window.addEventListener("resize", function () {
     reclampAllWindows();
     if (!resizeThrottled) {
@@ -533,11 +491,10 @@ function reclampAllWindows() {
     });
 
     // Siempre abrir CV al inicio
-    setTimeout(function () {
+    setTimeout(() => {
       openWindow("window-cv");
-      window.nextWallpaper(); // Establecer fondo Picsum aleatorio (default)
       systemLog("[startup] Fresh session: CV window opened");
-    }, CONFIG.cvAutoOpenDelay);
+    }, 500);
   }
 
   /**
@@ -568,7 +525,7 @@ function reclampAllWindows() {
         div.textContent = line;
         area.appendChild(div);
         // FIFO: keep max 200 entries
-        while (area.children.length > CONFIG.maxLogLines) {
+        while (area.children.length > 200) {
           area.removeChild(area.firstChild);
         }
         area.scrollTop = area.scrollHeight;
@@ -594,7 +551,7 @@ function reclampAllWindows() {
     // Ensure minimum dimensions to avoid tiny images on small viewports
     w = Math.max(w, 800);
     h = Math.max(h, 450);
-    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h + ".webp";
+    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h + "?format=webp";
   }
 
   function loadWallpaperUrl(d, url, fallback) {
@@ -626,7 +583,20 @@ function reclampAllWindows() {
     img.src = url;
   }
 
-  // [ELIMINADO] preloadNextWallpaper — era codigo muerto (nunca se llamaba)
+  // Preload next wallpaper for instant switching
+  function preloadNextWallpaper() {
+    var seed = Math.floor(Math.random() * 1000);
+    var url = getWallpaperUrl(seed);
+    var link = document.createElement("link");
+    link.rel = "preload";
+    link.as = "image";
+    link.type = "image/webp";
+    link.href = url;
+    document.head.appendChild(link);
+    // Clean up after load
+    link.onload = function () { link.remove(); };
+    link.onerror = function () { link.remove(); };
+  }
 
   /**
    * nextWallpaper()
@@ -645,53 +615,6 @@ function reclampAllWindows() {
   };
 
   /**
-   * toggleVanta()
-   * Activa/desactiva el fondo de nubes 3D Vanta.
-   * - OFF → ON: destruye el efecto Vanta actual (si existe), inicia Vanta Clouds,
-   *             limpia la background-image del escritorio.
-   * - ON  → OFF: destruye Vanta, carga un Picsum aleatorio como wallpaper.
-   * Cambia el icono del boton para reflejar el estado.
-   */
-  window.toggleVanta = function () {
-    var btn = document.getElementById("vanta-toggle");
-    var d = document.getElementById("desktop");
-
-    if (window.vantaEffect) {
-      // ── Vanta ACTIVO → DESACTIVAR ──
-      window.vantaEffect.destroy();
-      window.vantaEffect = null;
-      if (btn) {
-        btn.classList.remove("active");
-        btn.title = "Fondo 3D";
-        var icon = btn.querySelector("i");
-        if (icon) icon.className = "fas fa-cloud";
-      }
-      window.nextWallpaper(); // restaurar fondo Picsum
-      systemLog("[vanta] Vanta Clouds disabled via toggle");
-    } else {
-      // ── Vanta INACTIVO → ACTIVAR ──
-      if (d) {
-        d.style.backgroundImage = "none";
-        d.style.backgroundColor = "";
-        d.style.filter = "";
-      }
-      initVantaCloudsWallpaper();
-      // Si ya hay datos del clima, aplicar paleta de colores
-      var tempEl = document.getElementById("weather-temp");
-      if (tempEl && tempEl.textContent !== "--°C" && window._lastWeatherCode !== undefined && window._lastIsDay !== undefined) {
-        updateVantaByWeather(window._lastWeatherCode, window._lastIsDay);
-      }
-      if (btn) {
-        btn.classList.add("active");
-        btn.title = "Desactivar fondo 3D";
-        var icon = btn.querySelector("i");
-        if (icon) icon.className = "fas fa-cloud-sun";
-      }
-      systemLog("[vanta] Vanta Clouds enabled via toggle");
-    }
-  };
-
-  /**
    * showPowerPopup()
    * Muestra un diálogo con información de contacto al hacer clic
    * en el botón de apagado del menú inicio.
@@ -699,10 +622,8 @@ function reclampAllWindows() {
    * del portafolio en su lugar.
    */
   window.showPowerPopup = function () {
-    showToast("Contacto", CONFIG.contactEmail + " — Villarrica, Chile");
-    var sm = document.getElementById("start-menu");
-    if (sm) sm.classList.remove("show-sm");
-    systemLog("Power menu opened: Contact info displayed via toast");
+    alert("Contacto: alexmartinezdiaz91@gmail.com\nVillarrica, Chile");
+    systemLog("Power menu opened: Contact info displayed");
   };
 
   /**
@@ -733,6 +654,8 @@ function reclampAllWindows() {
     });
   }
 
+  // ── Shadow Intensity Sliders — REMOVED per user request ──
+
   /**
    * initMenuToggle()
    * Inicializa el menú inicio y búsqueda con placeholders dinámicos.
@@ -742,6 +665,21 @@ function reclampAllWindows() {
     initSearchAndPlaceholder();
   }
 
+  /* ──────────────────────────────────────────────────────────────
+     initVantaWaves()
+     Inicializa el efecto de ondas animadas en el fondo del
+     escritorio usando la librería Vanta.js (que a su vez usa
+     Three.js). Las ondas reaccionan al movimiento del mouse.
+
+     REQUISITO: Vanta.js y Three.js deben estar cargados en el HTML
+     antes de llamar esta función.
+
+     CÓMO MODIFICAR:
+     - Cambia waveHeight para ondas más altas o bajas.
+     - Ajusta shininess para más/menos brillo.
+     - Si no quieres el efecto, comenta la línea safeInit en
+       DOMContentLoaded.
+     ────────────────────────────────────────────────────────────── */
   /* ============================================================
      initVantaCloudsWallpaper() — Fondo de nubes 3D con Vanta
      Inicializa el efecto Vanta Clouds en el escritorio con
@@ -758,7 +696,7 @@ function reclampAllWindows() {
     }
     window.vantaEffect = VANTA.CLOUDS({
       el: "#desktop",
-      mouseControls: false,
+      mouseControls: true,
       touchControls: true,
       gyroControls: false,
       minHeight: 200.0,
@@ -782,6 +720,7 @@ function reclampAllWindows() {
      @returns {object}     - Colores para VANTA.CLOUDS
      ============================================================ */
   function getWeatherPalette(code, isDay) {
+    // Noche tiene prioridad sobre cualquier código
     if (isDay === 0) {
       return {
         skyColor: 0x0a0a1e,
@@ -792,7 +731,9 @@ function reclampAllWindows() {
         speed: 0.6
       };
     }
+    // Día — según código WMO
     if (code === 0 || code === 1) {
+      // Soleado / mayormente despejado
       return {
         skyColor: 0x4a90d9,
         cloudColor: 0xffffff,
@@ -803,6 +744,7 @@ function reclampAllWindows() {
       };
     }
     if (code === 2 || code === 3 || code === 45 || code === 48) {
+      // Nublado / niebla
       return {
         skyColor: 0x7a8a9a,
         cloudColor: 0xcccccc,
@@ -813,6 +755,7 @@ function reclampAllWindows() {
       };
     }
     if ((code >= 51 && code <= 55) || (code >= 61 && code <= 65) || (code >= 80 && code <= 82)) {
+      // Llovizna / lluvia / chubascos
       return {
         skyColor: 0x5a6a7a,
         cloudColor: 0x7a8a9a,
@@ -823,6 +766,7 @@ function reclampAllWindows() {
       };
     }
     if (code >= 95 && code <= 99) {
+      // Tormenta
       return {
         skyColor: 0x2a2a3a,
         cloudColor: 0x4a4a5a,
@@ -833,6 +777,7 @@ function reclampAllWindows() {
       };
     }
     if (code >= 71 && code <= 75) {
+      // Nevada
       return {
         skyColor: 0xccddee,
         cloudColor: 0xeeeeff,
@@ -842,6 +787,7 @@ function reclampAllWindows() {
         speed: 0.7
       };
     }
+    // Fallback: nublado
     return {
       skyColor: 0x7a8a9a,
       cloudColor: 0xcccccc,
@@ -872,12 +818,13 @@ function reclampAllWindows() {
       });
       systemLog("[vanta] Updated to weather code " + code + " | day=" + isDay);
     } else {
+      // Fallback: cambiar color de fondo manualmente
       var d = document.getElementById("desktop");
       if (d) d.style.backgroundColor = "#" + palette.backgroundColor.toString(16).padStart(6, "0");
     }
   }
 
-/**
+  /**
  * initAutoLang()
  * Detecta automáticamente el idioma del navegador del usuario.
  * Si comienza con "es", usa español; de lo contrario, usa inglés.
@@ -887,8 +834,8 @@ function reclampAllWindows() {
 function initAutoLang() {
   var nav = navigator.language || "es";
   var lang = nav.startsWith("es") ? "es" : "en";
-  currentLang = lang; // set before systemLog so clock init reads correctly
   systemLog("Auto-detected language: " + lang);
+  currentLang = lang;
   updateLanguage();
   
   // Añadir atributos de lenguaje para WCAG 2.1
@@ -908,7 +855,7 @@ function initAutoLang() {
     var ufEl = document.getElementById("ind-uf");
     var dolarEl = document.getElementById("ind-dolar");
     if (!utmEl) return;
-    fetch(CONFIG.indicatorsUrl)
+    fetch("https://gambito700.github.io/scraperUTM/dashboard_data.json")
       .then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
@@ -1195,12 +1142,12 @@ function initAutoLang() {
           form.reset();
           systemLog("Contact form submitted by: " + name);
         } else {
-          showErr(currentLang === "es" ? "Error al enviar. Escríbeme directo a " + CONFIG.contactEmail : "Error sending. Email me at " + CONFIG.contactEmail);
+          showErr(currentLang === "es" ? "Error al enviar. Escríbeme directo a alexmartinezdiaz91@gmail.com" : "Error sending. Email me at alexmartinezdiaz91@gmail.com");
         }
         resetBtn();
         setTimeout(function () { successMsg.classList.add("d-none"); }, 6000);
       }).catch(function () {
-        showErr(currentLang === "es" ? "Connection error. Escríbeme directo a " + CONFIG.contactEmail : "Connection error. Email me at " + CONFIG.contactEmail);
+        showErr(currentLang === "es" ? "Error de conexión. Escríbeme directo a alexmartinezdiaz91@gmail.com" : "Connection error. Email me at alexmartinezdiaz91@gmail.com");
         resetBtn();
       });
     });
@@ -1326,9 +1273,9 @@ function initAutoLang() {
     var errEl = document.getElementById("weather-error");
     if (!tempEl) return;
 
-    // Coordinates from CONFIG
-    var lat = CONFIG.weatherLat;
-    var lon = CONFIG.weatherLon;
+    // Villarrica, Chile coordinates
+    var lat = -39.2833;
+    var lon = -72.2333;
     var url = "https://api.open-meteo.com/v1/forecast?latitude=" + lat + "&longitude=" + lon + "&current_weather=true&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m,weathercode&timezone=America%2FSantiago&forecast_days=1";
 
     fetch(url)
@@ -1347,8 +1294,6 @@ function initAutoLang() {
         if (windEl) windEl.innerHTML = '<i class="fas fa-wind"></i> ' + Math.round(cw.windspeed) + " km/h";
         if (errEl) errEl.classList.add("d-none");
         systemLog("[weather] Data loaded for Villarrica");
-        window._lastWeatherCode = cw.weathercode;
-        window._lastIsDay = cw.is_day;
         if (typeof cw.is_day !== "undefined") {
           updateVantaByWeather(cw.weathercode, cw.is_day);
         }
@@ -1615,66 +1560,82 @@ function initAutoLang() {
         systemLog("[music] Polling: YT.Player not ready yet, retrying in 500ms");
         setTimeout(pollYT, 500);
       }
-    }()); // end pollYT IIFE
+/**
+ * initMovingLetters()
+ * Crea la animación de texto de bienvenida que flota sobre el
+ * escritorio. Muestra mensajes en un ciclo infinito, con letras
+ * que entran y salen usando anime.js.
+
+ * CÓMO MODIFICAR:
+ * - Cambia los textos en el array "messages" (primer idioma español).
+ * - Ajusta la duración del intervalo (12000ms = 12 segundos) para
+ *   que los mensajes cambien más rápido o más lento.
+ * - Modifica los valores de translateX, opacity, duration y delay
+ *   para personalizar la animación.
+
+ * REQUISITO: anime.js debe estar cargado en el HTML.
+ */
+function initMovingLetters() {
+  const messages = [
+    "Bienvenido a mi Portafolio Demostrativo",
+    "diseño y programado por alex M."
+  ];
+  let idx = 0;
+  const container = document.getElementById("moving-letters");
+  if (!container) return;
+  function showMessage(text) {
+    container.innerHTML = `<h1 class="ml12">${text}</h1>`;
+    const wrapper = container.querySelector('.ml12');
+    wrapper.innerHTML = wrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+    anime.timeline({loop:false})
+      .add({
+        targets: '.ml12 .letter',
+        translateX: [40,0],
+        translateZ: 0,
+        opacity: [0,1],
+        easing: "easeOutExpo",
+        duration: 1200,
+        delay: (el, i) => 500 + 30 * i
+      })
+      .add({
+        targets: '.ml12 .letter',
+        translateX: [0,-30],
+        opacity: [1,0],
+        easing: "easeInExpo",
+        duration: 1100,
+        delay: (el, i) => 100 + 30 * i
+      });
+  }
+  showMessage(messages[idx]);
+  setInterval(() => {
+    idx = (idx + 1) % messages.length;
+    showMessage(messages[idx]);
+  }, 12000);
+}
+
+/**
+ * initRandomBackgroundFilter()
+ * APLICA un filtro CSS aleatorio al body de la página.
+ * Es una función experimental que demuestra cómo manipular estilos
+ * desde JavaScript. Actualmente se llama pero puede desactivarse
+ * comentando su safeInit en DOMContentLoaded.
+ *
+ * POSIBLES FILTROS: blur, brightness, contrast, hue-rotate
+ */
+function initRandomBackgroundFilter(){
+  const filters=['blur(2px)','brightness(0.8)','contrast(1.3)','hue-rotate(45deg)'];
+  const f=filters[Math.floor(Math.random()*filters.length)];
+  document.body.style.filter = f;
+}
+safeInit(initMovingLetters, "initMovingLetters");
+})();
 
     updateMusicUI(ytCurrentTrack);
     systemLog("[music] Player inicializado — modo YouTube IFrame API");
   }
 
-  /**
-   * initMovingLetters()
-   * Crea la animación de texto de bienvenida que flota sobre el
-   * escritorio. Muestra mensajes en un ciclo infinito, con letras
-   * que entran y salen usando anime.js.
-   *
-   * CÓMO MODIFICAR:
-   * - Cambia los textos en el array "messages" (primer idioma español).
-   * - Ajusta la duración del intervalo (12000ms = 12 segundos).
-   * - Modifica translateX, opacity, duration y delay para personalizar.
-   *
-   * REQUISITO: anime.js debe estar cargado en el HTML.
-   */
-  function initMovingLetters() {
-    var messages = [
-      "Bienvenido a mi Portafolio Demostrativo",
-      "diseño y programado por   alex M."
-    ];
-    var idx = 0;
-    var container = document.getElementById("moving-letters");
-    if (!container) return;
-    if (typeof anime === "undefined") {
-      systemLog("[movingLetters] anime.js not loaded, skipping animation");
-      return;
-    }
-    function showMessage(text) {
-      container.innerHTML = "<h1 class=\"ml12\">" + text + "</h1>";
-      var wrapper = container.querySelector(".ml12");
-      wrapper.innerHTML = wrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
-      anime.timeline({ loop: false })
-        .add({
-          targets: ".ml12 .letter",
-          translateX: [40, 0],
-          translateZ: 0,
-          opacity: [0, 1],
-          easing: "easeOutExpo",
-          duration: 1200,
-          delay: function (el, i) { return 500 + 30 * i; }
-        })
-        .add({
-          targets: ".ml12 .letter",
-          translateX: [0, -30],
-          opacity: [1, 0],
-          easing: "easeInExpo",
-          duration: 1100,
-          delay: function (el, i) { return 100 + 30 * i; }
-        });
-    }
-    showMessage(messages[idx]);
-    setInterval(function () {
-      idx = (idx + 1) % messages.length;
-      showMessage(messages[idx]);
-    }, 12000);
-  }
+
+
 
   /**
    * initCalculator()
@@ -1688,19 +1649,6 @@ function initAutoLang() {
    * Estados internos: cur (valor actual), op (operador pendiente),
    * prev (valor previo), reset (borrar al escribir), isError.
    */
-  /**
-   * compute(a, op, b) — Helper aritmético centralizado para la calculadora.
-   * Extraído para eliminar duplicación entre "=" y operadores encadenados.
-   * @returns {number|"Error"}
-   */
-  function compute(a, op, b) {
-    if (op === "+") return a + b;
-    if (op === "-") return a - b;
-    if (op === "×") return a * b;
-    if (op === "÷") return b !== 0 ? a / b : "Error";
-    return "Error";
-  }
-
   function initCalculator() {
     var display = document.getElementById("calc-display");
     var sub = document.getElementById("calc-sub");
@@ -1742,25 +1690,35 @@ function initAutoLang() {
       } else if (v === "=") {
         if (isError) return;
         if (op && prev !== null) {
-          var result = compute(parseFloat(prev), op, parseFloat(cur));
+          var a = parseFloat(prev), b = parseFloat(cur), r;
+          if (op === "+") r = a + b;
+          else if (op === "-") r = a - b;
+          else if (op === "\u00D7") r = a * b;
+          else if (op === "\u00F7") r = b !== 0 ? a / b : "Error";
           if (sub) sub.textContent = prev + " " + op + " " + cur + " =";
-          if (result === "Error") {
+          if (r === "Error" || r === Infinity || (typeof r === "number" && !isFinite(r))) {
             cur = "Error"; isError = true; op = null; prev = null; reset = true;
-            display.textContent = "Error"; return;
+            display.textContent = "Error";
+            return;
           }
-          cur = String(Math.round(result * 1e10) / 1e10);
+          cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
           op = null; prev = null; reset = true;
           updateDisplay();
         }
-      } else if (["+", "-", "\u00D7", "\u00F7"].indexOf(v) !== -1) {
+      } else if (["+","-","\u00D7","\u00F7"].indexOf(v) !== -1) {
         if (isError) return;
         if (op && prev !== null && !reset) {
-          var result = compute(parseFloat(prev), op, parseFloat(cur));
-          if (result === "Error") {
+          var a = parseFloat(prev), b = parseFloat(cur), r;
+          if (op === "+") r = a + b;
+          else if (op === "-") r = a - b;
+          else if (op === "\u00D7") r = a * b;
+          else if (op === "\u00F7") r = b !== 0 ? a / b : "Error";
+          if (r === "Error" || r === Infinity || (typeof r === "number" && !isFinite(r))) {
             cur = "Error"; isError = true; op = null; prev = null; reset = true;
-            display.textContent = "Error"; return;
+            display.textContent = "Error";
+            return;
           }
-          cur = String(Math.round(result * 1e10) / 1e10);
+          cur = String(typeof r === "number" ? Math.round(r * 1e10) / 1e10 : r);
           updateDisplay();
         }
         prev = cur; op = v; reset = true;
@@ -1792,7 +1750,7 @@ function initAutoLang() {
     if (toastHideTimer) { clearTimeout(toastHideTimer); toastHideTimer = null; }
     toastHideTimer = setTimeout(function () {
       toast.classList.add("d-none");
-    }, CONFIG.toastDuration);
+    }, 4000);
   };
   function initToastDismiss() {
     var closeBtn = document.getElementById("toast-close-btn");
@@ -1865,7 +1823,7 @@ function initAutoLang() {
     safeInit(initMenuToggle, "initMenuToggle");         // Activa botón de menú inicio
     safeInit(initDrag, "initDrag");                     // Arrastre de ventanas
     safeInit(restoreOS, "restoreOS");                   // Estado inicial (abre CV)
-    // Vanta ya no se inicia por defecto — se activa manualmente con toggleVanta()
+    safeInit(initVantaCloudsWallpaper, "initVantaCloudsWallpaper"); // Fondo nubes 3D Vanta
     safeInit(initSystemTray, "initSystemTray");         // Iconos de la bandeja del sistema
 
     // ── UI Features ─────────────────────────────────────────
@@ -1892,7 +1850,7 @@ function initAutoLang() {
     setTimeout(function () {
       openWindow("window-music");
       systemLog("[startup] Music window auto-opened");
-    }, CONFIG.musicAutoOpenDelay);
+    }, 800);
 
     // Reajusta todas las ventanas dentro de los límites del escritorio
     reclampAllWindows();
