@@ -3,17 +3,44 @@
  * PORTAFOLIO ALEX MARTÍNEZ – Front-End 2026
  * File: js/script.js
  *
- * SECTIONS:
- *   A. OS Core (window manager, drag, theme, lang, wallpaper, log)
- *   B. Digital Clock
- *   C. Custom Cursor (canvas trail)
- *   D. Skill Bars
- *   E. Language Toggle ES/EN
- *   F. Text FX (letter by letter)
- *   G. Contact Form
- *   H. Calendar Widget
- *   I. Weather Widget
- *   J. Init (DOMContentLoaded)
+ * OBJETIVO:
+ *   Controlar todo el simulador de escritorio Windows 11:
+ *   apertura/cierre de ventanas, arrastre, barra de tareas,
+ *   menú inicio, reloj, clima, calculadora, reproductor de
+ *   música vía YouTube, calendario, barras de habilidades,
+ *   cambio de idioma, fondos animados, y más.
+ *
+ * DEPENDENCIAS EXTERNAS (deben cargarse ANTES en el HTML):
+ *   - anime.js       → Animaciones de texto letra por letra
+ *   - Vanta.js       → Efecto de ondas en el fondo del escritorio
+ *   - Three.js       → Librería 3D requerida por Vanta.js
+ *   - YouTube IFrame API → Reproductor de música oculto
+ *   - Bootstrap 5    → Acordeones, modales (formulario FAQ)
+ *   - Font Awesome 6 → Iconos en ventanas y barra de tareas
+ *
+ * ESTRUCTURA DEL CÓDIGO (secciones):
+ *   A. OS Core  – Gestor de ventanas (abrir, cerrar, arrastrar)
+ *   B. Reloj    – Reloj digital actualizado cada segundo
+ *   C. Animación de letras flotantes (initMovingLetters)
+ *   D. Skill Bars – Barras de progreso animadas
+ *   E. Idioma   – Toggle español/inglés con traducción dinámica
+ *   F. Text FX  – Animación de texto letra por letra
+ *   G. Contacto – Formulario vía Formspree
+ *   H. Calendario – Widget de calendario mensual
+ *   I. Clima    – Datos desde Open-Meteo API
+ *   J. Música   – Reproductor YouTube con playlist propia
+ *   K. Calculadora – Operaciones aritméticas básicas
+ *   L. Indicadores – UTM, UF, Dólar desde scraper chileno
+ *   M. Inicio   – safeInit + DOMContentLoaded (arranque)
+ *
+ * CONVENCIÓN:
+ *   - Las funciones expuestas globalmente (openWindow, closeWindow,
+ *     etc.) se asignan a window.* para que funcionen desde los
+ *     onclick en el HTML.
+ *   - Las funciones internas se declaran con function name() {}
+ *     dentro del IIFE para mantener el ámbito privado.
+ *   - safeInit() envuelve cada inicialización para capturar errores
+ *     sin romper el resto del programa.
  * =====================================================================
  */
 
@@ -22,14 +49,33 @@
 
   /* ============================================================
      A. OS CORE – Window Manager, Drag & Drop, Theme, Lang, Wallpaper
+     ============================================================
+     Esta sección contiene el núcleo del simulador de escritorio:
+     apertura/cierre de ventanas, control de z-index, arrastre,
+     barra de tareas, menú inicio, fondos de pantalla y registro
+     de actividades (systemLog).
+
+     Cada función expuesta globalmente (openWindow, closeWindow,
+     nextWallpaper, etc.) se asigna a window.* para que pueda
+     usarse desde los onclick en index.html.
      ============================================================ */
 
-  // zIndex counter ensures each opened/clicked window comes to front
-  /** Counter for window Z-index to ensure proper stacking order. */
-var zIndexCounter = 100;
+  /*
+   * ─── zIndexCounter ───────────────────────────────────────────
+   * Lleva la cuenta del índice Z para que las ventanas se superpongan
+   * correctamente. Cada vez que se abre o se hace clic en una ventana,
+   * su z-index aumenta para que quede al frente.
+   * ─────────────────────────────────────────────────────────────── */
+  var zIndexCounter = 100;
 
-/** Bring a window to the front by incrementing its z-index. */
-function bringToFront(win) {
+  /**
+   * bringToFront(win)
+   * Trae una ventana al frente incrementando su z-index.
+   * @param {HTMLElement} win - El elemento .win11-window a traer al frente.
+   * Cuando el contador llega a 140, se reinicia a 100 para evitar
+   * valores excesivamente grandes.
+   */
+  function bringToFront(win) {
   zIndexCounter = Math.min(zIndexCounter + 2, 150);
   win.style.zIndex = zIndexCounter;
   if (zIndexCounter >= 140) {
@@ -37,9 +83,13 @@ function bringToFront(win) {
   }
 }
 
-  /* ── Límites dinámicos según breakpoint actual ──────────
-     Devuelve el área segura donde las ventanas pueden moverse.
-     Se recalcula en cada drag y en cada resize.             */
+  /**
+   * getDesktopBounds()
+   * Calcula el área segura donde las ventanas pueden moverse sin
+   * salirse de la pantalla ni quedar debajo de la barra de tareas.
+   * Se recalcula en cada drag y en cada resize del navegador.
+   * @returns {Object} { minX, minY, maxX, maxY } Límites en píxeles.
+   */
   function getDesktopBounds() {
     var TASKBAR_H = window.innerWidth < 481 ? 40 :
       window.innerWidth < 768 ? 44 : 50;
@@ -51,7 +101,12 @@ function bringToFront(win) {
     };
   }
 
-  /* ── Clamp una ventana dentro de los límites ─────────── */
+  /**
+   * clampWindowToBounds(win)
+   * Reubica una ventana para que no se salga del área visible del
+   * escritorio. Se usa después de un drag o al redimensionar.
+   * @param {HTMLElement} win - La ventana a reubicar.
+   */
   function clampWindowToBounds(win) {
     var bounds = getDesktopBounds();
     var left = win.offsetLeft || 0;
@@ -68,8 +123,16 @@ function bringToFront(win) {
     return;
   }
 
-  /** Open a window, initialize its UI, and bring it to front. */
-window.openWindow = function (id) {
+  /**
+   * openWindow(id)
+   * Abre una ventana del sistema: la muestra, reproduce la animación
+   * de apertura, la trae al frente y actualiza el icono en la barra
+   * de tareas. También cierra el menú inicio si está abierto.
+   * @param {string} id - El ID del elemento .win11-window a abrir
+   *                      (ej: "window-cv", "window-about").
+   * Para usar desde HTML: onclick="openWindow('window-cv')"
+   */
+  window.openWindow = function (id) {
     var win = document.getElementById(id);
     if (!win) return;
 
@@ -99,8 +162,14 @@ window.openWindow = function (id) {
     systemLog("Window opened: " + id + " at (" + Math.round(rect.left) + "," + Math.round(rect.top) + ") " + Math.round(rect.width) + "x" + Math.round(rect.height));
   };
 
-  /** Close a window and clean up its state. */
-window.closeWindow = function (id) {
+  /**
+   * closeWindow(id)
+   * Cierra una ventana: reproduce la animación de cierre y luego
+   * la oculta (clase .d-none). También limpia el icono de la barra
+   * de tareas y guarda el estado.
+   * @param {string} id - El ID de la ventana a cerrar.
+   */
+  window.closeWindow = function (id) {
     var win = document.getElementById(id);
     if (win && !win.classList.contains("win-closing")) {
       // Ensure any transient state is cleared when closing
@@ -121,6 +190,12 @@ window.closeWindow = function (id) {
     saveOpenWindows();
   };
 
+  /**
+   * minimizeWindow(id)
+   * Minimiza una ventana agregándole la clase .minimized (escala a 0).
+   * @param {string} id - El ID de la ventana a minimizar.
+   * Para usar desde HTML: onclick="minimizeWindow('window-cv')"
+   */
   window.minimizeWindow = function (id) {
     var win = document.getElementById(id);
     if (win) win.classList.add("minimized");
@@ -130,6 +205,15 @@ window.closeWindow = function (id) {
     systemLog("Window minimized: " + id);
   };
 
+  /**
+   * maximizeWindow(id)
+   * Maximiza una ventana al tamaño completo del escritorio (menos la
+   * barra de tareas). Si ya está maximizada, la restaura a su tamaño
+   * y posición anterior.
+   * @param {string} id - El ID de la ventana a maximizar/restaurar.
+   * Guarda la posición y tamaño previos en dataset.prevRect para
+   * poder restaurarlos.
+   */
   window.maximizeWindow = function (id) {
     var win = document.getElementById(id);
     if (!win) return;
@@ -166,6 +250,11 @@ window.closeWindow = function (id) {
     systemLog(`Window ${id} ${win.classList.contains("maximized") ? "maximized" : "restored"}`);
   };
 
+  /**
+   * closeAllWindows()
+   * Cierra todas las ventanas abiertas (que no estén ocultas ni
+   * minimizadas) iterando sobre los elementos .win11-window visibles.
+   */
   window.closeAllWindows = function () {
     document.querySelectorAll(".win11-window:not(.d-none):not(.minimized)").forEach(win => {
       closeWindow(win.id);
@@ -207,7 +296,12 @@ window.closeWindow = function (id) {
     }
   }
 
-  // ── Start Menu Toggle ───────────────────────────────────────
+  /**
+   * initStartMenu()
+   * Configura el menú Inicio: al hacer clic en el botón Windows
+   * (#start-btn), se alterna la clase .show-sm en #start-menu.
+   * También cierra el menú si se hace clic fuera de él.
+   */
   function initStartMenu() {
     var btn = document.getElementById("start-btn");
     var menu = document.getElementById("start-menu");
@@ -236,7 +330,12 @@ function reclampAllWindows() {
   }
 }
 
-  // ── System Tray (Battery, etc) ──────────────────────────────
+  /**
+   * initSystemTray()
+   * Configura los iconos de la bandeja del sistema (esquina inferior
+   * derecha de la barra de tareas). Reemplaza el icono de batería
+   * de Font Awesome por una imagen PNG para mejor control visual.
+   */
   function initSystemTray() {
     // Reemplazar el ícono FA de batería por un <img> controlable
     var tray = document.querySelector(".tb-system-tray");
@@ -259,7 +358,13 @@ function reclampAllWindows() {
     }
   }
 
-  // ── Drag & Drop con límites de escritorio (mouse + touch) ──
+  /**
+   * initDrag()
+   * Habilita el arrastre de ventanas usando el mouse o táctil.
+   * Solo se puede arrastrar desde .window-header. Las ventanas
+   * no pueden salirse del área del escritorio (usando getDesktopBounds
+   * para definir los límites). Soporta eventos touch para móviles.
+   */
   function initDrag() {
     var activeWin = null;
     var isDragging = false;
@@ -343,7 +448,12 @@ function reclampAllWindows() {
     }, 500);
   });
 
-  // ── Initial State & Auto-Open ────────────────────────────────
+  /**
+   * restoreOS()
+   * Restaura el estado inicial del escritorio: reinicia posiciones
+   * de ventanas y abre automáticamente la ventana de CV (portafolio)
+   * después de 500ms de carga.
+   */
   function restoreOS() {
     // Reset positions to default on every load (no persistence)
     document.querySelectorAll(".win11-window").forEach(win => {
@@ -358,7 +468,16 @@ function reclampAllWindows() {
     }, 500);
   }
 
-  // ── System Log with Performance Tracking ─────────────────────
+  /**
+   * systemLog(msg)
+   * Registra mensajes en la consola y en el visor de logs del sistema
+   * (#log-output-area). Cada mensaje incluye una marca de tiempo y
+   * el tiempo de respuesta desde el último mensaje.
+   * @param {string} msg - El mensaje a registrar.
+   * 
+   * Útil para depuración: todos los componentes del sistema llaman
+   * a systemLog() para informar sus acciones.
+   */
   let lastInterTime = Date.now();
   window.systemLog = function (msg) {
     var now = Date.now();
@@ -450,6 +569,13 @@ function reclampAllWindows() {
     link.onerror = function () { link.remove(); };
   }
 
+  /**
+   * nextWallpaper()
+   * Cambia el fondo de escritorio a una imagen aleatoria de
+   * Picsum (servicio de imágenes placeholder). Precarga la
+   * imagen antes de aplicarla para una transición suave.
+   * Se llama desde el botón de la bandeja del sistema.
+   */
   window.nextWallpaper = function () {
     var d = document.getElementById("desktop");
     if (!d) return;
@@ -459,12 +585,28 @@ function reclampAllWindows() {
     });
   };
 
+  /**
+   * showPowerPopup()
+   * Muestra un diálogo con información de contacto al hacer clic
+   * en el botón de apagado del menú inicio.
+   * Simula el menú de apagado de Windows 11 mostrando datos
+   * del portafolio en su lugar.
+   */
   window.showPowerPopup = function () {
     alert("Contacto: alexmartinezdiaz91@gmail.com\nVillarrica, Chile");
     systemLog("Power menu opened: Contact info displayed");
   };
 
-  // ── Click-to-Reveal for obfuscated contacts ──────────────
+  /**
+   * initObfuscatedContacts()
+   * Activa el sistema de contactos ofuscados: al hacer clic en un
+   * enlace de email o teléfono, se revela la información completa
+   * (oculta inicialmente con "a***@gmail.com" / "+56 *** *** ****")
+   * y abre el enlace correspondiente.
+   * 
+   * Es una medida de privacidad para evitar que bots scraping
+   * capturen direcciones de email fácilmente.
+   */
   function initObfuscatedContacts() {
     document.querySelectorAll(".obfuscated-contact").forEach(function (el) {
       el.addEventListener("click", function (e) {
@@ -485,14 +627,32 @@ function reclampAllWindows() {
 
   // ── Shadow Intensity Sliders — REMOVED per user request ──
 
-  // ── Start Menu ──────────────────────────────────────────────
+  /**
+   * initMenuToggle()
+   * Inicializa el menú inicio. Es un wrapper que llama a
+   * initStartMenu() para mantener consistencia con el patrón
+   * de inicialización usado en DOMContentLoaded.
+   */
   function initMenuToggle() {
     initStartMenu();
   }
 
-  // ── Dynamic Wallpaper (Picsum) ──────────────────────────
-  /** Initialize Vanta.WAVES background effect */
-function initVantaWaves() {
+  /* ──────────────────────────────────────────────────────────────
+     initVantaWaves()
+     Inicializa el efecto de ondas animadas en el fondo del
+     escritorio usando la librería Vanta.js (que a su vez usa
+     Three.js). Las ondas reaccionan al movimiento del mouse.
+
+     REQUISITO: Vanta.js y Three.js deben estar cargados en el HTML
+     antes de llamar esta función.
+
+     CÓMO MODIFICAR:
+     - Cambia waveHeight para ondas más altas o bajas.
+     - Ajusta shininess para más/menos brillo.
+     - Si no quieres el efecto, comenta la línea safeInit en
+       DOMContentLoaded.
+     ────────────────────────────────────────────────────────────── */
+  function initVantaWaves() {
     if (!document.body.classList.contains("desktop-mode")) return;
     var d = document.getElementById("desktop");
     if (!d) return;
@@ -512,7 +672,13 @@ function initVantaWaves() {
     });
   }
 
-// ── Auto-detect Language ──────────────────────────────────────
+/**
+ * initAutoLang()
+ * Detecta automáticamente el idioma del navegador del usuario.
+ * Si comienza con "es", usa español; de lo contrario, usa inglés.
+ * También actualiza el atributo lang en el elemento <html> para
+ * accesibilidad WCAG.
+ */
 function initAutoLang() {
   var nav = navigator.language || "es";
   var lang = nav.startsWith("es") ? "es" : "en";
@@ -524,7 +690,14 @@ function initAutoLang() {
   document.documentElement.setAttribute("lang", lang);
 }
 
-  // ── Indicators (UTM / UF / Dólar) ─────────────────────────
+  /**
+   * initIndicators()
+   * Carga los indicadores económicos chilenos (UTM, UF, Dólar)
+   * desde un archivo JSON (scraperUTM/dashboard_data.json) con
+   * fallback a api/indicators.json.
+   * Muestra los valores formateados como moneda chilena ($).
+   * Si falla la carga, muestra "No disponible".
+   */
   function initIndicators() {
     var utmEl = document.getElementById("ind-utm");
     var ufEl = document.getElementById("ind-uf");
@@ -575,6 +748,14 @@ function initAutoLang() {
      J. DOMContentLoaded — Main Init
      ============================================================ */
   var clockInterval = null;
+  /**
+   * initClock()
+   * Inicializa el reloj digital en la barra de tareas. Actualiza
+   * la hora cada segundo (setInterval con 1000ms). Muestra formato
+   * HH:MM y la fecha según el idioma seleccionado.
+   * 
+   * Los elementos HTML objetivo son #clock-time y #clock-date.
+   */
   function initClock() {
     var timeEl = document.getElementById("clock-time"); // fixed: was #clockTime
     var dateEl = document.getElementById("clock-date"); // fixed: was #clockDate
@@ -598,7 +779,12 @@ function initAutoLang() {
 
 
   /* ============================================================
-     D. SKILL BARS + WAVE
+     D. SKILL BARS
+     ============================================================
+     Anima las barras de progreso de habilidades cuando la ventana
+     correspondiente se hace visible. Usa IntersectionObserver para
+     detectar cuándo la barra entra en pantalla, o MutationObserver
+     si está dentro de una ventana cerrada inicialmente.
      ============================================================ */
   function initSkillBars() {
     var bars = document.querySelectorAll(".skill-fill");
@@ -636,9 +822,26 @@ function initAutoLang() {
 
   /* ============================================================
      E. LANGUAGE TOGGLE ES / EN
+     ============================================================
+     Sistema de internacionalización (i18n) básico. Cambia todos
+     los textos del sitio entre español e inglés usando atributos
+     data-en y data-es en cada elemento del HTML.
+
+     CÓMO AGREGAR UN NUEVO TEXTO TRADUCIBLE:
+     1. En el HTML, agrega data-en="English text" data-es="Texto español"
+        al elemento.
+     2. Para placeholders (inputs), usa data-placeholder-en y
+        data-placeholder-es.
      ============================================================ */
   var currentLang = "es";
 
+  /**
+   * initLangToggle()
+   * Configura el botón de cambio de idioma (#lang-toggle). Al hacer
+   * clic, alterna entre español e inglés y actualiza todos los textos
+   * visibles mediante applyLanguage().
+   * También ajusta el formato del reloj y el calendario.
+   */
   function initLangToggle() {
     var btn = document.getElementById("lang-toggle");
     if (!btn) return;
@@ -703,7 +906,17 @@ function initAutoLang() {
 
 
   /* ============================================================
-     F. TEXT FX (letter-by-letter animation) [was G, Swiper removed]
+     F. TEXT FX (letter-by-letter animation)
+     ============================================================
+     Toma elementos con clase .txt-fx y descompone su texto en
+     letras individuales envueltas en <span>, luego las anima
+     secuencialmente (efecto "máquina de escribir" / revelado).
+
+     Cada letra aparece con un retraso progresivo (stagger) que
+     crea un efecto de escritura fluida. Usa transiciones CSS
+     definidas en style.css (.txt-fx .letter).
+
+     REQUISITO: Los elementos deben tener la clase .txt-fx en HTML.
      ============================================================ */
   function initTextFx() {
     var stagger = 14, delay = 150;
@@ -726,7 +939,21 @@ function initAutoLang() {
 
 
   /* ============================================================
-     H. CONTACT FORM (simulated send / EmailJS ready)
+     H. CONTACT FORM (Formspree)
+     ============================================================
+     Gestiona el envío del formulario de contacto a través de
+     Formspree (servicio que convierte formularios HTML en emails).
+     Incluye validación básica (nombre, email, mensaje requeridos;
+     formato de email válido).
+
+     Estados:
+     - Éxito: muestra mensaje verde (#form-success)
+     - Error: muestra mensaje rojo (#form-error)
+     - Cargando: deshabilita botón y muestra spinner
+
+     CÓMO MODIFICAR:
+     - Cambia la URL en fetch() si usas otro servicio.
+     - Ajusta la validación en las condiciones if.
      ============================================================ */
   function initContactForm() {
     var btn = document.getElementById("contact-submit");
@@ -798,10 +1025,29 @@ function initAutoLang() {
 
   /* ============================================================
      I. CALENDAR WIDGET
+     ============================================================
+     Widget de calendario mensual con navegación entre meses.
+     Renderiza una grilla de días similar al calendario de Windows.
+     El mes y año actuales se almacenan en calMonth y calYear.
+
+     COMPONENTES HTML:
+     - #cal-title  Muestra "Mes Año" (ej: "Junio 2026")
+     - #cal-body   Contenedor de la grilla de días
+     - #cal-prev   Botón mes anterior
+     - #cal-next   Botón mes siguiente
+
+     CÓMO MODIFICAR:
+     - Los nombres de meses están en MONTHS_ES y MONTHS_EN.
+     - Ajusta el formato de las celdas en renderCalendar().
      ============================================================ */
   var calMonth = new Date().getMonth();
   var calYear = new Date().getFullYear();
 
+  /**
+   * initCalendar()
+   * Inicializa el calendario: asigna eventos a los botones de
+   * navegación y renderiza el mes actual.
+   */
   function initCalendar() {
     var titleEl = document.getElementById("cal-title");
     var bodyEl = document.getElementById("cal-body");
@@ -824,6 +1070,15 @@ function initAutoLang() {
     systemLog("[calendar] Initialized");
   }
 
+  /**
+   * renderCalendar()
+   * Renderiza la grilla del calendario para el mes/año actuales
+   * (calMonth/calYear). Calcula el primer día del mes y el número
+   * total de días, luego genera celdas (.cal-day) para cada día.
+   * Resalta el día actual con la clase .cal-today.
+   * No recibe parámetros; usa las variables globales calMonth y
+   * calYear, y los elementos del DOM #cal-title y #cal-body.
+   */
   function renderCalendar() {
     var titleEl = document.getElementById("cal-title");
     var bodyEl = document.getElementById("cal-body");
@@ -851,6 +1106,19 @@ function initAutoLang() {
 
   /* ============================================================
      L. WEATHER API (Open-Meteo)
+     ============================================================
+     Consulta la API gratuita de Open-Meteo para obtener el clima
+     actual de Villarrica, Chile (lat: -39.2833, lon: -72.2333).
+
+     Muestra:
+     - Temperatura actual
+     - Descripción del clima (traducida ES/EN)
+     - Humedad relativa
+     - Velocidad del viento
+
+     Si la API no responde, muestra un mensaje de error.
+     La función weatherCodeDesc() traduce los códigos numéricos
+     de Open-Meteo a texto legible.
      ============================================================ */
   function initWeather() {
     var tempEl = document.getElementById("weather-temp");
@@ -888,6 +1156,17 @@ function initAutoLang() {
       });
   }
 
+  /**
+   * weatherCodeDesc(code, lang)
+   * Traduce un código numérico de clima de Open-Meteo a texto
+   * descriptivo en español o inglés.
+   * @param {number} code  - Código WMO de condición climática (0-99).
+   * @param {string} lang  - Idioma: "es" o "en".
+   * @returns {string} Descripción del clima en el idioma indicado.
+   * 
+   * Los códigos siguen el estándar WMO (Organización Meteorológica
+   * Mundial). Ver: https://open-meteo.com/en/docs
+   */
   function weatherCodeDesc(code, lang) {
     lang = lang || currentLang;
     var codes = {
@@ -920,9 +1199,23 @@ function initAutoLang() {
 
   /* ============================================================
      M. MUSIC PLAYER — YouTube IFrame API
-     Canciones 100% sin derechos de autor (YouTube Audio Library /
-     lofi públicos). El iframe queda oculto; la UI propia controla
-     reproducción, progreso y volumen vía la API oficial de YT.
+     ============================================================
+     Reproductor de música que usa la API de YouTube para reproducir
+     videos (audio solamente) en segundo plano. El iframe de YT está
+     oculto (1x1px) y la UI propia controla la reproducción.
+
+     Playlist: canciones sin derechos de autor (YouTube Audio Library
+     / lofi públicos) seleccionadas para ambiente de trabajo.
+
+     FLUJO:
+     1. La YouTube IFrame API se carga desde el HTML.
+     2. onYouTubeIframeAPIReady() crea el reproductor oculto.
+     3. La UI (botones play/pause, siguiente, anterior, volumen,
+        barra de progreso) controla el reproductor vía la API.
+
+     CÓMO MODIFICAR LA PLAYLIST:
+     - Edita el array ytPlaylist con IDs de videos de YouTube.
+     - Asegúrate de que los videos permitan embedding.
      ============================================================ */
 
   // Playlist: canciones atractivas seleccionadas (embedding permitido)
@@ -1043,6 +1336,14 @@ function initAutoLang() {
     if (fill) fill.style.width = "0%";
   }
 
+  /**
+   * initMusicPlayer()
+   * Inicializa la interfaz del reproductor de música: asigna
+   * eventos a los botones de play/pause (#window-music-play),
+   * siguiente/anterior, barra de progreso y volumen.
+   * También verifica si la API de YouTube ya está disponible
+   * (polling cada 500ms) por si la carga es asíncrona.
+   */
   function initMusicPlayer() {
     var playBtn = document.getElementById("window-music-play");
     var prevBtn = document.getElementById("window-music-prev");
@@ -1111,6 +1412,21 @@ function initAutoLang() {
         systemLog("[music] Polling: YT.Player not ready yet, retrying in 500ms");
         setTimeout(pollYT, 500);
       }
+/**
+ * initMovingLetters()
+ * Crea la animación de texto de bienvenida que flota sobre el
+ * escritorio. Muestra mensajes en un ciclo infinito, con letras
+ * que entran y salen usando anime.js.
+
+ * CÓMO MODIFICAR:
+ * - Cambia los textos en el array "messages" (primer idioma español).
+ * - Ajusta la duración del intervalo (12000ms = 12 segundos) para
+ *   que los mensajes cambien más rápido o más lento.
+ * - Modifica los valores de translateX, opacity, duration y delay
+ *   para personalizar la animación.
+
+ * REQUISITO: anime.js debe estar cargado en el HTML.
+ */
 function initMovingLetters() {
   const messages = [
     "Bienvenido a mi Portafolio Demostrativo",
@@ -1148,6 +1464,16 @@ function initMovingLetters() {
     showMessage(messages[idx]);
   }, 12000);
 }
+
+/**
+ * initRandomBackgroundFilter()
+ * APLICA un filtro CSS aleatorio al body de la página.
+ * Es una función experimental que demuestra cómo manipular estilos
+ * desde JavaScript. Actualmente se llama pero puede desactivarse
+ * comentando su safeInit en DOMContentLoaded.
+ *
+ * POSIBLES FILTROS: blur, brightness, contrast, hue-rotate
+ */
 function initRandomBackgroundFilter(){
   const filters=['blur(2px)','brightness(0.8)','contrast(1.3)','hue-rotate(45deg)'];
   const f=filters[Math.floor(Math.random()*filters.length)];
@@ -1163,7 +1489,18 @@ safeInit(initMovingLetters, "initMovingLetters");
 
 
 
-  // ── Calculator ──────────────────────────────────────────────
+  /**
+   * initCalculator()
+   * Inicializa la calculadora: maneja clics en los botones
+   * (.calc-btn) mediante event delegation (un solo evento en
+   * .calc-grid). Soporta dígitos, operaciones (+ - × ÷),
+   * porcentaje (%), cambio de signo (±), limpieza (C) e
+   * igual (=). Usa atributos data-v en cada botón para saber
+   * qué valor representan.
+   * 
+   * Estados internos: cur (valor actual), op (operador pendiente),
+   * prev (valor previo), reset (borrar al escribir), isError.
+   */
   function initCalculator() {
     var display = document.getElementById("calc-display");
     var sub = document.getElementById("calc-sub");
@@ -1244,7 +1581,15 @@ safeInit(initMovingLetters, "initMovingLetters");
     systemLog("[calculator] Initialized (event delegation)");
   }
 
-  // ── Toast Notification (manual trigger via music play) ────
+  /**
+   * showToast(title, msg)
+   * Muestra una notificación emergente tipo "toast" en la esquina
+   * inferior derecha. Se usa actualmente para notificar la canción
+   * que está sonando en el reproductor.
+   * @param {string} title - Título de la notificación.
+   * @param {string} msg   - Mensaje descriptivo.
+   * La notificación se oculta automáticamente tras 4 segundos.
+   */
   var toastHideTimer = null;
   window.showToast = function (title, msg) {
     var toast = document.getElementById("toast-notification");
@@ -1278,50 +1623,87 @@ safeInit(initMovingLetters, "initMovingLetters");
 
   /* ============================================================
      J. DOMContentLoaded — Main Init
+     ============================================================
+     safeInit() es una función auxiliar que envuelve cada
+     inicialización en un bloque try/catch. Si una función falla,
+     el error se registra en systemLog pero NO detiene al resto
+     del programa. Esto asegura que todo el sitio siga funcionando
+     aunque un componente tenga problemas.
+
+     @param {Function} fn   - La función a ejecutar.
+     @param {string}   name - Nombre descriptivo para los logs.
      ============================================================ */
   function safeInit(fn, name) {
     try { fn(); } catch (e) { systemLog("[error] " + name + " failed: " + e.message); console.error(name, e); }
   }
 
+  /*
+   * ================================================================
+   * DOMContentLoaded  –  Punto de entrada principal
+   * ================================================================
+   * Este evento se dispara cuando el HTML ha sido completamente
+   * cargado y parseado. Aquí se inicializan todos los componentes
+   * del simulador Windows 11.
+   *
+   * ORDEN DE INICIALIZACIÓN:
+   * 1. Núcleo del OS  →  Idioma, menú inicio, arrastre de ventanas,
+   *                      restauración de estado, fondo Vanta, bandeja
+   * 2. Características UI → Reloj, barras de skills, idioma, textos
+   *                         animados, formulario, calendario, clima
+   * 3. Extras          →  Calculadora, indicadores, música, contactos
+   *                       ofuscados, letras flotantes
+   *
+   * CADA COMPONENTE USA safeInit() para que un error en uno no
+   * afecte a los demás.
+   *
+   * CÓMO MODIFICAR:
+   * - Para DESACTIVAR un componente, simplemente comenta su safeInit().
+   * - Para AGREGAR uno nuevo, escribe tu función init*() y añade
+   *   su safeInit() aquí.
+   * - Para CAMBIAR el orden, reordena las líneas de safeInit().
+   * ================================================================ */
   document.addEventListener("DOMContentLoaded", function () {
 
-    // Console welcome
+    // Console welcome — mensaje decorativo en la consola del navegador
     console.log("%c PORTAFOLIO ALEX MARTÍNEZ 2026 ", "background:#0078d4;color:#fff;font-weight:bold;font-size:13px;padding:6px 14px;");
     console.log("%c HTML5 · CSS3 · JavaScript · Villarrica, Chile", "color:#888;font-size:10px;");
 
-    // AOS animations removed
+    // ── OS Core ─────────────────────────────────────────────
+    // Funciones fundamentales del sistema operativo simulado
+    safeInit(initAutoLang, "initAutoLang");       // Detecta idioma del navegador
+    safeInit(initMenuToggle, "initMenuToggle");   // Activa botón de menú inicio
+    safeInit(initDrag, "initDrag");               // Arrastre de ventanas
+    safeInit(restoreOS, "restoreOS");             // Estado inicial (abre CV)
+    safeInit(initVantaWaves, "initVantaWaves");   // Ondas animadas de fondo
+    safeInit(initSystemTray, "initSystemTray");   // Iconos de la bandeja del sistema
 
-    // OS Core
-    safeInit(initAutoLang, "initAutoLang");
-    safeInit(initMenuToggle, "initMenuToggle");
-    safeInit(initDrag, "initDrag");
-    safeInit(restoreOS, "restoreOS");
-    safeInit(initVantaWaves, "initVantaWaves");
-    safeInit(initSystemTray, "initSystemTray");
+    // ── UI Features ─────────────────────────────────────────
+    // Componentes visuales e interactivos
+    safeInit(initClock, "initClock");             // Reloj digital en barra de tareas
+    safeInit(initSkillBars, "initSkillBars");     // Barras de habilidades animadas
+    safeInit(initLangToggle, "initLangToggle");   // Botón de cambio de idioma
+    safeInit(initTextFx, "initTextFx");           // Animación de texto letra por letra
+    safeInit(initContactForm, "initContactForm"); // Formulario de contacto (Formspree)
+    safeInit(initCalendar, "initCalendar");       // Calendario mensual
+    safeInit(initIndicators, "initIndicators");   // Indicadores económicos (UTM/UF/Dólar)
+    safeInit(initMusicPlayer, "initMusicPlayer"); // Reproductor de música YouTube
+    safeInit(initObfuscatedContacts, "initObfuscatedContacts"); // Contactos con clic para revelar
 
-    // UI features
-    safeInit(initClock, "initClock");
-    safeInit(initSkillBars, "initSkillBars");
-    safeInit(initLangToggle, "initLangToggle");
-    safeInit(initTextFx, "initTextFx");
-    safeInit(initContactForm, "initContactForm");
-    safeInit(initCalendar, "initCalendar");
-    safeInit(initIndicators, "initIndicators");
-    safeInit(initMusicPlayer, "initMusicPlayer");
-    safeInit(initObfuscatedContacts, "initObfuscatedContacts");
+    // ── New Features ────────────────────────────────────────
+    // Funcionalidades adicionales
+    safeInit(initCalculator, "initCalculator");       // Calculadora
+    safeInit(initWeather, "initWeather");             // Clima desde Open-Meteo
+    safeInit(initToastDismiss, "initToastDismiss");   // Cerrar notificaciones
+    safeInit(initMovingLetters, "initMovingLetters"); // Texto animado de bienvenida
 
-    // New features
-    safeInit(initCalculator, "initCalculator");
-    safeInit(initWeather, "initWeather");
-    safeInit(initToastDismiss, "initToastDismiss");
-    safeInit(initMovingLetters, "initMovingLetters");
-
-    // Auto-open music window on startup
+    // ── Auto-open ──────────────────────────────────────────
+    // La ventana de música se abre automáticamente al cargar
     setTimeout(function () {
       openWindow("window-music");
       systemLog("[startup] Music window auto-opened");
     }, 800);
 
+    // Reajusta todas las ventanas dentro de los límites del escritorio
     reclampAllWindows();
     systemLog("OS Initialized successfully — Windows 11 Overhaul Mode");
   });

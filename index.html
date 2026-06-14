@@ -1,10 +1,38 @@
 <!DOCTYPE html>
+<!-- ============================================================
+  index.html  –  Portafolio estilo Windows 11
+  ============================================================
+  Este archivo es la entrada principal del sitio. Simula un
+  escritorio Windows 11 con ventanas, barra de tareas, menú
+  inicio, iconos y animaciones.
+
+  SECCIONES PRINCIPALES:
+    <head>        – Metadatos, SEO, estilos y librerías externas
+    Start Menu   – Menú Inicio al hacer clic en el botón Windows
+    Taskbar      – Barra inferior con botones, reloj y bandeja
+    Desktop      – Iconos del escritorio y fondo dinámico
+    Windows      – Ventanas del sistema (CV, About, Skills...)
+    Scripts      – Carga de librerías JS al final del body
+  ============================================================ -->
 <html data-theme="dark" lang="es">
 
+<!-- ==============================================================
+  <head>  –  Metadatos, SEO, estilos y librerías externas
+  ================================================================
+  Aquí se definen:
+  - Meta tags (charset, viewport, description)
+  - Content-Security-Policy (CSP) para seguridad
+  - Open Graph / Twitter Cards para redes sociales
+  - JSON-LD (datos estructurados para buscadores)
+  - CSS externo: Bootstrap 5, Font Awesome 6, Google Fonts
+  - CSS propio: style.css, extra.css, icons-shadows.css
+  ============================================================== -->
 <head>
   <meta charset="utf-8" />
+  <!-- VIEWPORT: controla cómo se ve en móviles -->
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Alex Martínez – Fullstack &amp; Diseño Original 2026</title>
+  <!-- DESCRIPTION: texto que aparece en los resultados de búsqueda -->
   <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
     name="description" />
   <!-- CSP (GitHub Pages no deja poner headers HTTP, usamos meta) -->
@@ -47,6 +75,17 @@
 
   <!-- ================================================================
      START MENU (WINDOWS 11 STYLE)
+     ================================================================
+     Menú Inicio que se despliega al hacer clic en el botón Windows
+     de la barra de tareas. Contiene:
+     - Barra de búsqueda (placeholders bilingües)
+     - Sección "Fijados" con acceso directo a cada ventana
+     - Pie con nombre de usuario y botón de apagado
+
+     CÓMO MODIFICAR:
+     - Para agregar un acceso directo, copia un bloque .sm-grid-item
+       y cambia el onclick="openWindow('window-xxxx')" y la imagen.
+     - Los textos usan data-en / data-es para soporte bilingüe.
      ================================================================ -->
 <div id="start-menu" class="win11-start-menu">
   <div class="sm-search-bar">
@@ -81,6 +120,18 @@
 
   <!-- ================================================================
      WINDOWS 11 TASKBAR
+     ================================================================
+     Barra inferior fija con tres zonas:
+     - Izquierda:  Espaciador (para mantener el centrado)
+     - Centro:     Botón Inicio + iconos de apps abiertas
+     - Derecha:    Bandeja del sistema (idioma, wallpaper, wifi,
+                   volumen, batería) y reloj digital
+
+     CÓMO MODIFICAR:
+     - Los iconos de la bandeja están en .tb-system-tray. Agrega
+       o quita <button> o <i> según necesites.
+     - El reloj se actualiza automáticamente desde js/script.js
+       buscando los elementos #clock-time y #clock-date.
      ================================================================ -->
   <div class="win11-taskbar">
     <div class="taskbar-inner">
@@ -113,10 +164,30 @@
 
   <!-- ================================================================
      DESKTOP
+     ================================================================
+     Contenedor principal del escritorio. Abarca toda la pantalla y
+     contiene:
+     - .desktop-icons:  Iconos del escritorio (accesos directos)
+     - #moving-letters: Animación de bienvenida (texto flotante)
+     - #windows-container:  Todas las ventanas del sistema
+
+     El fondo de pantalla se controla desde js/script.js mediante
+     Vanta.js (ondas) o imágenes de Picsum.
      ================================================================ -->
   <div class="win11-desktop" id="desktop">
 
-    <!-- DESKTOP ICONS -->
+    <!-- DESKTOP ICONS
+         ============================================================
+         Cada .desktop-icon es un acceso directo que abre una ventana
+         al hacer clic (onclick="openWindow('window-xxx')").
+
+         CÓMO MODIFICAR:
+         - Para agregar un icono, copia un bloque .desktop-icon,
+           cambia el ID de ventana, la imagen y el texto.
+         - También puede ser un <a> para enlaces externos (ej: DuckDuckGo).
+         - Los atributos data-en / data-es permiten cambiar el texto
+           según el idioma seleccionado.
+         ============================================================ -->
     <div class="desktop-icons">
 
       <div class="desktop-icon" onclick="openWindow('window-cv')">
@@ -202,6 +273,24 @@
 
     <!-- ================================================================
        WINDOWS CONTAINER
+       ================================================================
+       Aquí dentro están TODAS las ventanas del sistema. Cada ventana
+       es un div con clase .win11-window y un ID único (window-cv,
+       window-about, window-skills, etc.).
+
+       ESTRUCTURA DE UNA VENTANA:
+         .win11-window          ← Contenedor principal
+           .window-header       ← Barra de título (con icono y controles)
+             .window-title      ← Ícono + nombre
+             .window-controls   ← Botones: minimizar, maximizar, cerrar
+           .window-content      ← Contenido interno (se desplaza)
+
+       CÓMO AGREGAR UNA VENTANA NUEVA:
+       1. Copia un bloque .win11-window completo.
+       2. Cámbiale el ID (ej: "window-miventana").
+       3. Agrega un .desktop-icon en la sección de iconos que haga
+          onclick="openWindow('window-miventana')".
+       4. Agrega un .sm-grid-item en el Start Menu con el mismo onclick.
        ================================================================ -->
     <div id="windows-container">
 
@@ -1046,6 +1135,19 @@
 
   <!-- ================================================================
      SCRIPTS
+     ================================================================
+     Carga de librerías JavaScript. El orden es importante:
+
+     1. YouTube IFrame API  →  Reproductor de música oculto
+     2. Bootstrap JS        →  Acordeones, modales, etc. (con defer)
+     3. Three.js            →  Librería 3D requerida por Vanta.js
+     4. Vanta.js            →  Efecto de ondas animadas en el fondo
+     5. anime.js            →  Animaciones de texto (letra por letra)
+     6. script.js (defer)   →  Nuestro código principal
+
+     NOTA: script.js tiene "defer" para ejecutarse después de cargar
+     todo el HTML. Las dependencias (anime, Vanta, Three) deben estar
+     disponibles antes de que script.js se ejecute.
      ================================================================ -->
   <!-- YouTube IFrame API: debe cargarse ANTES que script.js para evitar race conditions -->
   <script src="https://www.youtube.com/iframe_api"></script>

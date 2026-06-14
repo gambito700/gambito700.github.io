@@ -1,12 +1,73 @@
-/* =====================================================
+/* ================================================================
    PORTAFOLIO ALEX MARTÍNEZ – FRONT-END 2026
    Archivo: css/style.css
-   Descripción: Estilos principales. Va DESPUÉS de vendor.css
-   ===================================================== */
 
-/* -------------------------------------------------------
-   1. VARIABLES GLOBALES
-   ------------------------------------------------------- */
+   PROPÓSITO:
+   Estilos principales del portafolio con simulador Windows 11.
+   Define el tema oscuro, el layout del escritorio, la barra de
+   tareas, el menú inicio, las ventanas, y los componentes UI.
+
+   NOTA: Este archivo va DESPUÉS de vendor.css (Bootstrap, etc.)
+   para sobrescribir estilos por defecto.
+
+   DEPENDENCIA: Requiere css/extra.css para la animación de texto
+   de bienvenida (.ml12).
+
+   SECCIONES PRINCIPALES (numeradas):
+     1. :root          – Variables CSS globales (colores, tipografía, sombras)
+     2. RESET          – Estilos base del documento
+     3. Taskbar        – Barra de tareas inferior
+     4. Start Menu     – Menú Inicio estilo Windows 11
+     5. Sidebar        – Panel lateral (modo lista)
+     6. Layout         – Estructura principal
+     7. Hero           – Banner principal
+     8. Skills         – Barras de habilidades
+     9. Timeline       – Línea de tiempo de experiencia
+    10. Project Cards  – Tarjetas de portafolio
+    11. Calendar       – Widget de calendario
+    12. Weather        – Widget del clima
+    13. Calculator     – Calculadora
+    14. Toast          – Notificaciones emergentes
+    15. Media Queries  – Adaptaciones responsive
+
+   ================================================================ */
+
+/* ---------------------------------------------------------------
+   1. :root – VARIABLES CSS GLOBALES
+   ---------------------------------------------------------------
+   Aquí se definen todas las variables que controlan la apariencia
+   del sitio. Cambiando estos valores puedes modificar:
+
+   COLORES:
+     --bg          Fondo principal (muy oscuro, #0a0a14)
+     --surface     Fondo semitransparente tipo "acrylic"
+     --text        Color de texto principal
+     --muted       Texto secundario / deshabilitado
+     --heading     Títulos
+     --accent      Color de acento principal (azul claro)
+     --accent2     Azul Windows 11 clásico
+
+   TIPOGRAFÍA:
+     --font-display  Fuente para títulos grandes
+     --font-body     Fuente para texto general
+     --font-mono     Fuente monoespaciada (código, fechas)
+
+   SOMBRAS Y FILTROS:
+     --shadow      Sombra de caja estándar
+     --glass       Desenfoque para efecto cristal (backdrop-filter)
+     --icon-shadow Sombra para iconos
+     --text-shadow Sombra para texto sobre fondos claros/oscuros
+
+   TRANSICIONES:
+     --t-fast  Transición rápida (0.2s)
+     --t-mid   Transición media (0.4s)
+     --t-slow  Transición lenta (0.8s)
+
+   CÓMO MODIFICAR:
+     - Cambia --accent para alterar el color principal del tema.
+     - Ajusta --bg si prefieres un fondo más claro u oscuro.
+     - Modifica --font-body si quieres otra tipografía general.
+   --------------------------------------------------------------- */
 :root {
   /* Paleta Windows 11 Minimalista Dark con mejor contraste */
   --bg: #0a0a14;
@@ -50,9 +111,19 @@
 
 
 
-/* -------------------------------------------------------
-   2. RESET BASE
-   ------------------------------------------------------- */
+/* ---------------------------------------------------------------
+   2. RESET BASE – Estilos iniciales para toda la página
+   ---------------------------------------------------------------
+   Aquí se normaliza el comportamiento entre navegadores:
+   - box-sizing: border-box  para que padding no agrande los elementos
+   - scroll-behavior: smooth para navegación suave
+   - Se define la tipografía base, colores y cursor personalizado
+
+   CÓMO MODIFICAR:
+   - Cambia la font-family en body si prefieres otra tipografía.
+   - Ajusta el font-size si quieres texto más grande o pequeño.
+   - El cursor personalizado usa imágenes PNG en la carpeta images/.
+   --------------------------------------------------------------- */
 *,
 *::before,
 *::after {
@@ -162,9 +233,24 @@ a:hover {
   color: var(--accent);
 }
 
-/* -------------------------------------------------------
-   6. WINDOWS 11 TASKBAR — Full-width classic Win11
-   ------------------------------------------------------- */
+/* ---------------------------------------------------------------
+   3. TASKBAR – Barra de tareas estilo Windows 11
+   ---------------------------------------------------------------
+   Barra fija en la parte inferior de la pantalla. Usa un diseño
+   de tres zonas (izquierda, centro, derecha) con flexbox.
+
+   COMPONENTES:
+   - .win11-taskbar   Contenedor principal (fixed, bottom: 0)
+   - .taskbar-inner   Layout horizontal con espacio entre zonas
+   - .tb-left         Zona izquierda (espaciador)
+   - .tb-center       Zona central (botón inicio + iconos de apps)
+   - .tb-right        Zona derecha (bandeja del sistema + reloj)
+
+   CÓMO MODIFICAR:
+   - Cambia --taskbar-height en :root si necesitas otra altura base.
+   - Los iconos se agregan dinámicamente desde JS en #taskbar-icons.
+   - El reloj usa #clock-time y #clock-date (actualizado por JS).
+   --------------------------------------------------------------- */
 .win11-taskbar {
   position: fixed;
   bottom: 0;
@@ -316,10 +402,22 @@ a:hover {
   white-space: nowrap;
 }
 
-/* -------------------------------------------------------
-   7. START MENU (W11 STYLE)
-   ------------------------------------------------*/
-/* Redundant Win11 start menu removed - classic 98 style is at the end of the file */
+/* ---------------------------------------------------------------
+   4. START MENU – Menú Inicio estilo Windows 11
+   ---------------------------------------------------------------
+   Panel que aparece al hacer clic en el botón Windows de la barra
+   de tareas. Se muestra/oculta con la clase .show-sm.
+
+   COMPONENTES:
+   - .sm-search-bar     Barra de búsqueda con icono
+   - .sm-section        Sección de apps fijadas
+   - .sm-apps-grid      Grilla de accesos directos (5 columnas)
+   - .sm-footer         Pie con nombre de usuario y botón de apagado
+
+   CÓMO MODIFICAR:
+   - Ajusta el ancho en .win11-start-menu (actual: 340px).
+   - Cambia grid-template-columns en .sm-apps-grid para más/menos columnas.
+   --------------------------------------------------------------- */
 
 .nav__list {
   list-style: none;
@@ -1294,9 +1392,13 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   opacity: 0.7;
 }
 
-/* =========================================
-   WINDOWS 11 DESKTOP SYSTEM
-   ========================================= */
+/* ================================================================
+   5. WINDOWS 11 DESKTOP SYSTEM – Escritorio, iconos y ventanas
+   ================================================================
+   Este bloque contiene los estilos del escritorio simulado:
+   el contenedor principal, los iconos, el contenedor de ventanas
+   y las ventanas con sus cabeceras, controles y animaciones.
+   ================================================================ */
 body.desktop-mode {
   overflow: hidden !important;
   height: 100vh;
@@ -1917,9 +2019,23 @@ height: 100vh;
 
 /* Old nav__list-item and nav-social (Win98) styles removed */
 
-/* -------------------------------------------------------
-   30. CALENDAR WIDGET
-   ------------------------------------------------------- */
+/* ---------------------------------------------------------------
+   6. CALENDAR WIDGET – Calendario mensual interactivo
+   ---------------------------------------------------------------
+   Widget de calendario que se muestra en la ventana window-calendar.
+   Se renderiza dinámicamente desde JavaScript (initCalendar en
+   js/script.js). Muestra el mes actual con navegación entre meses.
+
+   COMPONENTES:
+   - .cal-header       Mes/año + botones anterior/siguiente
+   - .cal-days-header  Cabecera con nombres de días (Dom, Lun...)
+   - .cal-body         Grilla con los días del mes
+   - .cal-today        Resalta el día actual
+
+   CÓMO MODIFICAR:
+   - Los nombres de los días están en .cal-days-header (data-es/data-en).
+   - El tamaño se controla con width/height en #window-calendar.
+   --------------------------------------------------------------- */
 #calendar-widget {
   color: #fff;
 }
@@ -1990,9 +2106,24 @@ height: 100vh;
   font-weight: 700;
 }
 
-/* -------------------------------------------------------
-   31. PROJECT CARDS
-   ------------------------------------------------------- */
+/* ---------------------------------------------------------------
+   7. PROJECT CARDS – Tarjetas de proyectos del portafolio
+   ---------------------------------------------------------------
+   Tarjetas con efecto hover que muestran los proyectos destacados
+   dentro de la ventana window-portfolio.
+
+   COMPONENTES:
+   - .proj-card        Contenedor con borde y sombra
+   - .proj-card-icon   Icono representativo (Font Awesome)
+   - .proj-card-title  Nombre del proyecto
+   - .proj-card-desc   Descripción breve
+   - .proj-card-tags   Tecnologías usadas (etiquetas)
+
+   CÓMO MODIFICAR:
+   - Duplica un bloque .col-md-6 dentro del .row.g-4 para agregar
+     un proyecto nuevo (en index.html).
+   - Cambia los colores de hover en .proj-card:hover.
+   --------------------------------------------------------------- */
 .proj-card {
   background: var(--surface);
   border: 1px solid var(--border);
@@ -2068,10 +2199,28 @@ height: 100vh;
   color: #e74c3c !important;
 }
 
-/* ═══════════════════════════════════════════════════════
-   RESPONSIVE — Breakpoints basados en análisis de dispositivos
-   Fuente: 3 major breaks 480 / 768 / 1024
-   ═══════════════════════════════════════════════════════ */
+/* ================================================================
+   12. MEDIA QUERIES – Diseño responsive para todos los dispositivos
+   ================================================================
+   Adaptaciones del layout según el tamaño de pantalla.
+   Los breakpoints se basan en los 3 puntos de quiebre principales:
+
+     XS (<=480px)  →  Teléfonos pequeños
+     SM (481-767)  →  Smartphones modernos / phablets
+     MD (768-1023) →  Tablets
+     LG (1024-1199)→  Desktop mínimo / laptops pequeñas
+     XL (>=1200)   →  Desktop completo
+
+   Cada bloque ajusta: altura de la barra de tareas, tamaño y
+   posición de los iconos, ventanas a pantalla completa, y ancho
+   del menú inicio.
+
+   CÓMO MODIFICAR:
+   - Si quieres cambiar el punto de quiebre, modifica los valores
+     en max-width / min-width de cada @media.
+   - Para ocultar elementos en móvil, agrega "display: none" dentro
+     del breakpoint XS o SM.
+   ================================================================ */
 
 /* ── XS: 320px — móvil mínimo ─────────────────────────── */
 @media (max-width: 480px) {
@@ -2261,9 +2410,24 @@ height: 100vh;
 
 /* ── Light mode calendar ───────────────────────────── */
 
-/* ─────────────────────────────────────────────────────────
-   TOAST NOTIFICATION
-   ─────────────────────────────────────────────────────────── */
+/* ================================================================
+   9. TOAST NOTIFICATION – Notificación emergente estilo Windows
+   ================================================================
+   Pequeña notificación que aparece en la esquina inferior derecha.
+   Se usa actualmente para mostrar qué canción está sonando en el
+   reproductor de música.
+
+   COMPONENTES:
+   - .win-toast        Contenedor principal (fixed, animación slideIn)
+   - .toast-icon       Icono decorativo
+   - .toast-title      Título del mensaje
+   - .toast-msg        Cuerpo del mensaje
+   - .toast-close      Botón para cerrar
+
+   CÓMO MODIFICAR:
+   - La duración en pantalla se controla desde JS (showToast en script.js).
+   - Cambia la posición con top/right/bottom/left en .win-toast.
+   ================================================================ */
 .win-toast {
   position: fixed;
   bottom: max(2rem, 5vh);
@@ -2319,9 +2483,23 @@ height: 100vh;
 }
 .toast-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-/* ─────────────────────────────────────────────────────────
-   CALCULATOR
-   ─────────────────────────────────────────────────────────── */
+/* ================================================================
+   10. CALCULATOR – Calculadora estilo Windows
+   ================================================================
+   Calculadora funcional con operaciones básicas: suma, resta,
+   multiplicación, división, porcentaje y cambio de signo.
+
+   COMPONENTES:
+   - .calc-grid        Grilla 4 columnas con botones numéricos y de operación
+   - #calc-display     Área donde se muestra el número actual
+   - #calc-sub         Área donde se muestra la operación en curso
+   - .calc-btn.num     Botón numérico (fondo semitransparente)
+   - .calc-btn.op      Botón de operación
+   - .calc-btn.eq      Botón de igual (=) con color de acento
+
+   NOTA: La lógica está en js/script.js (initCalculator).
+   Cada botón tiene un atributo data-v con el valor que representa.
+   ================================================================ */
 .calc-btn {
   border: none;
   border-radius: 6px;
@@ -2354,9 +2532,20 @@ height: 100vh;
 }
 .calc-btn.eq:hover { opacity: 0.85; }
 
-/* ─────────────────────────────────────────────────────────
-   INDICATORS WINDOW (UTM / UF / Dólar)
-   ─────────────────────────────────────────────────────────── */
+/* ================================================================
+   11. INDICATORS – Indicadores económicos (UTM / UF / Dólar)
+   ================================================================
+   Ventana que muestra valores económicos chilenos actualizados
+   desde un scraper (scraperUTM/dashboard_data.json).
+
+   COMPONENTES:
+   - .ind-row      Fila con label + valor
+   - .ind-label    Nombre del indicador (UTM, UF, Dólar)
+   - .ind-value    Valor numérico con formato moneda CL
+
+   NOTA: La carga de datos se hace en js/script.js (initIndicators)
+   con un sistema de fallback entre dos URLs.
+   ================================================================ */
 #window-indicators .ind-row {
   display: flex;
   justify-content: space-between;
@@ -2377,9 +2566,21 @@ height: 100vh;
   font-size: 0.95rem;
 }
 
-/* ============================================================
-   WEATHER WINDOW
-   ============================================================ */
+/* ================================================================
+   8. WEATHER WIDGET – Clima en vivo (Open-Meteo API)
+   ================================================================
+   Widget del clima que se conecta a la API gratuita de Open-Meteo
+   para mostrar la temperatura, humedad y viento de Villarrica, Chile.
+
+   COMPONENTES:
+   - .weather-temp     Temperatura actual en °C
+   - .weather-desc     Descripción textual del clima
+   - .weather-humidity Humedad relativa
+   - .weather-wind     Velocidad del viento
+
+   NOTA: Los datos se cargan desde js/script.js (initWeather).
+   Si la API falla, se muestra un mensaje de error.
+   ================================================================ */
 #window-weather .weather-main {
   text-align: center;
   margin-bottom: 8px;
