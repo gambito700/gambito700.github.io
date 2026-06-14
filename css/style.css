@@ -403,7 +403,7 @@ select:focus-visible,
   align-items: flex-end;
   font-family: var(--font-body);
   color: #fff;
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   cursor: pointer;
   padding: 2px 8px;
   border-radius: 6px;
@@ -2589,11 +2589,10 @@ body.desktop-mode {
   to { transform: translateY(-100vh) scale(0.5); opacity: 0; }
 }
 
-/* Escala global 5% - todo menos el canvas de Vanta */
+/* Escala global 5% - tareas tiene posicion fixed, se escala por separado */
 .win11-desktop .desktop-icons,
 .win11-start-menu,
-.win11-window,
-.win11-taskbar {
+.win11-window {
   transform: scale(1.05);
   transform-origin: bottom center;
 }

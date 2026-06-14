@@ -1884,6 +1884,12 @@ function initAutoLang() {
 
     // Reajusta todas las ventanas dentro de los límites del escritorio
     reclampAllWindows();
+    // Re-clamp al redimensionar la ventana
+    var resizeTimer;
+    window.addEventListener("resize", function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(reclampAllWindows, 150);
+    });
     systemLog("OS Initialized successfully — Windows 11 Overhaul Mode");
   });
 
