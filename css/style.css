@@ -1304,7 +1304,7 @@ body.desktop-mode {
 .desktop,
 .win11-desktop {
   width: clamp(320px, 100vw, 1920px);
-  height: calc(100vh - 60px);
+height: 100vh;
   max-height: calc(100vh - 60px);
   overflow: hidden;
   position: absolute;
@@ -2415,7 +2415,7 @@ body.desktop-mode {
 .moving-letter {
   position: absolute;
   font-size: 1.5rem;
-  color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.3);
   white-space: pre;
   animation-name: moveLetter;
   animation-timing-function: linear;
