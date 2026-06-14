@@ -491,19 +491,25 @@ function reclampAllWindows() {
   }
 
   // ── Dynamic Wallpaper (Picsum) ──────────────────────────
-  function initWallpaper() {
+  /** Initialize Vanta.WAVES background effect */
+function initVantaWaves() {
     if (!document.body.classList.contains("desktop-mode")) return;
     var d = document.getElementById("desktop");
     if (!d) return;
-    d.style.backgroundColor = "#0f0f0f";
-    try {
-      var seed = Math.floor(Math.random() * 1000);
-      loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
-        setWallpaperFallback(d);
-      });
-      // Preload next wallpaper for faster switching
-      setTimeout(preloadNextWallpaper, 2000);
-    } catch (e) { systemLog("[wallpaper] Error: " + e.message); setWallpaperFallback(d); }
+    // Initialize Vanta.WAVES background effect
+    VANTA.WAVES({
+        el: "#desktop",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.0,
+        minWidth: 200.0,
+        scale: 1.0,
+        scaleMobile: 1.0,
+        shininess: 102.0,
+        waveHeight: 29.5,
+        zoom: 1.35
+    });
   }
 
 // ── Auto-detect Language ──────────────────────────────────────
@@ -1105,7 +1111,45 @@ function initAutoLang() {
         systemLog("[music] Polling: YT.Player not ready yet, retrying in 500ms");
         setTimeout(pollYT, 500);
       }
-    })();
+function initMovingLetters() {
+  const messages = [
+    "Bienvenido a mi Portafolio Demostrativo",
+    "diseño y programado por alex M."
+  ];
+  let idx = 0;
+  const container = document.getElementById("moving-letters");
+  if (!container) return;
+  function showMessage(text) {
+    container.innerHTML = `<h1 class="ml12">${text}</h1>`;
+    const wrapper = container.querySelector('.ml12');
+    wrapper.innerHTML = wrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>");
+    anime.timeline({loop:false})
+      .add({
+        targets: '.ml12 .letter',
+        translateX: [40,0],
+        translateZ: 0,
+        opacity: [0,1],
+        easing: "easeOutExpo",
+        duration: 1200,
+        delay: (el, i) => 500 + 30 * i
+      })
+      .add({
+        targets: '.ml12 .letter',
+        translateX: [0,-30],
+        opacity: [1,0],
+        easing: "easeInExpo",
+        duration: 1100,
+        delay: (el, i) => 100 + 30 * i
+      });
+  }
+  showMessage(messages[idx]);
+  setInterval(() => {
+    idx = (idx + 1) % messages.length;
+    showMessage(messages[idx]);
+  }, 12000);
+}
+safeInit(initMovingLetters, "initMovingLetters");
+})();
 
     updateMusicUI(ytCurrentTrack);
     systemLog("[music] Player inicializado — modo YouTube IFrame API");
@@ -1247,7 +1291,7 @@ function initAutoLang() {
     safeInit(initMenuToggle, "initMenuToggle");
     safeInit(initDrag, "initDrag");
     safeInit(restoreOS, "restoreOS");
-    safeInit(initWallpaper, "initWallpaper");
+    safeInit(initVantaWaves, "initVantaWaves");
     safeInit(initSystemTray, "initSystemTray");
 
     // UI features
@@ -1265,6 +1309,7 @@ function initAutoLang() {
     safeInit(initCalculator, "initCalculator");
     safeInit(initWeather, "initWeather");
     safeInit(initToastDismiss, "initToastDismiss");
+    safeInit(initMovingLetters, "initMovingLetters");
 
     // Auto-open music window on startup
     setTimeout(function () {

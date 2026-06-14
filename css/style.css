@@ -2404,3 +2404,25 @@ body.desktop-mode {
   font-size: 0.85rem;
 }
 
+/* Moving letters layer – sits between background and UI */
+#moving-letters {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+.moving-letter {
+  position: absolute;
+  font-size: 1.5rem;
+  color: rgba(255,255,255,0.15);
+  white-space: pre;
+  animation-name: moveLetter;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
+}
+@keyframes moveLetter {
+  from { transform: translateY(0) scale(1); opacity: 1; }
+  to { transform: translateY(-100vh) scale(0.5); opacity: 0; }
+}
+
