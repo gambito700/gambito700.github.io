@@ -535,6 +535,7 @@ function reclampAllWindows() {
     // Siempre abrir CV al inicio
     setTimeout(function () {
       openWindow("window-cv");
+      window.nextWallpaper(); // Establecer fondo Picsum aleatorio (default)
       systemLog("[startup] Fresh session: CV window opened");
     }, CONFIG.cvAutoOpenDelay);
   }
@@ -625,20 +626,7 @@ function reclampAllWindows() {
     img.src = url;
   }
 
-  // Preload next wallpaper for instant switching
-  function preloadNextWallpaper() {
-    var seed = Math.floor(Math.random() * 1000);
-    var url = getWallpaperUrl(seed);
-    var link = document.createElement("link");
-    link.rel = "preload";
-    link.as = "image";
-    link.type = "image/webp";
-    link.href = url;
-    document.head.appendChild(link);
-    // Clean up after load
-    link.onload = function () { link.remove(); };
-    link.onerror = function () { link.remove(); };
-  }
+  // [ELIMINADO] preloadNextWallpaper — era codigo muerto (nunca se llamaba)
 
   /**
    * nextWallpaper()
@@ -654,6 +642,48 @@ function reclampAllWindows() {
     loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
       setWallpaperFallback(d);
     });
+  };
+
+  /**
+   * toggleVanta()
+   * Activa/desactiva el fondo de nubes 3D Vanta.
+   * - OFF → ON: destruye el efecto Vanta actual (si existe), inicia Vanta Clouds,
+   *             limpia la background-image del escritorio.
+   * - ON  → OFF: destruye Vanta, carga un Picsum aleatorio como wallpaper.
+   * Cambia el icono del boton para reflejar el estado.
+   */
+  window.toggleVanta = function () {
+    var btn = document.getElementById("vanta-toggle");
+    var d = document.getElementById("desktop");
+
+    if (window.vantaEffect) {
+      // ── Vanta ACTIVO → DESACTIVAR ──
+      window.vantaEffect.destroy();
+      window.vantaEffect = null;
+      if (btn) {
+        btn.classList.remove("active");
+        btn.title = "Fondo 3D";
+        var icon = btn.querySelector("i");
+        if (icon) icon.className = "fas fa-cloud";
+      }
+      window.nextWallpaper(); // restaurar fondo Picsum
+      systemLog("[vanta] Vanta Clouds disabled via toggle");
+    } else {
+      // ── Vanta INACTIVO → ACTIVAR ──
+      if (d) {
+        d.style.backgroundImage = "none";
+        d.style.backgroundColor = "";
+        d.style.filter = "";
+      }
+      initVantaCloudsWallpaper();
+      if (btn) {
+        btn.classList.add("active");
+        btn.title = "Desactivar fondo 3D";
+        var icon = btn.querySelector("i");
+        if (icon) icon.className = "fas fa-cloud-sun";
+      }
+      systemLog("[vanta] Vanta Clouds enabled via toggle");
+    }
   };
 
   /**
@@ -1617,7 +1647,7 @@ function initAutoLang() {
   function initMovingLetters() {
     var messages = [
       "Bienvenido a mi Portafolio Demostrativo",
-      "diseño y programado por alex M."
+      "diseño y programado por   alex M."
     ];
     var idx = 0;
     var container = document.getElementById("moving-letters");
@@ -1852,7 +1882,7 @@ function initAutoLang() {
     safeInit(initMenuToggle, "initMenuToggle");         // Activa botón de menú inicio
     safeInit(initDrag, "initDrag");                     // Arrastre de ventanas
     safeInit(restoreOS, "restoreOS");                   // Estado inicial (abre CV)
-    safeInit(initVantaCloudsWallpaper, "initVantaCloudsWallpaper"); // Fondo nubes 3D Vanta
+    // Vanta ya no se inicia por defecto — se activa manualmente con toggleVanta()
     safeInit(initSystemTray, "initSystemTray");         // Iconos de la bandeja del sistema
 
     // ── UI Features ─────────────────────────────────────────

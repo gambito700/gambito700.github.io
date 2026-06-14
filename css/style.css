@@ -219,11 +219,11 @@ select:focus-visible,
 /* Cursor personalizado eliminado - se usa cursor nativo */
 
 /* -------------------------------------------------------
-   4. RELOJ (movido a taskbar)
+   [EMPTY — clock styles moved into taskbar section]
    ------------------------------------------------------- */
 
 /* -------------------------------------------------------
-   5. BOTÓN DE IDIOMA
+   2b. BOTÓN DE IDIOMA
    ------------------------------------------------------- */
 .lang-btn {
   position: fixed;
@@ -311,14 +311,9 @@ select:focus-visible,
   flex-shrink: 0;
 }
 
-/* Escala 5% para todos los elementos del desktop */
-.win11-desktop .desktop-icons,
-.win11-start-menu,
-.win11-window,
-.win11-taskbar {
-  transform: scale(1.05);
-  transform-origin: bottom center;
-}
+/* NOTE: scale(1.05) removed — caused sub-pixel blur across the entire UI.
+   If you need visual "zoom" effect, use zoom:1.05 on .win11-desktop only,
+   or increase base font-size / window sizes instead. */
 
 /* Container where JS app icons are appended */
 .taskbar-apps {
@@ -1237,18 +1232,88 @@ section {
   text-shadow: none !important;
 }
 
-/* Mejor contraste de texto según WCAG */
-h1, h2, h3, h4, h5, h6, p, span, div {
-  color: var(--text) !important;
+/* WCAG contrast: scope color override to our own content only,
+   NOT to Bootstrap components / third-party widgets.
+   Use .win11-window or .win11-desktop as scope if needed per-component. */
+.win11-window h1,
+.win11-window h2,
+.win11-window h3,
+.win11-window h4,
+.win11-window h5,
+.win11-window h6,
+.win11-window p {
+  color: var(--text);
   text-shadow: none;
+}
+/* Headings outside windows (desktop labels) */
+body > h1, body > h2, body > h3 {
+  color: var(--heading);
+}
+
+/* -------------------------------------------------------
+   28b. SCROLLBARS PERSONALIZADAS – estilo Windows 11
+   ------------------------------------------------------- */
+.window-content::-webkit-scrollbar {
+  width: 6px;
+}
+.window-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.window-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+/* Firefox */
+.window-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
 }
 
 /* -------------------------------------------------------
    29. UTILIDADES
    ------------------------------------------------------- */
-.d-none {
-  display: none !important;
+/* Skip-to-content link (accesibilidad / teclado) */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 8px;
+  z-index: 9999;
+  background: var(--accent2);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.15s ease;
 }
+.skip-link:focus {
+  top: 0;
+}
+
+/* Log output area (moved from inline style) */
+.log-output-area {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  background: #000;
+  color: #00FF00;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  /* Custom scrollbar for log area */
+  scrollbar-width: thin;
+  scrollbar-color: #00FF00 #000;
+}
+.log-output-area::-webkit-scrollbar { width: 4px; }
+.log-output-area::-webkit-scrollbar-track { background: #000; }
+.log-output-area::-webkit-scrollbar-thumb { background: #00aa00; border-radius: 2px; }
+
+/* .d-none: Bootstrap already defines this with !important.
+   Redefining it here is redundant and creates specificity confusion.
+   Use Bootstrap's .d-none directly. Removed custom override. */
 
 /* Tray utility buttons */
 .tb-tray-btn {
@@ -1258,12 +1323,18 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   font-size: 0.75rem;
   padding: 0 4px;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, color 0.2s;
   opacity: 1;
 }
 
 .tb-tray-btn:hover {
   opacity: 0.7;
+}
+
+.tb-tray-btn.active {
+  color: var(--accent);
+  opacity: 1;
+  text-shadow: 0 0 6px rgba(0, 212, 255, 0.5);
 }
 
 /* ================================================================
@@ -1273,18 +1344,20 @@ h1, h2, h3, h4, h5, h6, p, span, div {
    el contenedor principal, los iconos, el contenedor de ventanas
    y las ventanas con sus cabeceras, controles y animaciones.
    ================================================================ */
+/* body.desktop-mode additional props (merged — first declaration at top of file) */
 body.desktop-mode {
-  overflow: hidden !important;
+  overflow: hidden;
   height: 100vh;
   width: 100vw;
   margin: 0;
-  background-color: #1a1a2e;
+  /* background-color handled by Trianglify/wallpaper via JS */
 }
 
 .desktop,
 .win11-desktop {
   width: clamp(320px, 100vw, 1920px);
-  height: 100vh;
+height: 100vh;
+  max-height: calc(100vh - 60px);
   overflow: hidden;
   position: absolute;
   top: 0;
@@ -1333,6 +1406,8 @@ body.desktop-mode {
 
 .win11-window {
   pointer-events: auto;
+  /* GPU compositing hint for drag performance */
+  will-change: transform;
 }
 
 .desktop-icon {
@@ -1353,6 +1428,7 @@ body.desktop-mode {
   box-shadow: none;
 }
 
+.desktop-icon:focus,
 .desktop-icon:hover {
   background: rgba(255, 255, 255, 0.06);
 }
@@ -1418,9 +1494,9 @@ body.desktop-mode {
   pointer-events: auto;
 }
 
-.win11-window.d-none {
-  display: none !important;
-}
+.win11-window/* .d-none: Bootstrap already defines this with !important.
+   Redefining it here is redundant and creates specificity confusion.
+   Use Bootstrap's .d-none directly. Removed custom override. */
 
 /* Window open/close animations — more animated/flashy */
 .win11-window.win-opening {
@@ -1453,7 +1529,7 @@ body.desktop-mode {
   top: 0 !important;
   left: 0 !important;
   width: 100% !important;
-  height: calc(100vh - 50px) !important;
+  height: calc(100vh - var(--taskbar-height)) !important; /* use CSS variable */
   border-radius: 0 !important;
 }
 
@@ -2094,6 +2170,15 @@ body.desktop-mode {
    - Para ocultar elementos en móvil, agrega "display: none" dentro
      del breakpoint XS o SM.
    ================================================================ */
+
+/* ── Light theme (prefers-color-scheme) ───────────────
+   Stub para tema claro del sistema operativo del usuario.
+   Expandir con variables en el futuro si se desea soporte
+   automático al tema claro del SO.
+   @media (prefers-color-scheme: light) {
+     :root { --bg: #f3f3f3; --text: #1a1a1a; --heading: #000; }
+   }
+   ───────────────────────────────────────────────────────── */
 
 /* ── XS: 320px — móvil mínimo ─────────────────────────── */
 @media (max-width: 480px) {

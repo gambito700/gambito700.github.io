@@ -71,6 +71,8 @@
 </head>
 
 <body class="desktop-mode">
+  <!-- Skip-to-content: accesibilidad para usuarios de teclado/lector de pantalla -->
+  <a href="#windows-container" class="skip-link" tabindex="0">Saltar al contenido</a>
 
   <!-- ================================================================
      START MENU (WINDOWS 11 STYLE)
@@ -86,7 +88,7 @@
        y cambia el onclick="openWindow('window-xxxx')" y la imagen.
      - Los textos usan data-en / data-es para soporte bilingüe.
      ================================================================ -->
-<div id="start-menu" class="win11-start-menu">
+<div id="start-menu" class="win11-start-menu" role="dialog" aria-label="Menú Inicio" aria-modal="false">
   <div class="sm-search-bar">
     <i class="fas fa-search sm-search-icon"></i>
     <input type="text" class="sm-search-input" data-placeholder-en="Search apps..." data-placeholder-es="Buscar aplicaciones..." placeholder="Buscar aplicaciones...">
@@ -94,17 +96,17 @@
   <div class="sm-section">
     <span class="sm-section-title" data-en="Pinned" data-es="Fijados">Fijados</span>
     <div class="sm-apps-grid">
-      <div class="sm-grid-item" onclick="openWindow('window-cv')"><img src="images/icons/intro.png"><span>CV</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-about')"><img src="images/icons/about.png"><span>About</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-experience')"><img src="images/icons/experience.png"><span>Exp.</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Skills</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proy.</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contact</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-indicators')"><img src="images/icons/scraper.png"><span>Ind.</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
-      <div class="sm-grid-item" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cv')}" onclick="openWindow('window-cv')"><img src="images/icons/intro.png"><span>CV</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-about')}" onclick="openWindow('window-about')"><img src="images/icons/about.png"><span>About</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-experience')}" onclick="openWindow('window-experience')"><img src="images/icons/experience.png"><span>Exp.</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-skills')}" onclick="openWindow('window-skills')"><img src="images/icons/skills.png"><span>Skills</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-portfolio')}" onclick="openWindow('window-portfolio')"><img src="images/icons/portfolio.png"><span>Proy.</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-contact')}" onclick="openWindow('window-contact')"><img src="images/icons/contact.png"><span>Contact</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-music')}" onclick="openWindow('window-music')"><img src="images/icons/music.png"><span>Música</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-indicators')}" onclick="openWindow('window-indicators')"><img src="images/icons/scraper.png"><span>Ind.</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calendar')}" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-logs')}" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calculator')}" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
     </div>
   </div>
   <div class="sm-footer">
@@ -132,7 +134,7 @@
      - El reloj se actualiza automáticamente desde js/script.js
        buscando los elementos #clock-time y #clock-date.
      ================================================================ -->
-  <div class="win11-taskbar">
+  <div class="win11-taskbar" role="toolbar" aria-label="Barra de tareas">
     <div class="taskbar-inner">
       <!-- LEFT: Spacer (Win11 style) -->
       <div class="tb-left"></div>
@@ -146,10 +148,11 @@
       <!-- RIGHT: System Tray + Clock (Win11 aligned) -->
       <div class="tb-right">
         <div class="tb-system-tray">
-          <button class="tb-tray-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma">EN</button>
+          <button class="tb-tray-btn" id="lang-toggle" title="Language" aria-label="Cambiar idioma" aria-live="polite">EN</button>
           <button class="tb-tray-btn" onclick="nextWallpaper()" title="Siguiente Fondo" aria-label="Cambiar fondo de pantalla"><i class="fas fa-image"></i></button>
+          <button class="tb-tray-btn" id="vanta-toggle" onclick="toggleVanta()" title="Fondo 3D" aria-label="Alternar fondo 3D"><i class="fas fa-cloud"></i></button>
           <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo" aria-label="Cerrar todas las ventanas"><i class="fas fa-window-restore"></i></button>
-          <i class="fas fa-wifi"></i>
+          <i class="fas fa-wifi" aria-label="WiFi conectado" role="img"></i>
           <img src="images/icons/icons8-volumen-bajo-50.png" style="width:16px;height:16px;object-fit:contain;filter:brightness(10);" alt="Volumen">
           <i class="fas fa-battery-three-quarters"></i>
         </div>
@@ -171,7 +174,7 @@
      - #windows-container:  Todas las ventanas del sistema
 
      El fondo de pantalla se controla desde js/script.js mediante
-     Vanta.js (ondas) o imágenes de Picsum.
+     Vanta.js (nubes 3D) con paleta dinámica según el clima.
      ================================================================ -->
   <div class="win11-desktop" id="desktop">
 
@@ -189,27 +192,27 @@
          ============================================================ -->
     <div class="desktop-icons">
 
-      <div class="desktop-icon" onclick="openWindow('window-cv')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cv')}" onclick="openWindow('window-cv')">
         <img alt="CV" class="desktop-png-icon" src="images/icons/intro.png" loading="lazy" />
         <span data-en="Welcome" data-es="Bienvenida">Bienvenida</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-about')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-about')}" onclick="openWindow('window-about')">
         <img alt="Sobre Mí" class="desktop-png-icon" src="images/icons/about.png" loading="lazy" />
         <span data-en="About" data-es="Sobre Mí">Sobre Mí</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-experience')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-experience')}" onclick="openWindow('window-experience')">
         <img alt="Experiencia" class="desktop-png-icon" src="images/icons/experience.png" loading="lazy" />
         <span data-en="Experience" data-es="Experiencia">Experiencia</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-skills')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-skills')}" onclick="openWindow('window-skills')">
         <img alt="Habilidades" class="desktop-png-icon" src="images/icons/skills.png" loading="lazy" />
         <span data-en="Skills" data-es="Habilidades">Habilidades</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-portfolio')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-portfolio')}" onclick="openWindow('window-portfolio')">
         <img alt="Proyectos" class="desktop-png-icon" src="images/icons/portfolio.png" loading="lazy" />
         <span data-en="Projects" data-es="Proyectos">Proyectos</span>
       </div>
@@ -220,27 +223,27 @@
         <span>DuckDuckGo</span>
       </a>
 
-      <div class="desktop-icon" onclick="openWindow('window-contact')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-contact')}" onclick="openWindow('window-contact')">
         <img alt="Contacto" class="desktop-png-icon" src="images/icons/contact.png" loading="lazy" />
         <span data-en="Contact" data-es="Contacto">Contacto</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-music')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-music')}" onclick="openWindow('window-music')">
         <img alt="Música" class="desktop-png-icon" src="images/icons/music.png" loading="lazy" />
         <span data-en="Music" data-es="Música">Música</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-weather')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-weather')}" onclick="openWindow('window-weather')">
         <img alt="Clima" class="desktop-png-icon" src="images/icons/weather.png" loading="lazy" />
         <span data-en="Weather" data-es="Clima">Clima</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-calendar')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calendar')}" onclick="openWindow('window-calendar')">
         <img alt="Calendario" class="desktop-png-icon" src="images/icons/calendar.png" loading="lazy">
         <span data-en="Calendar" data-es="Calendario">Calendar</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-indicators')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-indicators')}" onclick="openWindow('window-indicators')">
         <img alt="Indicadores" class="desktop-png-icon" src="images/icons/scraper.png" loading="lazy">
         <span data-en="Indicators" data-es="Indicadores">Indicadores</span>
       </div>
@@ -257,17 +260,17 @@
         <span>WhatsApp</span>
       </a>
 
-      <div class="desktop-icon" onclick="openWindow('window-calculator')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calculator')}" onclick="openWindow('window-calculator')">
         <i class="fas fa-calculator win-icon-fa"></i>
         <span data-en="Calculator" data-es="Calculadora">Calculadora</span>
       </div>
 
-      <div class="desktop-icon" onclick="openWindow('window-logs')">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-logs')}" onclick="openWindow('window-logs')">
         <img alt="Log Viewer" class="desktop-png-icon" src="images/icons/logviewer.png" loading="lazy" />
         <span data-en="Logs" data-es="Registros">System Logs</span>
       </div>
 
-      <div class="desktop-icon" onclick="window.open('windows11-simulator.pdf','_blank');">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){window.open('windows11-simulator.pdf','_blank');}" onclick="window.open('windows11-simulator.pdf','_blank');">
         <i class="fas fa-file-pdf win-icon-fa" style="font-size:24px;color:#ff4444;"></i>
         <span data-en="Download PDF" data-es="Descargar PDF">Descargar PDF</span>
       </div>
@@ -299,14 +302,14 @@
     <div id="windows-container">
 
       <!-- ======================== CV / INICIO ======================== -->
-      <div class="win11-window d-none" id="window-cv" style="width:600px; height:480px;">
+      <div class="win11-window d-none" id="window-cv" role="dialog" aria-labelledby="window-cv-title" aria-modal="false" style="width:600px; height:480px;">
         <div class="window-header">
-          <div class="window-title"><img alt="CV" class="win-img" src="images/icons/intro.png" /> Portafolio — Alex
+          <div class="window-title" id="window-cv-title"><img alt="CV" class="win-img" src="images/icons/intro.png" /> Portafolio — Alex
             Martínez</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-cv')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-cv')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-cv')"><i class="fas fa-times"></i></button>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Cv" onclick="minimizeWindow('window-cv')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Cv" onclick="maximizeWindow('window-cv')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Cv" onclick="closeWindow('window-cv')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content window-content-cv">
@@ -376,13 +379,13 @@
       </div>
 
       <!-- ======================== SOBRE MÍ ======================== -->
-      <div class="win11-window d-none" id="window-about">
+      <div class="win11-window d-none" id="window-about" role="dialog" aria-labelledby="window-about-title" aria-modal="false">
         <div class="window-header">
-          <div class="window-title"><img alt="Sobre Mí" class="win-img" src="images/icons/about.png" /> Sobre Mí</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-about')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-about')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-about')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-about-title"><img alt="Sobre Mí" class="win-img" src="images/icons/about.png" /> Sobre Mí</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar About" onclick="minimizeWindow('window-about')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar About" onclick="maximizeWindow('window-about')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar About" onclick="closeWindow('window-about')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content">
@@ -484,13 +487,13 @@
       </div>
 
       <!-- ======================== EXPERIENCIA ======================== -->
-      <div class="win11-window d-none" id="window-experience">
+      <div class="win11-window d-none" id="window-experience" role="dialog" aria-labelledby="window-experience-title" aria-modal="false">
         <div class="window-header">
-          <div class="window-title"><img alt="Experiencia" class="win-img" src="images/icons/experience.png" /> Experiencia</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-experience')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-experience')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-experience')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-experience-title"><img alt="Experiencia" class="win-img" src="images/icons/experience.png" /> Experiencia</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Experience" onclick="minimizeWindow('window-experience')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Experience" onclick="maximizeWindow('window-experience')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Experience" onclick="closeWindow('window-experience')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content">
@@ -608,13 +611,13 @@
       </div>
 
       <!-- ======================== HABILIDADES ======================== -->
-      <div class="win11-window d-none" id="window-skills">
+      <div class="win11-window d-none" id="window-skills" role="dialog" aria-labelledby="window-skills-title" aria-modal="false">
         <div class="window-header">
-          <div class="window-title"><img alt="Habilidades" class="win-img" src="images/icons/skills.png" /> Habilidades</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-skills')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-skills')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-skills')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-skills-title"><img alt="Habilidades" class="win-img" src="images/icons/skills.png" /> Habilidades</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Skills" onclick="minimizeWindow('window-skills')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Skills" onclick="maximizeWindow('window-skills')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Skills" onclick="closeWindow('window-skills')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content">
@@ -733,13 +736,13 @@
       </div>
 
       <!-- ======================== PORTAFOLIO ======================== -->
-      <div class="win11-window d-none" id="window-portfolio" style="width:720px;height:560px">
+      <div class="win11-window d-none" id="window-portfolio" role="dialog" aria-labelledby="window-portfolio-title" aria-modal="false" style="width:720px;height:560px">
         <div class="window-header">
-          <div class="window-title"><img alt="Proyectos" class="win-img" src="images/icons/portfolio.png" /> Proyectos</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-portfolio')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-portfolio')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-portfolio')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-portfolio-title"><img alt="Proyectos" class="win-img" src="images/icons/portfolio.png" /> Proyectos</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Portfolio" onclick="minimizeWindow('window-portfolio')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Portfolio" onclick="maximizeWindow('window-portfolio')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Portfolio" onclick="closeWindow('window-portfolio')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content">
@@ -832,13 +835,13 @@
       </div>
 
       <!-- ======================== CONTACTO ======================== -->
-      <div class="win11-window d-none" id="window-contact">
+      <div class="win11-window d-none" id="window-contact" role="dialog" aria-labelledby="window-contact-title" aria-modal="false">
         <div class="window-header">
-          <div class="window-title"><img alt="Contacto" class="win-img" src="images/icons/contact.png" /> Contacto</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-contact')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-contact')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-contact')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-contact-title"><img alt="Contacto" class="win-img" src="images/icons/contact.png" /> Contacto</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Contact" onclick="minimizeWindow('window-contact')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Contact" onclick="maximizeWindow('window-contact')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Contact" onclick="closeWindow('window-contact')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content">
@@ -956,13 +959,13 @@
 
 
       <!-- ======================== CALENDARIO ======================== -->
-      <div class="win11-window d-none" id="window-calendar">
+      <div class="win11-window d-none" id="window-calendar" role="dialog" aria-labelledby="window-calendar-title" aria-modal="false">
         <div class="window-header">
-          <div class="window-title"><img alt="Calendario" class="win-img" src="images/icons/calendar.png" /> Calendario</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-calendar')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-calendar-title"><img alt="Calendario" class="win-img" src="images/icons/calendar.png" /> Calendario</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Calendar" onclick="minimizeWindow('window-calendar')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Calendar" onclick="maximizeWindow('window-calendar')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Calendar" onclick="closeWindow('window-calendar')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content" style="padding:16px; overflow-y:auto;">
@@ -981,33 +984,32 @@
       </div>
 
       <!-- ======================== SYSTEM LOGS ======================== -->
-      <div class="win11-window d-none" id="window-logs" style="width:520px;height:360px;">
+      <div class="win11-window d-none" id="window-logs" role="dialog" aria-labelledby="window-logs-title" aria-modal="false" style="width:520px;height:360px;">
         <div class="window-header">
-          <div class="window-title"><img alt="Logs" class="win-img" src="images/icons/logviewer.png" /> System Logs
+          <div class="window-title" id="window-logs-title"><img alt="Logs" class="win-img" src="images/icons/logviewer.png" /> System Logs
             Viewer</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-logs')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-logs')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-logs')"><i class="fas fa-times"></i></button>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Logs" onclick="minimizeWindow('window-logs')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Logs" onclick="maximizeWindow('window-logs')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Logs" onclick="closeWindow('window-logs')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content" style="display:flex; flex-direction:column; padding:0;">
           <!-- Shadow sliders removed per user request -->
-          <div id="log-output-area"
-            style="flex:1; padding:10px; overflow-y:auto; background:#000; color:#00FF00; font-family:monospace; font-size:0.8rem;">
+          <div id="log-output-area" class="log-output-area">
             <div>[SYSTEM INIT] - Virtual Log Viewer Initialized</div>
           </div>
         </div>
       </div>
 
       <!-- ======================== MÚSICA / YOUTUBE ======================== -->
-      <div class="win11-window d-none" id="window-music" style="width:340px; height:215px;">
+      <div class="win11-window d-none" id="window-music" role="dialog" aria-labelledby="window-music-title" aria-modal="false" style="width:340px; height:215px;">
         <div class="window-header">
-          <div class="window-title"><img alt="Música" class="win-img" src="images/icons/music.png" /> Música</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-music')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-music')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-music')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-music-title"><img alt="Música" class="win-img" src="images/icons/music.png" /> Música</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Music" onclick="minimizeWindow('window-music')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Music" onclick="maximizeWindow('window-music')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Music" onclick="closeWindow('window-music')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content" style="display:flex; flex-direction:column; padding:8px 12px; gap:4px;">
@@ -1044,13 +1046,13 @@
       </div>
 
       <!-- ======================== CALCULADORA ======================== -->
-      <div class="win11-window d-none" id="window-calculator" style="width:280px; height:380px;">
+      <div class="win11-window d-none" id="window-calculator" role="dialog" aria-labelledby="window-calculator-title" aria-modal="false" style="width:280px; height:380px;">
         <div class="window-header">
-          <div class="window-title"><i class="fas fa-calculator"></i> Calculadora</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-calculator')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-calculator')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-calculator')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-calculator-title"><i class="fas fa-calculator"></i> Calculadora</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Calculator" onclick="minimizeWindow('window-calculator')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Calculator" onclick="maximizeWindow('window-calculator')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Calculator" onclick="closeWindow('window-calculator')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content" style="display:flex; flex-direction:column; padding:10px; font-family:var(--font-mono);">
@@ -1081,13 +1083,13 @@
       </div>
 
       <!-- ======================== INDICADORES UTM/UF ======================== -->
-      <div class="win11-window d-none" id="window-indicators" style="width:300px; height:220px;">
+      <div class="win11-window d-none" id="window-indicators" role="dialog" aria-labelledby="window-indicators-title" aria-modal="false" style="width:300px; height:220px;">
         <div class="window-header">
-          <div class="window-title"><img alt="Indicadores" class="win-img" src="images/icons/scraper.png" /> Indicadores</div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-indicators')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-indicators')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-indicators')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-indicators-title"><img alt="Indicadores" class="win-img" src="images/icons/scraper.png" /> Indicadores</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Indicators" onclick="minimizeWindow('window-indicators')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Indicators" onclick="maximizeWindow('window-indicators')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Indicators" onclick="closeWindow('window-indicators')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content" style="padding:16px; display:flex; flex-direction:column; justify-content:center;">
@@ -1098,13 +1100,13 @@
       </div>
 
       <!-- ======================== CLIMA ======================== -->
-      <div class="win11-window d-none" id="window-weather" style="width:210px; height:170px; left:calc(100vw - 210px - 15px); top:calc(100vh - 50px - 15px - 170px); z-index:140;">
+      <div class="win11-window d-none" id="window-weather" role="dialog" aria-labelledby="window-weather-title" aria-modal="false" style="width:210px; height:170px; left:calc(100vw - 210px - 15px); top:calc(100vh - 50px - 15px - 170px); z-index:140;">
         <div class="window-header">
-          <div class="window-title"><img alt="Clima" class="win-img" src="images/icons/weather.png" /> <span data-es="Clima" data-en="Weather">Clima</span></div>
-          <div class="window-controls">
-            <button class="btn-min" onclick="minimizeWindow('window-weather')"><i class="fas fa-minus"></i></button>
-            <button class="btn-max" onclick="maximizeWindow('window-weather')"><i class="far fa-square"></i></button>
-            <button class="btn-close" onclick="closeWindow('window-weather')"><i class="fas fa-times"></i></button>
+          <div class="window-title" id="window-weather-title"><img alt="Clima" class="win-img" src="images/icons/weather.png" /> <span data-es="Clima" data-en="Weather">Clima</span></div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Weather" onclick="minimizeWindow('window-weather')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Weather" onclick="maximizeWindow('window-weather')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Weather" onclick="closeWindow('window-weather')"><i class="fas fa-times"></i></button>
           </div>
         </div>
         <div class="window-content" style="padding:16px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
@@ -1153,12 +1155,13 @@
      todo el HTML. Las dependencias (Three.js, Vanta, anime) deben estar
      disponibles antes de que script.js se ejecute.
      ================================================================ -->
-  <!-- YouTube IFrame API: debe cargarse ANTES que script.js para evitar race conditions -->
+  <!-- YouTube IFrame API: sin defer intencionalmente — necesita definir onYouTubeIframeAPIReady
+       antes de que script.js (defer) se ejecute. El polling en script.js maneja el race condition. -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.clouds.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js" defer></script>
 <script src="js/script.js" defer></script>
 </body>
 
