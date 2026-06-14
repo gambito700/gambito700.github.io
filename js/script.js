@@ -110,7 +110,7 @@
       window.innerWidth < 768 ? 44 : 50;
     return {
       minX: 0,
-      minY: 10,
+      minY: 30,
       maxX: window.innerWidth,
       maxY: window.innerHeight - TASKBAR_H
     };
