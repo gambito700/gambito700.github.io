@@ -42,6 +42,10 @@
   --t-fast: 0.2s ease;
   --t-mid: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   --t-slow: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Icon and text shadows for UI consistency */
+  --icon-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  --text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  --taskbar-height: 50px;
 }
 
 
@@ -1371,6 +1375,7 @@ height: 100vh;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
   gap: 0;
   border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
 }
 
 .desktop-icon:hover {

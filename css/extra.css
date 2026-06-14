@@ -1,9 +1,15 @@
 /* Text animation styles */
 .ml12 {
-  font-weight: 200;
-  font-size: 1.8em;
+  font-weight: 600;
+  font-size: 2rem;
   text-transform: uppercase;
   letter-spacing: 0.5em;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  color: #fff;
 }
 .ml12 .letter {
   display: inline-block;

@@ -1148,6 +1148,11 @@ function initMovingLetters() {
     showMessage(messages[idx]);
   }, 12000);
 }
+function initRandomBackgroundFilter(){
+  const filters=['blur(2px)','brightness(0.8)','contrast(1.3)','hue-rotate(45deg)'];
+  const f=filters[Math.floor(Math.random()*filters.length)];
+  document.body.style.filter = f;
+}
 safeInit(initMovingLetters, "initMovingLetters");
 })();
 

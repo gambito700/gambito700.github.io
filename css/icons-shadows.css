@@ -1,0 +1,15 @@
+/* Icon and text shadows for UI consistency */
+
+.tb-app,
+.sm-grid-item,
+.desktop-icon {
+  box-shadow: var(--icon-shadow);
+}
+
+.tb-app,
+.sm-grid-item,
+.desktop-icon,
+.sm-grid-item span,
+.desktop-icon span {
+  text-shadow: var(--text-shadow);
+}
