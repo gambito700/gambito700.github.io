@@ -587,14 +587,11 @@ function reclampAllWindows() {
   }
 
   function getWallpaperUrl(seed) {
-    // Reduced max size for background images (1280x720) - much faster loading, less bandwidth
-    // Using WebP format via picsum.photos format parameter
     var w = Math.min(window.innerWidth, 1280);
     var h = Math.min(window.innerHeight, 720);
-    // Ensure minimum dimensions to avoid tiny images on small viewports
     w = Math.max(w, 800);
     h = Math.max(h, 450);
-    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h + ".webp";
+    return "https://picsum.photos/seed/" + seed + "/" + w + "/" + h;
   }
 
   function loadWallpaperUrl(d, url, fallback) {
@@ -605,14 +602,11 @@ function reclampAllWindows() {
     d.style.transition = "filter 0.6s ease-out, background-color 0.3s ease";
 
     var img = new Image();
-    img.decoding = "async"; // Allow async decoding for better performance
-    img.loading = "lazy"; // Hint for lazy loading (though not used directly as bg)
+    img.decoding = "async";
 
     img.onload = function () {
-      // Apply loaded image with smooth transition
       d.style.backgroundImage = "url('" + url + "')";
       d.style.backgroundColor = "#0f0f0f";
-      // Remove blur after image loads
       requestAnimationFrame(function () {
         d.style.filter = "blur(0px)";
       });
@@ -639,7 +633,8 @@ function reclampAllWindows() {
     var d = document.getElementById("desktop");
     if (!d) return;
     var seed = Math.floor(Math.random() * 1000);
-    loadWallpaperUrl(d, getWallpaperUrl(seed), function () {
+    var nonce = Date.now();
+    loadWallpaperUrl(d, getWallpaperUrl(seed) + "?random=" + nonce, function () {
       setWallpaperFallback(d);
     });
   };

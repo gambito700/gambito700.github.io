@@ -1,0 +1,43 @@
+/* ================================================================
+   css/extra.css -- Animacion de texto de bienvenida
+   ================================================================
+   Este archivo contiene los estilos para el texto animado que
+   aparece sobre el escritorio, justo encima de las ventanas.
+
+   RELACION CON index.html:
+   - El contenedor #moving-letters esta en el escritorio.
+   - La clase .ml12 se aplica al <h1> creado dinamicamente por
+     initMovingLetters() en js/script.js.
+
+   DEPENDENCIA:
+   - Requiere anime.js (CDN) para la animacion de las letras.
+   - Los estilos aqui son solo de presentacion (posicion, color,
+     tipografia); la animacion se controla desde JavaScript.
+
+   COMO MODIFICAR:
+   - Cambia font-size para hacer el texto mas grande o pequeno.
+   - Ajusta letter-spacing para separar mas o menos las letras.
+   - Modifica text-shadow si quieres un efecto de sombra diferente.
+   - Los textos que se muestran estan en el array "messages" dentro
+     de initMovingLetters() en script.js.
+   ================================================================ */
+
+/* Contenedor principal del texto animado de bienvenida */
+.ml12 {
+  font-weight: 600;
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 0 8px rgba(0,0,0,0.8);
+  color: #fff;
+}
+
+/* Cada letra individual que se anima con anime.js */
+.ml12 .letter {
+  display: inline-block;
+  line-height: 1em;
+}
