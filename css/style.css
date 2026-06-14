@@ -1530,6 +1530,7 @@ body.desktop-mode {
   width: 100% !important;
   height: calc(100vh - var(--taskbar-height)) !important; /* use CSS variable */
   border-radius: 0 !important;
+  transform: none !important;
 }
 
 .win11-window.minimized {

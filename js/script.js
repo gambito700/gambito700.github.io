@@ -1816,6 +1816,13 @@ function initAutoLang() {
     try { fn(); } catch (e) { systemLog("[error] " + name + " failed: " + e.message); console.error(name, e); }
   }
 
+  function updateTaskbarHeightVar() {
+    var h = window.innerWidth < 481 ? 40 :
+            window.innerWidth < 768 ? 44 :
+            window.innerWidth < 1024 ? 46 : 50;
+    document.documentElement.style.setProperty("--taskbar-height", h + "px");
+  }
+
   /*
    * ================================================================
    * DOMContentLoaded  –  Punto de entrada principal
@@ -1883,11 +1890,13 @@ function initAutoLang() {
     }, CONFIG.musicAutoOpenDelay);
 
     // Reajusta todas las ventanas dentro de los límites del escritorio
+    updateTaskbarHeightVar();
     reclampAllWindows();
     // Re-clamp al redimensionar la ventana
     var resizeTimer;
     window.addEventListener("resize", function () {
       clearTimeout(resizeTimer);
+      updateTaskbarHeightVar();
       resizeTimer = setTimeout(reclampAllWindows, 150);
     });
     systemLog("OS Initialized successfully — Windows 11 Overhaul Mode");
