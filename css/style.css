@@ -1356,14 +1356,13 @@ body.desktop-mode {
 .desktop,
 .win11-desktop {
   width: clamp(320px, 100vw, 1920px);
-height: 100vh;
-  max-height: calc(100vh - 60px);
+  height: 100vh;
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
   background-color: #050523;
-  background-size: cover;
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   /* Optimize background rendering */
