@@ -532,10 +532,11 @@ function reclampAllWindows() {
       win.style.top = "";
     });
 
+    window.nextWallpaper(); // Cargar wallpaper inmediatamente, sin esperar
+
     // Siempre abrir CV al inicio
     setTimeout(function () {
       openWindow("window-cv");
-      window.nextWallpaper(); // Establecer fondo Picsum aleatorio (default)
       systemLog("[startup] Fresh session: CV window opened");
     }, CONFIG.cvAutoOpenDelay);
   }
@@ -595,26 +596,18 @@ function reclampAllWindows() {
   }
 
   function loadWallpaperUrl(d, url, fallback) {
-    // Show blur placeholder while loading
     d.style.backgroundImage = "none";
     d.style.backgroundColor = "#0f0f0f";
-    d.style.filter = "blur(0)";
-    d.style.transition = "filter 0.6s ease-out, background-color 0.3s ease";
 
     var img = new Image();
     img.decoding = "async";
 
     img.onload = function () {
       d.style.backgroundImage = "url('" + url + "')";
-      d.style.backgroundColor = "#0f0f0f";
-      requestAnimationFrame(function () {
-        d.style.filter = "blur(0px)";
-      });
       systemLog("[wallpaper] Loaded: " + url.substring(0, 60) + " (" + img.width + "x" + img.height + ")");
     };
     img.onerror = function () {
       systemLog("[wallpaper] Failed: " + url.substring(0, 60));
-      d.style.filter = "blur(0px)";
       if (fallback) fallback();
     };
     img.src = url;
