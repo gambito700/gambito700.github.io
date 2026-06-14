@@ -1320,6 +1320,13 @@ body.desktop-mode {
   transition: background-image 0.4s ease-out, background-color 0.3s ease;
 }
 
+/* Ensure desktop fills full viewport width */
+.desktop,
+.win11-desktop {
+  width: 100vw !important;
+  max-width: none !important;
+}
+
 .desktop-icons {
   position: absolute;
   top: 1rem;
