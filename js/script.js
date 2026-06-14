@@ -25,8 +25,10 @@
      ============================================================ */
 
   // zIndex counter ensures each opened/clicked window comes to front
-  var zIndexCounter = 100;
+  /** Counter for window Z-index to ensure proper stacking order. */
+var zIndexCounter = 100;
 
+/** Bring a window to the front by incrementing its z-index. */
 function bringToFront(win) {
   zIndexCounter = Math.min(zIndexCounter + 2, 150);
   win.style.zIndex = zIndexCounter;
@@ -66,7 +68,8 @@ function bringToFront(win) {
     return;
   }
 
-  window.openWindow = function (id) {
+  /** Open a window, initialize its UI, and bring it to front. */
+window.openWindow = function (id) {
     var win = document.getElementById(id);
     if (!win) return;
 
@@ -96,7 +99,8 @@ function bringToFront(win) {
     systemLog("Window opened: " + id + " at (" + Math.round(rect.left) + "," + Math.round(rect.top) + ") " + Math.round(rect.width) + "x" + Math.round(rect.height));
   };
 
-  window.closeWindow = function (id) {
+  /** Close a window and clean up its state. */
+window.closeWindow = function (id) {
     var win = document.getElementById(id);
     if (win && !win.classList.contains("win-closing")) {
       // Ensure any transient state is cleared when closing

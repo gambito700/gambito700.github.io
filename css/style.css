@@ -1333,6 +1333,7 @@ body.desktop-mode {
   left: 1rem;
   right: auto;
   width: auto;
+/* Desktop icons container – positioned under windows; icons layer */
   height: calc(100vh - 60px - 1rem);
   z-index: 10;
   padding: 1rem;
@@ -1415,7 +1416,8 @@ body.desktop-mode {
   width: 100%;
   height: calc(100vh - 50px);
   pointer-events: none;
-  z-index: 5;
+    /* Ensure windows layer overlays icons */
+    z-index: 20;
 }
 
 .win11-window {
