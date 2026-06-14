@@ -72,16 +72,13 @@
    * bringToFront(win)
    * Trae una ventana al frente incrementando su z-index.
    * @param {HTMLElement} win - El elemento .win11-window a traer al frente.
-   * Cuando el contador llega a 140, se reinicia a 100 para evitar
-   * valores excesivamente grandes.
+   * Usa una estrategia simple: incrementa el contador y lo asigna.
    */
   function bringToFront(win) {
-  zIndexCounter = Math.min(zIndexCounter + 2, 150);
-  win.style.zIndex = zIndexCounter;
-  if (zIndexCounter >= 140) {
-    zIndexCounter = 100;
+    if (!win) return;
+    zIndexCounter = Math.max(zIndexCounter + 1, 101);
+    win.style.zIndex = zIndexCounter;
   }
-}
 
   /**
    * getDesktopBounds()
@@ -297,24 +294,51 @@
   }
 
   /**
-   * initStartMenu()
-   * Configura el menú Inicio: al hacer clic en el botón Windows
-   * (#start-btn), se alterna la clase .show-sm en #start-menu.
-   * También cierra el menú si se hace clic fuera de él.
+   * initSearchAndPlaceholder()
+   * Configura la búsqueda en el menú inicio y placeholders dinámicos
+   * según el idioma seleccionado.
    */
+  function initSearchAndPlaceholder() {
+    var searchInput = document.querySelector(".sm-search-input");
+    if (!searchInput) return;
+    
+    // Actualizar placeholder basado en idioma
+    function updatePlaceholder() {
+      var lang = document.documentElement.getAttribute("data-theme") === "light" ? "en" : "es";
+      var placeholderEn = searchInput.getAttribute("data-placeholder-en") || "Search apps...";
+      var placeholderEs = searchInput.getAttribute("data-placeholder-es") || "Buscar aplicaciones...";
+      searchInput.placeholder = lang === "en" ? placeholderEn : placeholderEs;
+    }
+    
+    updatePlaceholder();
+    
+    // Buscar funcionalidad
+    searchInput.addEventListener("input", function() {
+      var query = this.value.toLowerCase();
+      document.querySelectorAll(".sm-grid-item").forEach(item => {
+        var text = item.textContent.toLowerCase();
+        item.style.display = text.includes(query) ? "flex" : "none";
+      });
+    });
+  }
   function initStartMenu() {
     var btn = document.getElementById("start-btn");
     var menu = document.getElementById("start-menu");
     if (!btn || !menu) return;
 
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", "start-menu");
+
     btn.addEventListener("click", function (e) {
-      menu.classList.toggle("show-sm");
+      var isOpen = menu.classList.toggle("show-sm");
+      btn.setAttribute("aria-expanded", isOpen);
       e.stopPropagation();
     });
 
     document.addEventListener("click", function (e) {
       if (!menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
         menu.classList.remove("show-sm");
+        btn.setAttribute("aria-expanded", "false");
       }
     });
   }
@@ -438,14 +462,19 @@ function reclampAllWindows() {
     document.addEventListener("touchend", endDrag);
   }
 
-  // Reajustar ventanas al cambiar tamaño del navegador
+  // Reajustar ventanas al cambiar tamaño del navegador (con throttle)
   var resizeTimer;
+  var resizeThrottled = false;
   window.addEventListener("resize", function () {
     reclampAllWindows();
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () {
-      systemLog("[resize] Viewport: " + window.innerWidth + "x" + window.innerHeight);
-    }, 500);
+    if (!resizeThrottled) {
+      resizeThrottled = true;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        systemLog("[resize] Viewport: " + window.innerWidth + "x" + window.innerHeight);
+        resizeThrottled = false;
+      }, 250);
+    }
   });
 
   /**
@@ -629,12 +658,11 @@ function reclampAllWindows() {
 
   /**
    * initMenuToggle()
-   * Inicializa el menú inicio. Es un wrapper que llama a
-   * initStartMenu() para mantener consistencia con el patrón
-   * de inicialización usado en DOMContentLoaded.
+   * Inicializa el menú inicio y búsqueda con placeholders dinámicos.
    */
   function initMenuToggle() {
     initStartMenu();
+    initSearchAndPlaceholder();
   }
 
   /* ──────────────────────────────────────────────────────────────
@@ -652,27 +680,151 @@ function reclampAllWindows() {
      - Si no quieres el efecto, comenta la línea safeInit en
        DOMContentLoaded.
      ────────────────────────────────────────────────────────────── */
-  function initVantaWaves() {
-    if (!document.body.classList.contains("desktop-mode")) return;
+  /* ============================================================
+     initVantaCloudsWallpaper() — Fondo de nubes 3D con Vanta
+     Inicializa el efecto Vanta Clouds en el escritorio con
+     colores por defecto (soleado). Se actualiza dinámicamente
+     cuando initWeather() obtiene datos reales.
+     ============================================================ */
+  function initVantaCloudsWallpaper() {
     var d = document.getElementById("desktop");
     if (!d) return;
-    // Initialize Vanta.WAVES background effect
-    VANTA.WAVES({
-        el: "#desktop",
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.0,
-        minWidth: 200.0,
-        scale: 1.0,
-        scaleMobile: 1.0,
-        shininess: 102.0,
-        waveHeight: 29.5,
-        zoom: 1.35
+    if (typeof VANTA === "undefined" || typeof VANTA.CLOUDS === "undefined") {
+      setWallpaperFallback(d);
+      systemLog("[vanta] Vanta not available, using fallback");
+      return;
+    }
+    window.vantaEffect = VANTA.CLOUDS({
+      el: "#desktop",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.0,
+      minWidth: 200.0,
+      skyColor: 0x4a90d9,
+      cloudColor: 0xffffff,
+      cloudShadowColor: 0x425f77,
+      sunColor: 0xffd700,
+      backgroundColor: 0x1a2a4a,
+      speed: 0.8
     });
+    systemLog("[vanta] Vanta Clouds initialized");
   }
 
-/**
+  /* ============================================================
+     getWeatherPalette(code, isDay)
+     Mapea códigos WMO de Open-Meteo + día/noche a una paleta
+     de colores para Vanta Clouds.
+     @param {number} code  - Código WMO (0-99)
+     @param {number} isDay - 1 = día, 0 = noche
+     @returns {object}     - Colores para VANTA.CLOUDS
+     ============================================================ */
+  function getWeatherPalette(code, isDay) {
+    // Noche tiene prioridad sobre cualquier código
+    if (isDay === 0) {
+      return {
+        skyColor: 0x0a0a1e,
+        cloudColor: 0x1a1a3a,
+        cloudShadowColor: 0x000000,
+        sunColor: null,
+        backgroundColor: 0x050510,
+        speed: 0.6
+      };
+    }
+    // Día — según código WMO
+    if (code === 0 || code === 1) {
+      // Soleado / mayormente despejado
+      return {
+        skyColor: 0x4a90d9,
+        cloudColor: 0xffffff,
+        cloudShadowColor: 0x425f77,
+        sunColor: 0xffd700,
+        backgroundColor: 0x1a2a4a,
+        speed: 0.8
+      };
+    }
+    if (code === 2 || code === 3 || code === 45 || code === 48) {
+      // Nublado / niebla
+      return {
+        skyColor: 0x7a8a9a,
+        cloudColor: 0xcccccc,
+        cloudShadowColor: 0x5a6a7a,
+        sunColor: 0xdddddd,
+        backgroundColor: 0x3a4a5a,
+        speed: 1.0
+      };
+    }
+    if ((code >= 51 && code <= 55) || (code >= 61 && code <= 65) || (code >= 80 && code <= 82)) {
+      // Llovizna / lluvia / chubascos
+      return {
+        skyColor: 0x5a6a7a,
+        cloudColor: 0x7a8a9a,
+        cloudShadowColor: 0x3a4a5a,
+        sunColor: null,
+        backgroundColor: 0x2a3a4a,
+        speed: 1.4
+      };
+    }
+    if (code >= 95 && code <= 99) {
+      // Tormenta
+      return {
+        skyColor: 0x2a2a3a,
+        cloudColor: 0x4a4a5a,
+        cloudShadowColor: 0x1a1a2a,
+        sunColor: null,
+        backgroundColor: 0x0a0a1a,
+        speed: 2.0
+      };
+    }
+    if (code >= 71 && code <= 75) {
+      // Nevada
+      return {
+        skyColor: 0xccddee,
+        cloudColor: 0xeeeeff,
+        cloudShadowColor: 0x8899aa,
+        sunColor: 0xe8e8ff,
+        backgroundColor: 0x8899aa,
+        speed: 0.7
+      };
+    }
+    // Fallback: nublado
+    return {
+      skyColor: 0x7a8a9a,
+      cloudColor: 0xcccccc,
+      cloudShadowColor: 0x5a6a7a,
+      sunColor: 0xdddddd,
+      backgroundColor: 0x3a4a5a,
+      speed: 1.0
+    };
+  }
+
+  /* ============================================================
+     updateVantaByWeather(code, isDay)
+     Actualiza los colores de Vanta Clouds según el clima actual.
+     Se llama desde initWeather() después de obtener datos.
+     @param {number} code  - Código WMO
+     @param {number} isDay - 1 = día, 0 = noche
+     ============================================================ */
+  function updateVantaByWeather(code, isDay) {
+    var palette = getWeatherPalette(code, isDay);
+    if (window.vantaEffect) {
+      window.vantaEffect.setOptions({
+        skyColor: palette.skyColor,
+        cloudColor: palette.cloudColor,
+        cloudShadowColor: palette.cloudShadowColor,
+        sunColor: palette.sunColor,
+        backgroundColor: palette.backgroundColor,
+        speed: palette.speed
+      });
+      systemLog("[vanta] Updated to weather code " + code + " | day=" + isDay);
+    } else {
+      // Fallback: cambiar color de fondo manualmente
+      var d = document.getElementById("desktop");
+      if (d) d.style.backgroundColor = "#" + palette.backgroundColor.toString(16).padStart(6, "0");
+    }
+  }
+
+  /**
  * initAutoLang()
  * Detecta automáticamente el idioma del navegador del usuario.
  * Si comienza con "es", usa español; de lo contrario, usa inglés.
@@ -703,18 +855,11 @@ function initAutoLang() {
     var ufEl = document.getElementById("ind-uf");
     var dolarEl = document.getElementById("ind-dolar");
     if (!utmEl) return;
-    var urls = [
-      "scraperUTM/dashboard_data.json",
-      "api/indicators.json"
-    ];
-    function tryFetch(i) {
-      if (i >= urls.length) throw new Error("All URLs failed");
-      return fetch(urls[i]).then(function (r) {
+    fetch("https://gambito700.github.io/scraperUTM/dashboard_data.json")
+      .then(function (r) {
         if (!r.ok) throw new Error("HTTP " + r.status);
         return r.json();
-      });
-    }
-    tryFetch(0).catch(function () { return tryFetch(1); })
+      })
       .then(function (data) {
         var utm, uf, dolar;
         if (data.previred) {
@@ -733,7 +878,7 @@ function initAutoLang() {
         if (utm && utmEl) utmEl.textContent = "$" + Number(utm).toLocaleString("es-CL");
         if (uf && ufEl) ufEl.textContent = "$" + Number(uf).toLocaleString("es-CL");
         if (dolar && dolarEl) dolarEl.textContent = "$" + Number(dolar).toLocaleString("es-CL");
-        systemLog("[indicators] UTM/UF loaded");
+        systemLog("[indicators] UTM/UF loaded from scraperUTM");
       })
       .catch(function () {
         if (utmEl) utmEl.textContent = "No disponible";
@@ -1149,6 +1294,9 @@ function initAutoLang() {
         if (windEl) windEl.innerHTML = '<i class="fas fa-wind"></i> ' + Math.round(cw.windspeed) + " km/h";
         if (errEl) errEl.classList.add("d-none");
         systemLog("[weather] Data loaded for Villarrica");
+        if (typeof cw.is_day !== "undefined") {
+          updateVantaByWeather(cw.weathercode, cw.is_day);
+        }
       })
       .catch(function (err) {
         if (errEl) { errEl.classList.remove("d-none"); errEl.textContent = currentLang === "es" ? "No se pudo cargar el clima" : "Could not load weather"; }
@@ -1621,6 +1769,7 @@ safeInit(initMovingLetters, "initMovingLetters");
 
 
 
+
   /* ============================================================
      J. DOMContentLoaded — Main Init
      ============================================================
@@ -1670,12 +1819,12 @@ safeInit(initMovingLetters, "initMovingLetters");
 
     // ── OS Core ─────────────────────────────────────────────
     // Funciones fundamentales del sistema operativo simulado
-    safeInit(initAutoLang, "initAutoLang");       // Detecta idioma del navegador
-    safeInit(initMenuToggle, "initMenuToggle");   // Activa botón de menú inicio
-    safeInit(initDrag, "initDrag");               // Arrastre de ventanas
-    safeInit(restoreOS, "restoreOS");             // Estado inicial (abre CV)
-    safeInit(initVantaWaves, "initVantaWaves");   // Ondas animadas de fondo
-    safeInit(initSystemTray, "initSystemTray");   // Iconos de la bandeja del sistema
+    safeInit(initAutoLang, "initAutoLang");             // Detecta idioma del navegador
+    safeInit(initMenuToggle, "initMenuToggle");         // Activa botón de menú inicio
+    safeInit(initDrag, "initDrag");                     // Arrastre de ventanas
+    safeInit(restoreOS, "restoreOS");                   // Estado inicial (abre CV)
+    safeInit(initVantaCloudsWallpaper, "initVantaCloudsWallpaper"); // Fondo nubes 3D Vanta
+    safeInit(initSystemTray, "initSystemTray");         // Iconos de la bandeja del sistema
 
     // ── UI Features ─────────────────────────────────────────
     // Componentes visuales e interactivos
