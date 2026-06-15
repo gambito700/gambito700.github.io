@@ -32,7 +32,7 @@ class ThemeManager {
     StorageUtil.setItem(STORAGE_KEYS.THEME, theme)
     const icon = document.getElementById('theme-toggle-icon')
     if (icon) {
-      icon.src = theme === THEME.DARK ? 'images/icons/theme-light.png' : 'images/icons/theme-dark.png'
+      icon.src = theme === THEME.DARK ? 'images/icons/theme-dark.png' : 'images/icons/theme-light.png'
     }
     document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme } }))
   }

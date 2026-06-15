@@ -515,10 +515,32 @@ class WindowManager {
   }
 
   showPowerPopup() {
-    this.showToast('Contacto', 'alexmartinezdiaz91@gmail.com -- Villarrica, Chile')
+    const existing = document.getElementById('power-popup')
+    if (existing) existing.remove()
+    const overlay = document.createElement('div')
+    overlay.id = 'power-popup'
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);'
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove() })
+    const popup = document.createElement('div')
+    popup.style.cssText = 'background:var(--bg,#fdf6e3);color:var(--text,#657b83);border-radius:12px;padding:32px;width:340px;max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.3);text-align:center;position:relative;'
+    popup.innerHTML = `
+      <button id="power-popup-close" style="position:absolute;top:12px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--muted,#839496);padding:4px;">&times;</button>
+      <div style="font-size:3rem;margin-bottom:8px;color:var(--accent,#268bd2);"><i class="fas fa-user-circle"></i></div>
+      <h2 style="margin:0 0 4px;font-size:1.2rem;color:var(--heading,#586e75);">Alex Martinez</h2>
+      <p style="margin:0 0 16px;font-size:0.85rem;color:var(--muted,#839496);">Desarrollador Full Stack</p>
+      <div style="display:flex;flex-direction:column;gap:10px;text-align:left;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:0.9rem;"><i class="fas fa-envelope" style="width:20px;color:var(--accent,#268bd2);"></i><a href="mailto:alexmartinezdiaz91@gmail.com" style="color:var(--text,#657b83);text-decoration:none;">alexmartinezdiaz91@gmail.com</a></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:0.9rem;"><i class="fas fa-map-marker-alt" style="width:20px;color:var(--accent,#268bd2);"></i><span>Villarrica, Chile</span></div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:0.9rem;"><i class="fab fa-github" style="width:20px;color:var(--accent,#268bd2);"></i><a href="https://github.com/gambito700" target="_blank" style="color:var(--text,#657b83);text-decoration:none;">gambito700</a></div>
+      </div>
+    `
+    overlay.appendChild(popup)
+    document.body.appendChild(overlay)
+    document.getElementById('power-popup-close').addEventListener('click', () => overlay.remove())
+    document.addEventListener('keydown', function _onEsc(e) { if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', _onEsc) } })
     const sm = document.getElementById('start-menu')
     if (sm) sm.classList.remove('show-sm')
-    this._systemLog('Power menu opened: Contact info displayed via toast')
+    this._systemLog('Power menu opened: Contact info displayed')
   }
 
   showToast(title, msg) {

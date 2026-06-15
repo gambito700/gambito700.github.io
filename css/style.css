@@ -105,8 +105,393 @@
   --icon-shadow: 0 2px 6px rgba(0,0,0,0.4);
   --text-shadow: 0 1px 3px rgba(0,0,0,0.5);
   --taskbar-height: 50px;
+  --tray-icon-filter: brightness(0) invert(1);
+  --tray-icon-opacity: 0.85;
 }
 
+/* Tema claro - Solarized Light (Ethan Schoonover) */
+[data-theme="light"] {
+  --bg: #fdf6e3;
+  --surface: rgba(147, 161, 161, 0.15);
+  --surface-opaque: #eee8d5;
+  --border: rgba(101, 123, 131, 0.25);
+  --text: #657b83;
+  --muted: #839496;
+  --heading: #586e75;
+  --accent: #268bd2;
+  --accent2: #2aa198;
+  --accent-soft: rgba(38, 139, 210, 0.15);
+  --glass: blur(30px);
+  --radius: 8px;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  --ts-body-dark: 0 1px 4px rgba(0, 0, 0, 0.12);
+  --ts-body-light: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --icon-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  --text-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  --tray-icon-filter: none;
+  --tray-icon-opacity: 0.7;
+}
+
+/* ================================================================
+   OVERRIDES DEL TEMA CLARO – Componentes con colores hardcodeados
+   ================================================================
+   Sección que agrupa todos los overrides necesarios para que los
+   componentes del simulador Windows 11 se vean correctamente con
+   la paleta Solarized Light. Agregar aquí cualquier override nuevo.
+   ================================================================ */
+
+/* ── Taskbar ─────────────────────────────────────────── */
+[data-theme="light"] .win11-taskbar {
+  background: rgba(238, 232, 213, 0.92);
+  border-top: 1px solid rgba(101, 123, 131, 0.2);
+  box-shadow: 0 -1px 12px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .tb-btn {
+  color: #586e75;
+}
+[data-theme="light"] .tb-btn:hover {
+  background: rgba(147, 161, 161, 0.15);
+}
+[data-theme="light"] .tb-start {
+  color: #268bd2;
+}
+[data-theme="light"] .tb-system-tray {
+  color: #586e75;
+}
+[data-theme="light"] .tb-clock {
+  color: #586e75;
+}
+[data-theme="light"] .tb-clock:hover {
+  background: rgba(147, 161, 161, 0.15);
+}
+
+/* ── Start Menu ─────────────────────────────────────── */
+[data-theme="light"] .win11-start-menu {
+  background: rgba(253, 246, 227, 0.95);
+  border: 1px solid rgba(101, 123, 131, 0.2);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
+[data-theme="light"] .sm-search-bar {
+  background: rgba(147, 161, 161, 0.12);
+  border: 1px solid rgba(147, 161, 161, 0.25);
+}
+[data-theme="light"] .sm-search-bar:focus-within {
+  background: rgba(147, 161, 161, 0.15);
+}
+[data-theme="light"] .sm-grid-item:hover {
+  background: rgba(38, 139, 210, 0.12);
+}
+[data-theme="light"] .sm-footer {
+  border-top: 1px solid rgba(101, 123, 131, 0.15);
+}
+[data-theme="light"] .sm-power-btn:hover {
+  background: rgba(147, 161, 161, 0.15);
+  color: #586e75;
+}
+
+/* ── Desktop / Icons ────────────────────────────────── */
+[data-theme="light"] .desktop,
+[data-theme="light"] .win11-desktop {
+  background-color: #fdf6e3;
+}
+[data-theme="light"] .desktop-icon {
+  color: #586e75;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .desktop-icon .win-icon-fa {
+  color: #268bd2;
+}
+[data-theme="light"] .desktop-icon span {
+  color: #586e75;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .desktop-icon:focus,
+[data-theme="light"] .desktop-icon:hover {
+  background: rgba(147, 161, 161, 0.12);
+}
+[data-theme="light"] .desktop-icon:active {
+  background: rgba(147, 161, 161, 0.2);
+}
+
+/* ── Windows ────────────────────────────────────────── */
+[data-theme="light"] .win11-window {
+  background: #fdf6e3;
+  border: 1px solid rgba(101, 123, 131, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+[data-theme="light"] .window-header {
+  background: rgba(238, 232, 213, 0.8);
+  border-bottom: 1px solid rgba(101, 123, 131, 0.12);
+}
+[data-theme="light"] .window-controls button {
+  color: #586e75;
+}
+[data-theme="light"] .window-controls button:hover {
+  background: rgba(147, 161, 161, 0.15);
+}
+[data-theme="light"] .win11-window .btn-close:hover {
+  background: #d73a49 !important;
+}
+[data-theme="light"] .window-title {
+  color: #586e75;
+}
+[data-theme="light"] .window-title i {
+  color: #268bd2;
+}
+[data-theme="light"] .window-content {
+  background: rgba(253, 246, 227, 0.95);
+}
+
+/* ── Calendar Widget ────────────────────────────────── */
+[data-theme="light"] #calendar-widget {
+  color: #657b83;
+}
+[data-theme="light"] .cal-nav-btn {
+  background: rgba(147, 161, 161, 0.1);
+  border: 1px solid rgba(147, 161, 161, 0.2);
+  color: #586e75;
+}
+[data-theme="light"] .cal-nav-btn:hover {
+  background: rgba(38, 139, 210, 0.2);
+}
+[data-theme="light"] .cal-days-header span {
+  color: #839496;
+}
+[data-theme="light"] .cal-day,
+[data-theme="light"] .cal-empty {
+  color: #657b83;
+}
+[data-theme="light"] .cal-day:hover {
+  background: rgba(38, 139, 210, 0.15);
+}
+[data-theme="light"] .cal-today {
+  color: #fdf6e3;
+}
+
+/* ── Project Cards ──────────────────────────────────── */
+[data-theme="light"] .proj-card-title {
+  color: #586e75;
+}
+
+/* ── Calculator ─────────────────────────────────────── */
+[data-theme="light"] .calc-btn.num {
+  background: rgba(147, 161, 161, 0.15);
+  color: #586e75;
+}
+[data-theme="light"] .calc-btn.num:hover {
+  background: rgba(147, 161, 161, 0.25);
+}
+[data-theme="light"] .calc-btn.op {
+  background: rgba(147, 161, 161, 0.08);
+  color: #839496;
+}
+[data-theme="light"] .calc-btn.op:hover {
+  background: rgba(147, 161, 161, 0.18);
+}
+[data-theme="light"] .calc-btn.eq {
+  color: #fdf6e3;
+}
+
+/* ── Weather Widget ─────────────────────────────────── */
+[data-theme="light"] #window-weather .weather-temp {
+  color: #586e75;
+}
+[data-theme="light"] #window-weather .weather-desc {
+  color: #839496;
+}
+[data-theme="light"] #window-weather .weather-details {
+  color: #839496;
+}
+[data-theme="light"] #window-weather .weather-error {
+  color: #cb4b16;
+}
+
+/* ── Indicators ─────────────────────────────────────── */
+[data-theme="light"] #window-indicators .ind-row {
+  border-bottom: 1px solid rgba(101, 123, 131, 0.12);
+}
+[data-theme="light"] #window-indicators .ind-label {
+  color: #839496;
+}
+[data-theme="light"] #window-indicators .ind-value {
+  color: #586e75;
+}
+
+/* ── Toast Notification ─────────────────────────────── */
+[data-theme="light"] .toast-title {
+  color: #586e75;
+}
+[data-theme="light"] .toast-msg {
+  color: #839496;
+}
+[data-theme="light"] .toast-close {
+  color: #839496;
+}
+[data-theme="light"] .toast-close:hover {
+  background: rgba(147, 161, 161, 0.15);
+  color: #586e75;
+}
+
+/* ── QR Generator ───────────────────────────────────── */
+[data-theme="light"] .qr-input-group input {
+  background: rgba(147, 161, 161, 0.1);
+  color: #586e75;
+}
+[data-theme="light"] .qr-display {
+  background: rgba(238, 232, 213, 0.6);
+}
+[data-theme="light"] .qr-actions .btn-secondary {
+  background: rgba(147, 161, 161, 0.15);
+  color: #586e75;
+}
+
+/* ── Comments / Anotaciones ─────────────────────────── */
+[data-theme="light"] .comments-filter select {
+  background: rgba(147, 161, 161, 0.1);
+  color: #586e75;
+}
+[data-theme="light"] .comment-item {
+  background: rgba(147, 161, 161, 0.06);
+}
+[data-theme="light"] .comment-form textarea {
+  background: rgba(147, 161, 161, 0.1);
+  color: #586e75;
+}
+[data-theme="light"] .comment-form button {
+  color: #fdf6e3;
+}
+
+/* ── Window Scrollbar ───────────────────────────────── */
+[data-theme="light"] .window-content::-webkit-scrollbar-thumb {
+  background: rgba(101, 123, 131, 0.3);
+}
+[data-theme="light"] .window-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(101, 123, 131, 0.5);
+}
+[data-theme="light"] .window-content {
+  scrollbar-color: rgba(101, 123, 131, 0.3) transparent;
+}
+
+/* ── Hover Overlay ──────────────────────────────────── */
+[data-theme="light"] .hover-overlay-win {
+  background: rgba(253, 246, 227, 0.3);
+}
+[data-theme="light"] .hover-overlay-win i {
+  color: #586e75;
+}
+
+/* ── Form Inputs Focus ──────────────────────────────── */
+[data-theme="light"] .custom-input:focus {
+  background: rgba(147, 161, 161, 0.1) !important;
+}
+
+/* ── CV Window ──────────────────────────────────────── */
+[data-theme="light"] .cv-hero-banner {
+  border-bottom: 1px solid rgba(101, 123, 131, 0.12);
+}
+[data-theme="light"] .cv-hero-tagline {
+  color: #839496;
+}
+[data-theme="light"] .cv-avatar-circle {
+  border: 2px solid rgba(147, 161, 161, 0.3);
+  background: linear-gradient(135deg, #268bd2, #2aa198);
+  color: #fdf6e3;
+}
+[data-theme="light"] .cv-name {
+  color: #586e75;
+}
+[data-theme="light"] .cv-subtitle {
+  color: #268bd2;
+}
+[data-theme="light"] .cv-divider {
+  border-color: rgba(101, 123, 131, 0.15);
+}
+[data-theme="light"] .cv-section-title {
+  color: #268bd2;
+}
+[data-theme="light"] .cv-body-text {
+  color: #657b83;
+}
+[data-theme="light"] .cv-body-list {
+  color: #657b83;
+}
+[data-theme="light"] .cv-contact-link {
+  color: #268bd2;
+}
+[data-theme="light"] .cv-contact-wa {
+  color: #2aa198;
+}
+[data-theme="light"] .cv-contact-gh {
+  color: #839496;
+}
+[data-theme="light"] .cv-tag {
+  background: rgba(38, 139, 210, 0.12);
+  border: 1px solid rgba(38, 139, 210, 0.3);
+  color: #268bd2;
+}
+
+/* ── Skip link ──────────────────────────────────────── */
+[data-theme="light"] .skip-link {
+  color: #fdf6e3;
+}
+
+/* ── QR btn-primary ─────────────────────────────────── */
+[data-theme="light"] .qr-actions .btn-primary {
+  color: #fdf6e3;
+}
+
+/* ── Cal-day default text ───────────────────────────── */
+[data-theme="light"] .cal-day {
+  color: #657b83;
+}
+
+/* ── Selection color ────────────────────────────────── */
+[data-theme="light"] ::selection {
+  color: #fdf6e3;
+}
+
+/* ── Button submit hover ────────────────────────────── */
+[data-theme="light"] .btn-submit:hover {
+  color: #fdf6e3;
+}
+
+/* ── Alert error ────────────────────────────────────── */
+[data-theme="light"] .alert-error-custom {
+  border-left-color: #d73a49 !important;
+  color: #d73a49 !important;
+}
+
+/* ── Hero bg overlay ────────────────────────────────── */
+[data-theme="light"] .hero-bg-overlay {
+  background: radial-gradient(circle at center, rgba(253, 246, 227, 0.4) 0%, rgba(253, 246, 227, 0.9) 100%);
+}
+
+/* ── Buttons hover states ───────────────────────────── */
+[data-theme="light"] .btn-special:hover,
+[data-theme="light"] .btn-outline-custom:hover {
+  background: rgba(147, 161, 161, 0.15);
+}
+
+/* ── Personal table ──────────────────────────────── */
+[data-theme="light"] .personal-table tr:hover td,
+[data-theme="light"] .personal-table tr:hover th {
+  background: rgba(38, 139, 210, 0.06);
+}
+
+/* ── Accordion filter ───────────────────────────────── */
+[data-theme="light"] .accordion-button::after {
+  filter: invert(0.3);
+}
+
+/* ── Tag orange / blue ──────────────────────────────── */
+[data-theme="light"] .tag-orange {
+  border-color: #cb4b16 !important;
+  color: #cb4b16 !important;
+}
+[data-theme="light"] .tag-blue {
+  border-color: #268bd2 !important;
+  color: #268bd2 !important;
+}
 
 
 /* ---------------------------------------------------------------
@@ -1361,6 +1746,37 @@ body > h1, body > h2, body > h3 {
   color: var(--accent);
   opacity: 1;
   text-shadow: 0 0 6px rgba(0, 212, 255, 0.5);
+}
+
+/* Tray icon images – use CSS vars so theme toggle changes appearance */
+.tb-system-tray img,
+.tb-tray-btn img {
+  filter: var(--tray-icon-filter);
+  opacity: var(--tray-icon-opacity);
+  transition: filter 0.4s ease, opacity 0.4s ease;
+}
+
+/* Theme toggle button – prominent and visible */
+#theme-toggle {
+  position: relative;
+  margin-left: 4px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+#theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+[data-theme="light"] #theme-toggle {
+  background: rgba(147, 161, 161, 0.12);
+  border-color: rgba(101, 123, 131, 0.2);
+}
+[data-theme="light"] #theme-toggle:hover {
+  background: rgba(147, 161, 161, 0.2);
+  border-color: rgba(101, 123, 131, 0.3);
 }
 
 /* ================================================================
