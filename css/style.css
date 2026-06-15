@@ -1406,22 +1406,21 @@ body.desktop-mode {
 
 .desktop-icons {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  right: auto;
+  top: 0;
+  left: 0;
   width: auto;
 /* Desktop icons container – positioned under windows; icons layer */
-  height: calc(100vh - 60px - 1rem);
+  height: calc(100vh - 50px);
   z-index: 10;
   padding: 1rem;
   display: grid;
   grid-template-columns: repeat(3, 76px);
+  grid-auto-rows: 84px;
   gap: 0.5rem;
   align-content: start;
   justify-content: start;
   pointer-events: none;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 .desktop-icons .desktop-icon,
@@ -2411,12 +2410,9 @@ body.desktop-mode {
 
   .win11-taskbar { height: 46px; }
 
-  /* Iconos: grid izquierda */
+  /* Iconos: misma grilla de 3 columnas, padding más compacto */
   .desktop-icons {
-    left: 8px;
-    grid-template-columns: repeat(2, 72px);
-    gap: 2px;
-    padding: 8px 4px;
+    padding: 0.75rem;
   }
 
   /* Ventanas con tamaño reducido pero usable */
@@ -2682,8 +2678,7 @@ body.desktop-mode {
   to { transform: translateY(-100vh) scale(0.5); opacity: 0; }
 }
 
-/* Escala global 5% - tareas tiene posicion fixed, se escala por separado */
-.win11-desktop .desktop-icons,
+/* Escala 15% al menú inicio (tiene position: fixed, se escala por separado) */
 .win11-start-menu {
   transform: scale(1.15);
   transform-origin: top;
