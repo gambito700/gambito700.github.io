@@ -30,7 +30,6 @@ Portafolio interactivo con interfaz simulada de Windows 11. Desarrollado con HTM
 - **Calendario interactivo** — Navegacion mensual con resaltado del dia actual
 - **Wallpaper dinamico** — Fondos aleatorios desde Picsum Photos
 - **Formulario de contacto** — Validacion client-side + envio via Formspree
-- **Bateria en tiempo real** — API de bateria del navegador
 - **Logs del sistema** — Consola de eventos en vivo
 
 ## Estructura

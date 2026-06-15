@@ -155,7 +155,10 @@
           <button class="tb-tray-btn" onclick="closeAllWindows()" title="Cerrar todo" aria-label="Cerrar todas las ventanas"><i class="fas fa-window-restore"></i></button>
           <i class="fas fa-wifi" aria-label="WiFi conectado" role="img"></i>
           <img src="images/icons/icons8-volumen-bajo-50.png" style="width:16px;height:16px;object-fit:contain;filter:brightness(10);" alt="Volumen">
-          <i class="fas fa-battery-three-quarters"></i>
+          <img src="images/icons/battery-full.png" style="width:16px;height:16px;object-fit:contain;filter:brightness(10);" alt="Bateria">
+          <button class="tb-tray-btn" id="theme-toggle" title="Tema" aria-label="Alternar tema claro/oscuro">
+            <img id="theme-toggle-icon" src="images/icons/theme-light.png" style="width:16px;height:16px;object-fit:contain;filter:brightness(10);" alt="Tema">
+          </button>
         </div>
         <div class="tb-clock" id="taskbar-clock">
           <span id="clock-time">--:--</span>
@@ -1111,7 +1114,7 @@
       </div>
 
       <!-- ======================== CLIMA ======================== -->
-      <div class="win11-window d-none" id="window-weather" role="dialog" aria-labelledby="window-weather-title" aria-modal="false" style="width:210px; height:170px; left:calc(100vw - 210px - 15px); top:calc(100vh - 50px - 15px - 170px); z-index:140;">
+      <div class="win11-window d-none" id="window-weather" role="dialog" aria-labelledby="window-weather-title" aria-modal="false" style="width:210px; height:170px; left:calc(100vw - 210px - 20px); top:calc(100vh - 50px - 20px - 170px); z-index:130;">
         <div class="window-header">
           <div class="window-title" id="window-weather-title"><img alt="Clima" class="win-img" src="images/icons/weather.png" /> <span data-es="Clima" data-en="Weather">Clima</span></div>
           <div class="window-controls" role="toolbar" aria-label="Controles de ventana">

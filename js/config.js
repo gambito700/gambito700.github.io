@@ -56,7 +56,7 @@ export const CACHE = {
 
 export const FEATURES = {
   WEATHER: true, CLOCK: true, CALENDAR: true, PLAYER: true,
-  BATTERY: true, QR_GENERATOR: true, COMMENTS: true,
+  QR_GENERATOR: true, COMMENTS: true,
   BLOG: true, PROJECTS: true, SOCIAL: true
 };
 

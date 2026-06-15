@@ -14,7 +14,6 @@ class WindowManager {
     this._initMenuToggle()
     this._initDrag()
     this._restoreOS()
-    this._initSystemTray()
     this._initObfuscatedContacts()
     this._setupResizeHandler()
     this._setupEscapeHandler()
@@ -336,27 +335,6 @@ class WindowManager {
     document.addEventListener('mouseup', endDrag)
     document.addEventListener('touchend', endDrag)
   }
-
-  _initSystemTray() {
-    const tray = document.querySelector('.tb-system-tray')
-    if (tray) {
-      const batteryFa = tray.querySelector('.fa-battery-three-quarters, .fa-battery-full, [class*="battery"]')
-      if (batteryFa) {
-        const batteryImg = document.createElement('img')
-        batteryImg.id = 'tray-battery-icon'
-        batteryImg.src = 'images/icons/battery-full.png'
-        batteryImg.style.cssText = 'width:18px;height:18px;object-fit:contain;'
-        batteryImg.alt = 'bateria'
-        batteryFa.replaceWith(batteryImg)
-      }
-    }
-    const img = document.getElementById('tray-battery-icon')
-    if (img) {
-      img.src = 'images/icons/battery-charging.png'
-      img.title = 'Bateria (simulada)'
-    }
-  }
-
   _restoreOS() {
     document.querySelectorAll('.win11-window').forEach(win => {
       win.style.left = ''

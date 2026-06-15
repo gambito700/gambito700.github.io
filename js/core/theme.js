@@ -30,6 +30,10 @@ class ThemeManager {
     const meta = document.querySelector('meta[name="theme-color"]')
     if (meta) meta.content = theme === THEME.DARK ? '#1a1a2e' : '#ffffff'
     StorageUtil.setItem(STORAGE_KEYS.THEME, theme)
+    const icon = document.getElementById('theme-toggle-icon')
+    if (icon) {
+      icon.src = theme === THEME.DARK ? 'images/icons/theme-light.png' : 'images/icons/theme-dark.png'
+    }
     document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme } }))
   }
 
