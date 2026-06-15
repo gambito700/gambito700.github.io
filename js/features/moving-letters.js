@@ -1,8 +1,8 @@
 export class MovingLettersModule {
   static init() {
     const messages = [
-      'Bienvenido a mi Portafolio Demostrativo',
-      'diseno y programado por   alex M.'
+      'Bienvenido a mi<br>Portafolio Demostrativo',
+      'diseño y programado por<br>Alex M.'
     ]
     let idx = 0
     const container = document.getElementById('moving-letters')
@@ -10,9 +10,20 @@ export class MovingLettersModule {
     if (typeof anime === 'undefined') return
 
     const showMessage = (text) => {
-      container.innerHTML = '<h1 class="ml12">' + text + '</h1>'
+      container.innerHTML = '<h1 class="ml12"></h1>'
       const wrapper = container.querySelector('.ml12')
-      wrapper.innerHTML = wrapper.textContent.replace(/\S/g, "<span class='letter'>$&</span>")
+      text.split('<br>').forEach((line, li) => {
+        if (li > 0) wrapper.appendChild(document.createElement('br'))
+        const lineSpan = document.createElement('span')
+        lineSpan.style.display = 'inline-block'
+        for (const ch of line) {
+          const letter = document.createElement('span')
+          letter.className = 'letter'
+          letter.textContent = ch === ' ' ? '\u00A0' : ch
+          lineSpan.appendChild(letter)
+        }
+        wrapper.appendChild(lineSpan)
+      })
       anime.timeline({ loop: false })
         .add({
           targets: '.ml12 .letter',

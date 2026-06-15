@@ -107,6 +107,7 @@
       <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calendar')}" onclick="openWindow('window-calendar')"><img src="images/icons/calendar.png"><span>Cal.</span></div>
       <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-logs')}" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
       <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calculator')}" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('qr-generator')}" onclick="openWindow('qr-generator')"><i class="fas fa-qrcode" style="font-size:24px;color:#00d4ff;"></i><span>QR</span></div>
     </div>
   </div>
   <div class="sm-footer">
@@ -254,7 +255,7 @@
         <span>Cine Chatarra</span>
       </a>
 
-      <a class="desktop-icon" href="https://wa.me/56945341572?text=Hola%20Alex" style="text-decoration:none;"
+      <a class="desktop-icon" href="https://wa.me/56945341572?text=Hola%20Alex%20este%20texto%20es%20default%20desde%20tu%20portafolio%20online" style="text-decoration:none;"
         target="_blank">
         <img alt="WhatsApp" class="desktop-png-icon" src="images/icons/whatsapp.png" loading="lazy">
         <span>WhatsApp</span>
@@ -270,9 +271,19 @@
         <span data-en="Logs" data-es="Registros">System Logs</span>
       </div>
 
-      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){window.open('windows11-simulator.pdf','_blank');}" onclick="window.open('windows11-simulator.pdf','_blank');">
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){window.open('Alex CV 2026.pdf','_blank');}" onclick="window.open('Alex CV 2026.pdf','_blank');">
         <i class="fas fa-file-pdf win-icon-fa" style="font-size:24px;color:#ff4444;"></i>
-        <span data-en="Download PDF" data-es="Descargar PDF">Descargar PDF</span>
+        <span data-en="CV PDF" data-es="CV PDF">CV PDF</span>
+      </div>
+
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('qr-generator')}" onclick="openWindow('qr-generator')">
+        <i class="fas fa-qrcode win-icon-fa" style="font-size:24px;color:#00d4ff;"></i>
+        <span data-en="QR Generator" data-es="Generador QR">Generador QR</span>
+      </div>
+
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('comments')}" onclick="openWindow('comments')">
+        <i class="fas fa-comments win-icon-fa" style="font-size:24px;color:#25d366;"></i>
+        <span data-en="Comments" data-es="Anotaciones">Anotaciones</span>
       </div>
 
     </div><!-- /.desktop-icons -->
@@ -372,8 +383,8 @@
               data-en="View Projects" data-es="Ver Proyectos">Ver Proyectos</button>
             <button class="btn-outline-custom cv-btn-sm" onclick="openWindow('window-contact'); return false;"
               data-en="Contact Me" data-es="Contáctame">Contáctame</button>
-            <button class="btn-outline-custom cv-btn-sm" onclick="window.open('windows11-simulator.pdf','_blank');"
-              data-en="Download PDF" data-es="Descargar PDF">Descargar PDF</button>
+             <button class="btn-outline-custom cv-btn-sm" onclick="window.open('Alex CV 2026.pdf','_blank');"
+              data-en="Download CV PDF" data-es="Descargar CV PDF">Descargar CV PDF</button>
           </div>
         </div>
       </div>
@@ -1122,6 +1133,32 @@
         </div>
       </div>
 
+      <!-- ======================== QR GENERATOR ======================== -->
+      <div class="win11-window d-none" id="qr-generator" role="dialog" aria-labelledby="window-qr-title" aria-modal="false" style="width:450px; height:400px;">
+        <div class="window-header">
+          <div class="window-title" id="window-qr-title"><i class="fas fa-qrcode"></i> Generador QR</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar QR" onclick="minimizeWindow('qr-generator')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar QR" onclick="maximizeWindow('qr-generator')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar QR" onclick="closeWindow('qr-generator')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content"></div>
+      </div>
+
+      <!-- ======================== COMMENTS ======================== -->
+      <div class="win11-window d-none" id="comments" role="dialog" aria-labelledby="window-comments-title" aria-modal="false" style="width:500px; height:500px;">
+        <div class="window-header">
+          <div class="window-title" id="window-comments-title"><i class="fas fa-comments"></i> Anotaciones</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar Comments" onclick="minimizeWindow('comments')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar Comments" onclick="maximizeWindow('comments')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar Comments" onclick="closeWindow('comments')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content"></div>
+      </div>
+
     </div><!-- /#windows-container -->
   </div><!-- /#desktop -->
 
@@ -1140,29 +1177,24 @@
   </div>
 
   <!-- ================================================================
-     SCRIPTS
-     ================================================================
-     Carga de librerías JavaScript. El orden es importante:
+      SCRIPTS
+      ================================================================
+      Librerías externas (defer → se ejecutan antes que el módulo).
+      js/main.js (type="module") es el entry point del sistema modular.
 
-     1. YouTube IFrame API  →  Reproductor de música oculto
-     2. Bootstrap JS        →  Acordeones, modales, etc. (con defer)
-     3. Three.js            →  Motor WebGL requerido por Vanta
-     4. Vanta Clouds        →  Nubes animadas 3D de fondo
-     5. anime.js            →  Animaciones de texto (letra por letra)
-     6. script.js (defer)   →  Nuestro código principal
-
-     NOTA: script.js tiene "defer" para ejecutarse después de cargar
-     todo el HTML. Las dependencias (Three.js, Vanta, anime) deben estar
-     disponibles antes de que script.js se ejecute.
-     ================================================================ -->
-  <!-- YouTube IFrame API: sin defer intencionalmente — necesita definir onYouTubeIframeAPIReady
-       antes de que script.js (defer) se ejecute. El polling en script.js maneja el race condition. -->
+      1. YouTube IFrame API  → Reproductor de música (carga async)
+      2. Bootstrap JS        → Acordeones, modales (defer)
+      3. Three.js            → Motor WebGL para Vanta (defer)
+      4. Vanta Clouds        → Nubes 3D animadas (defer)
+      5. anime.js            → Animaciones de texto (defer)
+      6. js/main.js (module) → Entry point modular (defer automático)
+      ================================================================ -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.clouds.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js" defer></script>
-<script src="js/script.js" defer></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

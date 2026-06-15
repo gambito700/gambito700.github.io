@@ -62,8 +62,6 @@ export const FEATURES = {
 
 export const SOCIAL_LINKS = {
   GITHUB: 'https://github.com/gambito700',
-  LINKEDIN: 'https://linkedin.com/in/gambito700',
-  TWITTER: 'https://twitter.com/gambito700',
   EMAIL: 'alexmartinezdiaz91@gmail.com',
   PORTFOLIO: 'https://gambito700.github.io'
 };

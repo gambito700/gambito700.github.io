@@ -14,9 +14,6 @@ import { MovingLettersModule } from './features/moving-letters.js'
 import { ToastModule } from './features/toast.js'
 import { QRGeneratorInstance } from './features/qr-generator.js'
 import { CommentSystemInstance } from './features/comments.js'
-import { BlogModule } from './features/blog.js'
-import { ProjectsModule } from './features/projects.js'
-import { SocialModule } from './features/social.js'
 
 function safeInit(fn, name) {
   try {
@@ -49,10 +46,6 @@ async function initApp() {
   safeInit(() => WeatherModule.init(), 'Weather')
   safeInit(() => ToastModule.init(), 'Toast')
   safeInit(() => MovingLettersModule.init(), 'MovingLetters')
-
-  safeInit(() => ProjectsModule.init(), 'Projects')
-  safeInit(() => BlogModule.init(), 'Blog')
-  safeInit(() => SocialModule.init(), 'Social')
 
   QRGeneratorInstance.init().catch(e => console.warn('[modular] QRGenerator failed:', e))
   CommentSystemInstance.init()

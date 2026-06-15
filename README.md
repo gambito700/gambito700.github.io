@@ -19,7 +19,7 @@
 | Estilos | CSS3 + Bootstrap 5.3.3 |
 | Interactividad | JavaScript ES6+ (Vanilla) |
 | Íconos | Font Awesome 6.5 |
-| Animaciones | AOS 2.3.4 |
+| Animaciones | Anime.js |
 | Tipografía | Inter + JetBrains Mono |
 | APIs externas | YouTube IFrame API, Open-Meteo, ipapi.co, Picsum Photos, Formspree |
 
@@ -40,17 +40,36 @@
 
 ```
 gambito700.github.io/
-├── index.html          # Single-page application
-├── 404.html            # Página de error personalizada
-├── robots.txt          # Instrucciones para crawlers
-├── sitemap.xml         # Mapa del sitio para SEO
-├── .nojekyll           # Desactiva Jekyll en GitHub Pages
+├── index.html              # Single-page application (entry point)
+├── 404.html                # Página de error personalizada
+├── robots.txt              # Instrucciones para crawlers
+├── sitemap.xml             # Mapa del sitio para SEO
+├── .nojekyll               # Desactiva Jekyll en GitHub Pages
 ├── css/
-│   └── style.css       # Todos los estilos
+│   ├── style.css           # Estilos principales (variables, layout, componentes)
+│   └── extra.css           # Estilos de animación de texto (.ml12)
 ├── js/
-│   └── script.js       # Toda la lógica
-└── images/
-    └── icons/          # Iconos PNG personalizados
+│   ├── main.js             # Entry point modular (type="module")
+│   ├── config.js           # Configuración global
+│   ├── core/
+│   │   ├── window-manager.js  # Gestor de ventanas, drag & drop, taskbar
+│   │   ├── theme.js           # Tema claro/oscuro
+│   │   └── language.js        # Idioma ES/EN con detección automática
+│   ├── features/
+│   │   ├── blog.js, calculator.js, calendar.js, clock.js
+│   │   ├── comments.js, contact.js, indicators.js
+│   │   ├── moving-letters.js, music.js, projects.js
+│   │   ├── qr-generator.js, skill-bars.js, social.js
+│   │   ├── text-fx.js, toast.js, weather.js
+│   │   └── ...
+│   └── utils/
+│       ├── storage.js      # Utilidades de localStorage
+│       └── dom.js           # Helpers DOM (createElement, debounce, throttle)
+├── assets/
+│   └── data/               # JSON de traducciones, proyectos y blog
+├── images/
+│   └── icons/              # Iconos PNG personalizados
+└── Alex CV 2026.pdf       # CV descargable
 ```
 
 ## Desarrollo local

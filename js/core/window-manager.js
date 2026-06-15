@@ -175,9 +175,10 @@ class WindowManager {
     const existing = container.querySelector(`.tb-btn[data-win="${id}"]`)
     if (isOpen) {
       if (!existing) {
-        const sourceIcon = document.querySelector(`.desktop-icon[onclick*="${id}"] img`)
-          || document.querySelector(`.sm-grid-item[onclick*="${id}"] img`)
-        const iconSrc = sourceIcon ? sourceIcon.src : 'images/icons/about.png'
+        const iconImg = document.querySelector(`.desktop-icon[onclick*="${id}"] img`) || document.querySelector(`.sm-grid-item[onclick*="${id}"] img`)
+        const iconFa = document.querySelector(`.desktop-icon[onclick*="${id}"] i.win-icon-fa`) || document.querySelector(`.sm-grid-item[onclick*="${id}"] i`)
+        const iconSrc = iconImg ? iconImg.src : null
+        const iconClass = iconFa ? iconFa.className : null
         const btn = document.createElement('button')
         btn.className = 'tb-btn tb-app active-win'
         btn.setAttribute('data-win', id)
@@ -192,10 +193,18 @@ class WindowManager {
             this.minimizeWindow(id)
           }
         }
-        const img = document.createElement('img')
-        img.src = iconSrc
-        img.alt = btn.title
-        btn.appendChild(img)
+        if (iconClass) {
+          const i = document.createElement('i')
+          i.className = iconClass
+          i.style.fontSize = '18px'
+          i.style.color = '#60cdff'
+          btn.appendChild(i)
+        } else {
+          const img = document.createElement('img')
+          img.src = iconSrc || 'images/icons/about.png'
+          img.alt = btn.title
+          btn.appendChild(img)
+        }
         container.appendChild(btn)
       } else {
         existing.classList.add('active-win')
