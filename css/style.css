@@ -2697,7 +2697,7 @@ body.desktop-mode {
 /* Escala global 5% - tareas tiene posicion fixed, se escala por separado */
 .win11-desktop .desktop-icons,
 .win11-start-menu {
-  transform: scale(1.25);
+  transform: scale(1.15);
   transform-origin: top;
 }
 
