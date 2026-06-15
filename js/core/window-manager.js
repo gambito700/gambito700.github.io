@@ -62,8 +62,8 @@ class WindowManager {
   }
 
   _getDesktopBounds() {
-    const TASKBAR_H = window.innerWidth < 481 ? 40
-      : window.innerWidth < 768 ? 44 : 50
+    const TASKBAR_H = window.innerWidth < 481 ? 50
+      : window.innerWidth < 768 ? 50 : 50
     return {
       minX: 0, minY: 30,
       maxX: window.innerWidth,

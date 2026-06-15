@@ -25,19 +25,35 @@
 /* Contenedor principal del texto animado de bienvenida */
 .ml12 {
   font-weight: 600;
-  font-size: 2rem;
+  font-size: clamp(1.2rem, 5vw, 2rem);
   text-transform: uppercase;
-  letter-spacing: 0.5em;
+  letter-spacing: 0.3em;
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   text-shadow: 0 0 8px rgba(0,0,0,0.8);
   color: #fff;
+  z-index: 5;
 }
 
 /* Cada letra individual que se anima con anime.js */
 .ml12 .letter {
   display: inline-block;
   line-height: 1em;
+}
+
+/* Media queries para móvil */
+@media (max-width: 480px) {
+  .ml12 {
+    font-size: 1.2rem;
+    letter-spacing: 0.2em;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  .ml12 {
+    font-size: 1.5rem;
+    letter-spacing: 0.25em;
+  }
 }

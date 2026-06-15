@@ -1077,6 +1077,19 @@ section {
   font-size: 0.95rem;
   padding: 12px 16px !important;
   transition: border-color var(--t-fast), background var(--t-fast);
+  appearance: none;
+  -webkit-appearance: none;
+  -webkit-border-radius: 12px;
+}
+
+@media (max-width: 767px) {
+  .custom-input {
+    font-size: 1rem;
+    padding: 14px 14px !important;
+    border-radius: 10px !important;
+    appearance: none;
+    -webkit-appearance: none;
+  }
 }
 
 .custom-input:focus {
@@ -1102,6 +1115,19 @@ section {
   cursor: pointer;
   transition: background var(--t-fast), color var(--t-fast);
   margin-top: 6px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .btn-submit {
+    font-size: 0.75rem;
+    padding: 14px 18px;
+    min-width: 100%;
+    width: 100%;
+  }
 }
 
 .btn-submit:hover {
@@ -1575,16 +1601,16 @@ body.desktop-mode {
 }
 
 .window-controls button {
-  width: clamp(28px, 3vw, 46px);
-  min-width: 28px;
+  width: clamp(32px, 3.5vw, 46px);
+  min-width: 32px;
   height: 100%;
-  min-height: 28px;
+  min-height: 32px;
   border: none;
   background: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: clamp(0.5rem, 1.8vw, 0.75rem);
+  font-size: clamp(0.55rem, 1.8vw, 0.75rem);
   color: #fff;
   transition: background 0.08s ease;
   flex-shrink: 0;
@@ -1641,10 +1667,28 @@ body.desktop-mode {
   overscroll-behavior: none;
 }
 
+@media (max-width: 480px) {
+  .window-inner-section {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .window-inner-section {
+    padding: 1rem;
+  }
+}
+
 /* CV Window custom styles (replaces inline styles) */
 .window-content-cv {
   padding: 30px 40px;
   overflow-y: auto;
+}
+
+@media (max-width: 767px) {
+  .window-content-cv {
+    padding: 16px 18px;
+  }
 }
 
 .cv-hero-banner {
@@ -1779,7 +1823,21 @@ body.desktop-mode {
 
 .cv-btn-sm {
   font-size: 0.8rem;
-  padding: 8px 18px;
+  padding: 10px 18px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .cv-btn-sm {
+    font-size: 0.8rem;
+    padding: 12px 16px;
+    min-height: 44px;
+    flex: 1;
+    min-width: 120px;
+  }
 }
 
 /* WCAG 2.1 - Focus visible for keyboard accessibility */
@@ -2183,85 +2241,23 @@ body.desktop-mode {
 /* ── XS: 320px — móvil mínimo ─────────────────────────── */
 @media (max-width: 480px) {
 
-  /* Taskbar compacta */
-  .win11-taskbar { height: 40px; padding: 0 6px; }
-  .taskbar-inner { gap: 4px; }
+  /* Taskbar mejorada para accesibilidad táctil */
+  .win11-taskbar { height: 50px; padding: 0 6px; }
+  .taskbar-inner { gap: 6px; }
   .tb-system-tray { display: none; }
-  .tb-btn { width: 32px; height: 32px; font-size: 0.9rem; }
-  .tb-clock { font-size: 0.55rem; }
+  .tb-btn { width: 44px; height: 44px; font-size: 0.95rem; min-width: 44px; min-height: 44px; }
+  .tb-clock { font-size: 0.6rem; padding: 4px; }
 
-  /* Iconos: grilla compacta, wrap */
+  /* Iconos: grilla optimizada para toque */
   .desktop-icons {
     position: fixed;
     top: auto;
     left: 0;
     right: 0;
-    bottom: 40px;
+    bottom: 50px;
     max-width: 100vw;
     height: auto;
-    padding: 4px 6px;
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: center;
-    gap: 3px;
-    z-index: 1;
-    overflow-x: hidden;
-    overflow-y: visible;
-  }
-  .desktop-icon {
-    width: 48px;
-    height: 52px;
-    padding: 4px;
-    flex-shrink: 0;
-  }
-  .desktop-icon img {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 2px;
-  }
-  .desktop-icon span {
-    font-size: 0.5rem;
-  }
-
-  /* Ventanas ocupan casi toda la pantalla */
-  .win11-window {
-    width: calc(100vw - 8px) !important;
-    height: calc(100vh - 48px) !important;
-    left: 4px !important;
-    top: 0 !important;
-    transform: none !important;
-    border-radius: 8px;
-  }
-
-  /* Start menu ocupa todo el ancho */
-  .win11-start-menu {
-    width: calc(100vw - 16px);
-    padding: 16px;
-    bottom: 44px;
-  }
-  .sm-apps-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-  }
-}
-
-/* ── SM: 480px — smartphones modernos ─────────────────── */
-@media (min-width: 481px) and (max-width: 767px) {
-
-  .win11-taskbar { height: 44px; }
-  .tb-system-tray { display: none; }
-
-  /* Iconos: grilla compacta, wrap */
-  .desktop-icons {
-    position: fixed;
-    top: auto;
-    left: 0;
-    right: 0;
-    bottom: 44px;
-    max-width: 100vw;
-    height: auto;
-    padding: 6px 8px;
+    padding: 6px 6px;
     display: flex;
     flex-wrap: wrap;
     align-content: center;
@@ -2272,34 +2268,142 @@ body.desktop-mode {
     overflow-y: visible;
   }
   .desktop-icon {
-    width: 52px;
-    height: 56px;
+    width: 56px;
+    height: 60px;
     padding: 6px;
     flex-shrink: 0;
+    min-height: 60px;
   }
   .desktop-icon img {
     width: 28px;
     height: 28px;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
   .desktop-icon span {
     font-size: 0.55rem;
+    line-height: 1.2;
+  }
+
+  /* Ventanas ocupan casi toda la pantalla */
+  .win11-window {
+    width: calc(100vw - 8px) !important;
+    height: calc(100vh - 58px) !important;
+    left: 4px !important;
+    top: 0 !important;
+    transform: none !important;
+    border-radius: 8px;
+  }
+  
+  .window-header {
+    min-height: 40px !important;
+    padding: 8px 12px !important;
+  }
+  
+  .window-title {
+    font-size: 0.9rem !important;
+  }
+  
+  .btn-min, .btn-max, .btn-close {
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+  }
+
+  /* Start menu ocupa todo el ancho */
+  .win11-start-menu {
+    width: calc(100vw - 16px);
+    padding: 16px;
+    bottom: 50px;
+  }
+  .sm-apps-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  
+  .sm-grid-item {
+    min-height: 80px;
+    padding: 8px;
+  }
+  
+  .sm-grid-item span {
+    font-size: 0.65rem;
+  }
+}
+
+/* ── SM: 480px — smartphones modernos ─────────────────── */
+@media (min-width: 481px) and (max-width: 767px) {
+
+  .win11-taskbar { height: 50px; }
+  .tb-system-tray { display: none; }
+  .tb-btn { width: 44px; height: 44px; min-width: 44px; }
+  .tb-clock { font-size: 0.65rem; }
+
+  /* Iconos: grilla compacta, wrap */
+  .desktop-icons {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 50px;
+    max-width: 100vw;
+    height: auto;
+    padding: 8px 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    gap: 6px;
+    z-index: 1;
+    overflow-x: hidden;
+    overflow-y: visible;
+  }
+  .desktop-icon {
+    width: 60px;
+    height: 64px;
+    padding: 6px;
+    flex-shrink: 0;
+  }
+  .desktop-icon img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 3px;
+  }
+  .desktop-icon span {
+    font-size: 0.6rem;
+    line-height: 1.2;
   }
 
   /* Ventanas casi pantalla completa */
   .win11-window {
     width: calc(100vw - 16px) !important;
-    height: calc(100vh - 56px) !important;
+    height: calc(100vh - 58px) !important;
     left: 8px !important;
     top: 0 !important;
     transform: none !important;
   }
+  
+  .window-header {
+    min-height: 40px !important;
+    padding: 8px 14px !important;
+  }
+  
+  .window-content {
+    font-size: 0.9rem !important;
+  }
 
   .win11-start-menu {
     width: calc(100vw - 24px);
-    bottom: 48px;
+    bottom: 50px;
   }
-  .sm-apps-grid { grid-template-columns: repeat(5, 1fr); }
+  .sm-apps-grid { 
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+  }
+  
+  .sm-grid-item {
+    min-height: 85px;
+    padding: 8px;
+  }
 }
 
 /* ── MD: 768px — tablets ──────────────────────────────── */
