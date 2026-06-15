@@ -1415,8 +1415,8 @@ body.desktop-mode {
   z-index: 10;
   padding: 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(3, 76px);
+  gap: 0.5rem;
   align-content: start;
   justify-content: start;
   pointer-events: none;
@@ -2433,12 +2433,6 @@ body.desktop-mode {
 /* ── LG: 1024px — desktop mínimo ─────────────────────── */
 @media (min-width: 1024px) and (max-width: 1199px) {
 
-  /* Iconos: grid izquierda */
-  .desktop-icons {
-    grid-template-columns: repeat(2, 76px);
-    gap: 2px;
-  }
-
   .win11-window {
     width: clamp(340px, 60vw, 800px) !important;
     height: clamp(300px, 68vh, 560px) !important;
@@ -2449,12 +2443,6 @@ body.desktop-mode {
 
 /* ── XL: 1200px+ — desktop completo ──────────────────── */
 @media (min-width: 1200px) {
-
-  /* Layout completo — grid izquierda */
-  .desktop-icons {
-    grid-template-columns: repeat(2, 76px);
-    gap: 2px;
-  }
 
 }
 
