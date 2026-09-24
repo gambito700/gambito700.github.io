@@ -29,7 +29,7 @@ export const EMULATOR = {
     DEFAULT_WIDTH: 600, DEFAULT_HEIGHT: 400,
     TITLE_BAR_HEIGHT: 32
   },
-  Z_INDEX: { DESKTOP: 1, TASKBAR: 100, WINDOW_BASE: 1000, MODAL: 2000, NOTIFICATION: 3000 }
+  Z_INDEX: { DESKTOP: 1, TASKBAR: 100, WINDOW_BASE: 1000, MODAL: 2000, FAB: 2600, NOTIFICATION: 3000 }
 };
 
 export const APIS = {
@@ -57,7 +57,7 @@ export const CACHE = {
 export const FEATURES = {
   WEATHER: true, CLOCK: true, CALENDAR: true, PLAYER: true,
   QR_GENERATOR: true, COMMENTS: true,
-  BLOG: true, PROJECTS: true, SOCIAL: true
+  PROJECTS: true, SOCIAL: true
 };
 
 export const SOCIAL_LINKS = {
@@ -71,7 +71,6 @@ export const WINDOWS = {
   WEATHER: { id: 'weather', title: 'Clima', icon: '🌤️', width: 350, height: 300 },
   CALENDAR: { id: 'calendar', title: 'Calendario', icon: '📅', width: 400, height: 450 },
   PLAYER: { id: 'player', title: 'Reproductor Lo-fi', icon: '🎵', width: 400, height: 200 },
-  BLOG: { id: 'blog', title: 'Blog del Proyecto', icon: '📝', width: 900, height: 600 },
   PROJECTS: { id: 'projects', title: 'Proyectos', icon: '🎯', width: 900, height: 600 },
   COMMENTS: { id: 'comments', title: 'Anotaciones de Codigo', icon: '💬', width: 500, height: 500 },
   QR: { id: 'qr-generator', title: 'Generador de QR', icon: '📲', width: 450, height: 400 },

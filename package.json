@@ -1,0 +1,11 @@
+{
+  "name": "gambito700-portafolio",
+  "version": "1.0.0",
+  "description": "Portafolio estilo Windows 11 - gambito700.github.io",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "audit": "python scripts/audit-encoding.py"
+  }
+}
