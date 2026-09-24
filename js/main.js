@@ -2,6 +2,7 @@
 import { WindowManagerInstance } from './core/window-manager.js'
 import { ThemeManagerInstance } from './core/theme.js'
 import { LanguageManagerInstance } from './core/language.js'
+import StorageUtil from './utils/storage.js'
 import { WeatherModule } from './features/weather.js'
 import { ClockModule } from './features/clock.js'
 import { CalendarModule } from './features/calendar.js'
@@ -52,12 +53,26 @@ async function initApp() {
   QRGeneratorInstance.init().catch(e => console.warn('[modular] QRGenerator failed:', e))
   CommentSystemInstance.init()
 
-  // UX P0: wizard de bienvenida, ayuda y FAB (antes del autoplay de música)
+  // UX P0: ayuda y FAB (antes del autoplay de música)
   safeInit(() => UxModule.init(), 'UX')
 
-  setTimeout(() => {
-    WindowManagerInstance.openWindow('window-music')
-  }, 800)
+  // P0.8: la apertura de la musica queda detras del splash. Se decide
+  // al recibir 'app-ready' (disparado por el boton Entrar del splash):
+  // - Visitante recurrente (g700_onboarding_done): musica a los 600ms.
+  // - Visitante nuevo: espera 'onboarding-resolved' y musica a los 400ms.
+  window.addEventListener('app-ready', () => {
+    if (StorageUtil.getItem('g700_onboarding_done')) {
+      setTimeout(() => {
+        WindowManagerInstance.openWindow('window-music')
+      }, 600)
+    } else {
+      window.addEventListener('onboarding-resolved', () => {
+        setTimeout(() => {
+          WindowManagerInstance.openWindow('window-music')
+        }, 400)
+      }, { once: true })
+    }
+  }, { once: true })
 
   WindowManagerInstance._systemLog('[modular] All modules initialized')
 }

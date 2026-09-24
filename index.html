@@ -73,6 +73,22 @@
 </head>
 
 <body class="desktop-mode">
+  <!-- ================================================================
+     P0.8 – SPLASH SCREEN (pantalla de inicio)
+     ================================================================
+     Primer hijo de body: tapa todo el escritorio mientras carga y
+     hasta que el visitante pulsa Entrar. El z-index (4000) coincide
+     con EMULATOR.Z_INDEX.SPLASH en js/config.js. Al entrar se anima
+     (clase .splash-leaving) y el nodo se elimina del DOM.
+     ================================================================ -->
+  <div id="splash-screen" class="splash-screen" role="dialog" aria-modal="true" aria-label="Pantalla de inicio">
+    <div class="splash-clock" id="splash-clock">--:--</div>
+    <div class="splash-date" id="splash-date"></div>
+    <h1 class="splash-title">Alex Martínez - Fullstack & Diseño Original</h1>
+    <p class="splash-sub" data-es="Escritorio interactivo 100% funcional: abre ventanas, explora aplicaciones y revisa mi trabajo." data-en="Fully interactive desktop: open windows, explore apps and review my work.">Escritorio interactivo 100% funcional: abre ventanas, explora aplicaciones y revisa mi trabajo.</p>
+    <button type="button" id="splash-enter" class="splash-enter" data-es="Entrar como Reclutador / Cliente" data-en="Enter as Recruiter / Client">Entrar como Reclutador / Cliente</button>
+  </div>
+
   <!-- Skip-to-content: accesibilidad para usuarios de teclado/lector de pantalla -->
   <a href="#windows-container" class="skip-link" tabindex="0">Saltar al contenido</a>
 
@@ -202,10 +218,10 @@
 
       <!-- ===== Columna 1 — Perfil/Navegación ===== -->
 
-      <!-- Fila 1 — Col1: Bienvenida -->
-      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cv')}" onclick="openWindow('window-cv')">
+      <!-- Fila 1 — Col1: Mi Curriculumn -->
+      <div class="desktop-icon" role="button" tabindex="0" data-onboard="step1" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cv')}" onclick="openWindow('window-cv')">
         <img alt="CV" class="desktop-png-icon" src="images/icons/intro.png" loading="lazy" />
-        <span data-en="Welcome" data-es="Bienvenida">Bienvenida</span>
+        <span data-en="My Resume" data-es="Mi Curriculumn">Mi Curriculumn</span>
       </div>
 
       <!-- Fila 2 — Col1: Sobre Mí -->
@@ -226,10 +242,10 @@
         <span data-en="Experience" data-es="Experiencia">Experiencia</span>
       </div>
 
-      <!-- Fila 5 — Col1: Registros -->
+      <!-- Fila 5 — Col1: Consola del Sistema -->
       <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-logs')}" onclick="openWindow('window-logs')">
         <img alt="Log Viewer" class="desktop-png-icon" src="images/icons/logviewer.png" loading="lazy" />
-        <span data-en="Logs" data-es="Registros">System Logs</span>
+        <span data-en="System Console (Devs Only)" data-es="Consola del Sistema (Solo Devs)">Consola del Sistema (Solo Devs)</span>
       </div>
 
       <!-- Fila 6 — Col1: DuckDuckGo -->
@@ -246,16 +262,16 @@
         <span data-en="Calculator" data-es="Calculadora">Calculadora</span>
       </div>
 
-      <!-- Fila 2 — Col2: Proyectos -->
+      <!-- Fila 2 — Col2: Proyectos Reales -->
       <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-portfolio')}" onclick="openWindow('window-portfolio')">
-        <img alt="Proyectos" class="desktop-png-icon" src="images/icons/portfolio.png" loading="lazy" />
-        <span data-en="Projects" data-es="Proyectos">Proyectos</span>
+        <img alt="Proyectos Reales" class="desktop-png-icon" src="images/icons/portfolio.png" loading="lazy" />
+        <span data-en="Real Projects" data-es="Proyectos Reales">Proyectos Reales</span>
       </div>
 
-      <!-- Fila 3 — Col2: Indicadores -->
+      <!-- Fila 3 — Col2: Indicadores Chile -->
       <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-indicators')}" onclick="openWindow('window-indicators')">
-        <img alt="Indicadores" class="desktop-png-icon" src="images/icons/scraper.png" loading="lazy">
-        <span data-en="Indicators" data-es="Indicadores">Indicadores</span>
+        <img alt="Indicadores Chile" class="desktop-png-icon" src="images/icons/scraper.png" loading="lazy">
+        <span data-en="Chile Indicators" data-es="Indicadores Chile">Indicadores Chile</span>
       </div>
 
       <!-- Fila 4 — Col2: Anotaciones -->
@@ -1229,26 +1245,6 @@
         <span class="fab-email-addr">alexmartinezdiaz91@gmail.com</span>
       </span>
     </a>
-  </div>
-
-  <!-- ================================================================
-     UX P0 – WIZARD DE BIENVENIDA (una vez por sesión de pestaña)
-     ================================================================ -->
-  <div id="welcome-wizard" class="ux-overlay d-none" role="dialog" aria-modal="false" aria-labelledby="wizard-title">
-    <div class="ux-card">
-      <div class="ux-card-header">
-        <h2 class="ux-card-title" id="wizard-title" data-en="Welcome to my portfolio" data-es="Bienvenido a mi portafolio">Bienvenido a mi portafolio</h2>
-        <button type="button" class="ux-close-btn" id="wizard-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
-      </div>
-      <span class="ux-section-label" data-en="How to navigate" data-es="Cómo navegar">Cómo navegar</span>
-      <ul class="ux-list">
-        <li data-en="Click the desktop icons to open apps." data-es="Haz clic en los iconos del escritorio para abrir aplicaciones.">Haz clic en los iconos del escritorio para abrir aplicaciones.</li>
-        <li data-en="Drag windows by their top bar." data-es="Arrastra las ventanas por su barra superior.">Arrastra las ventanas por su barra superior.</li>
-        <li data-en="Use the Start button (taskbar corner, Windows icon)." data-es="Usa el botón Inicio (esquina de la barra de tareas, icono Windows).">Usa el botón Inicio (esquina de la barra de tareas, icono Windows).</li>
-        <li data-en="Switch light/dark theme and language with the buttons on the right of the taskbar." data-es="Tema claro/oscuro e idioma se cambian con los botones a la derecha de la barra de tareas.">Tema claro/oscuro e idioma se cambian con los botones a la derecha de la barra de tareas.</li>
-      </ul>
-      <button type="button" class="ux-primary-btn" id="wizard-start-btn" data-en="Start" data-es="Empezar">Empezar</button>
-    </div>
   </div>
 
   <!-- ================================================================

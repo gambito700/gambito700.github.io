@@ -1,53 +1,24 @@
 /* (c) 2026 gambito700 - Alex Martinez | gambito700.github.io */
 import { EMULATOR } from '../config.js'
+import StorageUtil from '../utils/storage.js'
+import { OnboardingModule } from './onboarding.js'
 
 // Overlays: sobre MODAL (2000), bajo FAB (2600) y NOTIFICATION (3000).
 // Se deriva de config para que la jerarquia siga siendo consistente.
 const OVERLAY_Z = EMULATOR.Z_INDEX.MODAL + 500
 
-function sessGet(key) {
-  try { return window.sessionStorage.getItem(key) } catch (e) { return null }
-}
-
-function sessSet(key, val) {
-  try { window.sessionStorage.setItem(key, val) } catch (e) { /* almacenamiento no disponible */ }
-}
-
 export class UxModule {
   static init() {
-    const wizard = document.getElementById('welcome-wizard')
     const helpOverlay = document.getElementById('help-overlay')
     const fabWrap = document.getElementById('fab-wrap')
     const helpBtn = document.getElementById('help-btn')
 
     // Z-index consistente desde la config (EMULATOR.Z_INDEX)
-    if (wizard) wizard.style.zIndex = String(OVERLAY_Z)
     if (helpOverlay) helpOverlay.style.zIndex = String(OVERLAY_Z)
     if (fabWrap) fabWrap.style.zIndex = String(EMULATOR.Z_INDEX.FAB)
 
-    const fireHint = () => {
-      if (sessGet('p0_hint_shown') === '1') return
-      sessSet('p0_hint_shown', '1')
-      const msg = (window.currentLang === 'en')
-        ? 'Open any icon or the Start menu to begin.'
-        : 'Abre cualquier icono o el menú Inicio para empezar'
-      if (typeof window.showToast === 'function') {
-        window.showToast('Click to start', msg)
-      } else {
-        console.log('[ux] hint:', msg)
-      }
-    }
-
-    const closeWizard = () => {
-      if (!wizard) return
-      wizard.classList.add('d-none')
-      sessSet('p0_welcome_shown', '1')
-      if (wizard.contains(document.activeElement)) {
-        const sb = document.getElementById('start-btn')
-        if (sb) sb.focus()
-      }
-      fireHint()
-    }
+    // P0.8: splash screen (reloj + entrada) antes de nada del UX
+    UxModule._initSplash()
 
     const showHelp = () => {
       if (!helpOverlay) return
@@ -62,21 +33,7 @@ export class UxModule {
       if (helpBtn) helpBtn.focus()
     }
 
-    // 1) Wizard de bienvenida: una vez por sesión de pestaña
-    if (wizard && sessGet('p0_welcome_shown') !== '1') {
-      wizard.classList.remove('d-none')
-      const startBtn = document.getElementById('wizard-start-btn')
-      if (startBtn) startBtn.focus()
-    } else {
-      fireHint()
-    }
-
-    const wizardStart = document.getElementById('wizard-start-btn')
-    const wizardClose = document.getElementById('wizard-close-btn')
-    if (wizardStart) wizardStart.addEventListener('click', closeWizard)
-    if (wizardClose) wizardClose.addEventListener('click', closeWizard)
-
-    // 3) Boton de ayuda en la barra de tareas
+    // Boton de ayuda en la barra de tareas
     if (helpBtn) {
       helpBtn.addEventListener('click', () => {
         if (helpOverlay && helpOverlay.classList.contains('d-none')) showHelp()
@@ -88,11 +45,48 @@ export class UxModule {
     if (helpOk) helpOk.addEventListener('click', closeHelp)
     if (helpClose) helpClose.addEventListener('click', closeHelp)
 
-    // Esc cierra el overlay visible
+    // Esc cierra el overlay de ayuda visible
     document.addEventListener('keydown', (e) => {
       if (e.key !== 'Escape') return
-      if (helpOverlay && !helpOverlay.classList.contains('d-none')) { closeHelp(); return }
-      if (wizard && !wizard.classList.contains('d-none')) { closeWizard() }
+      if (helpOverlay && !helpOverlay.classList.contains('d-none')) closeHelp()
+    })
+  }
+
+  // P0.8: reloj del splash + entrada al escritorio.
+  // Al pulsar Entrar se dispara 'app-ready' (lo escucha main.js para
+  // abrir la musica) y, si el visitante no hizo el onboarding (P0.8),
+  // se lanza el tour de 2 pasos.
+  static _initSplash() {
+    const splash = document.getElementById('splash-screen')
+    const enterBtn = document.getElementById('splash-enter')
+    if (!splash || !enterBtn) return
+    splash.style.zIndex = String(EMULATOR.Z_INDEX.SPLASH)
+
+    const clockEl = document.getElementById('splash-clock')
+    const dateEl = document.getElementById('splash-date')
+    const locale = (window.currentLang || 'es') === 'es' ? 'es-CL' : 'en-US'
+
+    const renderClock = () => {
+      const n = new Date()
+      if (clockEl) clockEl.textContent = n.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+      if (dateEl) dateEl.textContent = n.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })
+    }
+    renderClock()
+    const timer = setInterval(renderClock, 1000)
+
+    enterBtn.addEventListener('click', () => {
+      window.dispatchEvent(new CustomEvent('app-ready', { detail: { source: 'splash' } }))
+      splash.classList.add('splash-leaving')
+      setTimeout(() => {
+        clearInterval(timer)
+        splash.remove()
+        // Devuelve el foco a la barra de tareas (mismo patron del wizard P0)
+        const sb = document.getElementById('start-btn')
+        if (sb && (!document.activeElement || document.activeElement === document.body)) sb.focus()
+        if (!StorageUtil.getItem('g700_onboarding_done')) {
+          OnboardingModule.start()
+        }
+      }, 500)
     })
   }
 }

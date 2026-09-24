@@ -3287,11 +3287,10 @@ body.desktop-mode {
 
 
 /* ================================================================
-   UX P0 - wizard, help, FAB, hint
+   UX P0 - help, FAB
    ================================================================
    Adiciones de UX para usuarios no técnicos:
    - .ux-overlay        Capa fija a pantalla completa (z-index via JS)
-   - #welcome-wizard    Wizard de bienvenida (una vez por sesión)
    - #help-overlay      Overlay de ayuda (botón ? de la taskbar)
    - #fab-wrap         FAB de contacto rápido (WhatsApp + correo)
 
@@ -3527,6 +3526,204 @@ body.desktop-mode {
 /* Overrides tema claro (mismo patrón que la sección de overrides) */
 [data-theme="light"] .ux-card { background: rgba(253, 246, 227, 0.96); }
 [data-theme="light"] .ux-close-btn:hover { background: rgba(147, 161, 161, 0.15); color: var(--heading); }
+
+/* ================================================================
+   P0.8 - SPLASH SCREEN + ONBOARDING TOUR
+   ================================================================
+   Pantalla de inicio (splash) y tour de onboarding con spotlight
+   + tooltip bilingue:
+   - #splash-screen   Tapa el escritorio al cargar (z-index 4000 =
+                      EMULATOR.Z_INDEX.SPLASH en js/config.js)
+   - .splash-leaving  Estado de salida (fade 500ms + sin interaccion)
+   - .ux-spotlight    Foco luminoso sobre el elemento objetivo
+   - .ux-tooltip      Tarjeta de ayuda con titulo, texto y acciones
+
+   El onboarding vive en js/features/onboarding.js y recorre 2 pasos.
+   ================================================================ */
+
+/* Splash screen: primer hijo de body, tapa todo el escritorio */
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px;
+  text-align: center;
+  background: var(--bg);
+  color: var(--text);
+  transition: opacity 500ms ease;
+}
+
+/* Reloj gigante del splash */
+.splash-clock {
+  font-family: var(--font-display);
+  font-size: clamp(64px, 18vw, 180px);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  text-shadow: var(--text-shadow);
+  letter-spacing: 0.02em;
+}
+
+/* Fecha larga bajo el reloj */
+.splash-date {
+  font-family: var(--font-mono);
+  font-size: clamp(16px, 3vw, 26px);
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+/* Titulo del splash */
+.splash-title {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 4vw, 34px);
+  font-weight: 600;
+  color: var(--heading);
+  max-width: 640px;
+  margin: 6px 0 0;
+}
+
+/* Subtitulo bilingue */
+.splash-sub {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 2vw, 17px);
+  color: var(--muted);
+  max-width: 520px;
+  margin: 0;
+}
+
+/* Boton de entrada estilo win11: borde, hover invertido, foco visible */
+.splash-enter {
+  margin-top: 18px;
+  padding: 14px 32px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast), transform 0.1s ease;
+}
+.splash-enter:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+.splash-enter:active { transform: scale(0.98); }
+.splash-enter:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Salida del splash: fade out y sin interaccion */
+.splash-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Media query movil: reducir tamaños */
+@media (max-width: 640px) {
+  .splash-screen { gap: 10px; padding: 16px; }
+  .splash-clock { font-size: clamp(48px, 16vw, 96px); }
+  .splash-title { font-size: 1.15rem; }
+  .splash-sub { font-size: 0.85rem; }
+  .splash-enter { padding: 12px 24px; font-size: 0.85rem; }
+}
+
+/* Onboarding: spotlight sobre el elemento objetivo (no bloquea clicks) */
+.ux-spotlight {
+  position: fixed;
+  pointer-events: none;
+  z-index: 3200;
+  border-radius: 8px;
+  outline: 2px solid var(--accent);
+  box-shadow: 0 0 0 9999px rgba(8, 10, 20, 0.72);
+  transition: all 300ms ease;
+}
+
+/* Onboarding: tooltip bilingue */
+.ux-tooltip {
+  position: fixed;
+  z-index: 3300;
+  max-width: 320px;
+  background: var(--surface-opaque);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+.ux-tooltip-title {
+  display: block;
+  margin: 0 0 6px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+.ux-tooltip-text {
+  margin: 0 0 14px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+.ux-tooltip-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Boton primario del tooltip (Siguiente / Finalizar) */
+.ux-tooltip-btn {
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter var(--t-fast), transform 0.1s ease;
+}
+.ux-tooltip-btn:hover { filter: brightness(1.1); }
+.ux-tooltip-btn:active { transform: scale(0.98); }
+.ux-tooltip-btn:focus-visible,
+.ux-tooltip-link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Boton secundario del tooltip (Saltar ayuda) */
+.ux-tooltip-link {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+}
+.ux-tooltip-link:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Overrides tema claro (mismo patron que la seccion de overrides) */
+[data-theme="light"] .ux-tooltip { background: rgba(253, 246, 227, 0.98); }
+[data-theme="light"] .ux-spotlight { box-shadow: 0 0 0 9999px rgba(40, 44, 52, 0.6); }
+[data-theme="light"] .ux-tooltip-link:hover { background: rgba(147, 161, 161, 0.15); }
 
 
 
