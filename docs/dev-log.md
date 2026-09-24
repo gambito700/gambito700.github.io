@@ -37,3 +37,7 @@ fecha | fase | archivo(s) | cambio | resultado | duracion.
 - [audit] Nuevo .editorconfig (UTF-8, LF, final newline) y scripts/audit-encoding.py
   (verifica UTF-8 estricto + sin BOM + sin mezcla de line endings). Resultado:
   36 archivos, 0 fallos. result=OK
+- [docs] README.md reescrito a nivel produccion: badges, stack, arquitectura
+  ASCII, estructura de archivos, tabla de configuracion, convenciones (UTF-8/LF/
+  commits), deploy GH Pages (sin build, .nojekyll), roadmap P0-P4 activo y P5+
+  congelado, estado P0 honesto (pendiente UX + verificacion). result=OK
