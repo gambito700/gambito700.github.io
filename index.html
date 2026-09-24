@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <!-- ============================================================
-  FIRMA DIGITAL — gambito700
-  HOST:    HPVictusi7
-  SSH:     SHA256:V+ckr6XyxG4FdJ7X+s9JAKJqUFiLG43LXkAMs+91fzU
-  EMAIL:   gambitocerati@gmail.com
-  FECHA:   2026-06-15
-  ============================================================
+  (c) 2026 gambito700 - Alex Martinez | gambito700.github.io
   index.html  –  Portafolio estilo Windows 11
-  ============================================================
   Este archivo es la entrada principal del sitio. Simula un
   escritorio Windows 11 con ventanas, barra de tareas, menú
   inicio, iconos y animaciones.
@@ -19,12 +13,9 @@
     Desktop      – Iconos del escritorio y fondo dinámico
     Windows      – Ventanas del sistema (CV, About, Skills...)
     Scripts      – Carga de librerías JS al final del body
-  ============================================================ -->
 <html data-theme="dark" lang="es">
 
-<!-- ==============================================================
   <head>  –  Metadatos, SEO, estilos y librerías externas
-  ================================================================
   Aquí se definen:
   - Meta tags (charset, viewport, description)
   - Content-Security-Policy (CSP) para seguridad
@@ -32,7 +23,6 @@
   - JSON-LD (datos estructurados para buscadores)
   - CSS externo: Bootstrap 5, Font Awesome 6, Google Fonts
   - CSS propio: style.css, extra.css
-  ============================================================== -->
 <head>
   <meta charset="utf-8" />
   <!-- VIEWPORT: controla cómo se ve en móviles -->
@@ -80,9 +70,7 @@
   <!-- Skip-to-content: accesibilidad para usuarios de teclado/lector de pantalla -->
   <a href="#windows-container" class="skip-link" tabindex="0">Saltar al contenido</a>
 
-  <!-- ================================================================
      START MENU (WINDOWS 11 STYLE)
-     ================================================================
      Menú Inicio que se despliega al hacer clic en el botón Windows
      de la barra de tareas. Contiene:
      - Barra de búsqueda (placeholders bilingües)
@@ -93,7 +81,6 @@
      - Para agregar un acceso directo, copia un bloque .sm-grid-item
        y cambia el onclick="openWindow('window-xxxx')" y la imagen.
      - Los textos usan data-en / data-es para soporte bilingüe.
-     ================================================================ -->
 <div id="start-menu" class="win11-start-menu" role="dialog" aria-label="Menú Inicio" aria-modal="false">
   <div class="sm-search-bar">
     <i class="fas fa-search sm-search-icon"></i>
@@ -126,9 +113,7 @@
   </div>
 </div>
 
-  <!-- ================================================================
      WINDOWS 11 TASKBAR
-     ================================================================
      Barra inferior fija con tres zonas:
      - Izquierda:  Espaciador (para mantener el centrado)
      - Centro:     Botón Inicio + iconos de apps abiertas
@@ -140,7 +125,6 @@
        o quita <button> o <i> según necesites.
      - El reloj se actualiza automáticamente desde js/script.js
        buscando los elementos #clock-time y #clock-date.
-     ================================================================ -->
   <div class="win11-taskbar" role="toolbar" aria-label="Barra de tareas">
     <div class="taskbar-inner">
       <!-- LEFT: Spacer (Win11 style) -->
@@ -174,9 +158,7 @@
     </div>
   </div>
 
-  <!-- ================================================================
      DESKTOP
-     ================================================================
      Contenedor principal del escritorio. Abarca toda la pantalla y
      contiene:
      - .desktop-icons:  Iconos del escritorio (accesos directos)
@@ -185,11 +167,9 @@
 
      El fondo de pantalla se controla desde js/script.js mediante
      Vanta.js (nubes 3D) con paleta dinámica según el clima.
-     ================================================================ -->
   <div class="win11-desktop" id="desktop">
 
     <!-- DESKTOP ICONS
-         ============================================================
          Cada .desktop-icon es un acceso directo que abre una ventana
          al hacer clic (onclick="openWindow('window-xxx')").
 
@@ -199,10 +179,8 @@
          - También puede ser un <a> para enlaces externos (ej: DuckDuckGo).
          - Los atributos data-en / data-es permiten cambiar el texto
            según el idioma seleccionado.
-         ============================================================ -->
     <div class="desktop-icons">
 
-      <!-- ===== Columna 1 — Perfil/Navegación ===== -->
 
       <!-- Fila 1 — Col1: Bienvenida -->
       <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cv')}" onclick="openWindow('window-cv')">
@@ -240,7 +218,6 @@
         <span>DuckDuckGo</span>
       </a>
 
-      <!-- ===== Columna 2 — Herramientas ===== -->
 
       <!-- Fila 1 — Col2: Calculadora -->
       <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calculator')}" onclick="openWindow('window-calculator')">
@@ -278,7 +255,6 @@
         <span data-en="Calendar" data-es="Calendario">Calendar</span>
       </div>
 
-      <!-- ===== Columna 3 — Social/Media/Extra ===== -->
 
       <!-- Fila 1 — Col3: Contacto -->
       <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-contact')}" onclick="openWindow('window-contact')">
@@ -321,9 +297,7 @@
     </div><!-- /.desktop-icons -->
     <div id="moving-letters"></div>
 
-    <!-- ================================================================
        WINDOWS CONTAINER
-       ================================================================
        Aquí dentro están TODAS las ventanas del sistema. Cada ventana
        es un div con clase .win11-window y un ID único (window-cv,
        window-about, window-skills, etc.).
@@ -341,10 +315,8 @@
        3. Agrega un .desktop-icon en la sección de iconos que haga
           onclick="openWindow('window-miventana')".
        4. Agrega un .sm-grid-item en el Start Menu con el mismo onclick.
-       ================================================================ -->
     <div id="windows-container">
 
-      <!-- ======================== CV / INICIO ======================== -->
       <div class="win11-window d-none" id="window-cv" role="dialog" aria-labelledby="window-cv-title" aria-modal="false" style="width:600px; height:480px; left:40px; top:40px; z-index:100;">
         <div class="window-header">
           <div class="window-title" id="window-cv-title"><img alt="CV" class="win-img" src="images/icons/intro.png" /> Portafolio — Alex
@@ -421,7 +393,6 @@
         </div>
       </div>
 
-      <!-- ======================== SOBRE MÍ ======================== -->
       <div class="win11-window d-none" id="window-about" role="dialog" aria-labelledby="window-about-title" aria-modal="false">
         <div class="window-header">
           <div class="window-title" id="window-about-title"><img alt="Sobre Mí" class="win-img" src="images/icons/about.png" /> Sobre Mí</div>
@@ -529,7 +500,6 @@
         </div>
       </div>
 
-      <!-- ======================== EXPERIENCIA ======================== -->
       <div class="win11-window d-none" id="window-experience" role="dialog" aria-labelledby="window-experience-title" aria-modal="false">
         <div class="window-header">
           <div class="window-title" id="window-experience-title"><img alt="Experiencia" class="win-img" src="images/icons/experience.png" /> Experiencia</div>
@@ -653,7 +623,6 @@
         </div>
       </div>
 
-      <!-- ======================== HABILIDADES ======================== -->
       <div class="win11-window d-none" id="window-skills" role="dialog" aria-labelledby="window-skills-title" aria-modal="false">
         <div class="window-header">
           <div class="window-title" id="window-skills-title"><img alt="Habilidades" class="win-img" src="images/icons/skills.png" /> Habilidades</div>
@@ -778,7 +747,6 @@
         </div>
       </div>
 
-      <!-- ======================== PORTAFOLIO ======================== -->
       <div class="win11-window d-none" id="window-portfolio" role="dialog" aria-labelledby="window-portfolio-title" aria-modal="false" style="width:720px;height:560px">
         <div class="window-header">
           <div class="window-title" id="window-portfolio-title"><img alt="Proyectos" class="win-img" src="images/icons/portfolio.png" /> Proyectos</div>
@@ -877,7 +845,6 @@
         </div>
       </div>
 
-      <!-- ======================== CONTACTO ======================== -->
       <div class="win11-window d-none" id="window-contact" role="dialog" aria-labelledby="window-contact-title" aria-modal="false">
         <div class="window-header">
           <div class="window-title" id="window-contact-title"><img alt="Contacto" class="win-img" src="images/icons/contact.png" /> Contacto</div>
@@ -1001,7 +968,6 @@
 
 
 
-      <!-- ======================== CALENDARIO ======================== -->
       <div class="win11-window d-none" id="window-calendar" role="dialog" aria-labelledby="window-calendar-title" aria-modal="false">
         <div class="window-header">
           <div class="window-title" id="window-calendar-title"><img alt="Calendario" class="win-img" src="images/icons/calendar.png" /> Calendario</div>
@@ -1026,7 +992,6 @@
         </div>
       </div>
 
-      <!-- ======================== SYSTEM LOGS ======================== -->
       <div class="win11-window d-none" id="window-logs" role="dialog" aria-labelledby="window-logs-title" aria-modal="false" style="width:520px;height:360px;">
         <div class="window-header">
           <div class="window-title" id="window-logs-title"><img alt="Logs" class="win-img" src="images/icons/logviewer.png" /> System Logs
@@ -1045,7 +1010,6 @@
         </div>
       </div>
 
-      <!-- ======================== MÚSICA / YOUTUBE ======================== -->
       <div class="win11-window d-none" id="window-music" role="dialog" aria-labelledby="window-music-title" aria-modal="false" style="width:340px; height:180px; z-index:113; left:calc(100vw - 390px); top:15px;">
         <div class="window-header">
           <div class="window-title" id="window-music-title"><img alt="Música" class="win-img" src="images/icons/music.png"> Música</div>
@@ -1087,7 +1051,6 @@
         </div>
       </div>
 
-      <!-- ======================== CALCULADORA ======================== -->
       <div class="win11-window d-none" id="window-calculator" role="dialog" aria-labelledby="window-calculator-title" aria-modal="false" style="width:280px; height:380px;">
         <div class="window-header">
           <div class="window-title" id="window-calculator-title"><i class="fas fa-calculator"></i> Calculadora</div>
@@ -1124,7 +1087,6 @@
         </div>
       </div>
 
-      <!-- ======================== INDICADORES UTM/UF ======================== -->
       <div class="win11-window d-none" id="window-indicators" role="dialog" aria-labelledby="window-indicators-title" aria-modal="false" style="width:300px; height:220px;">
         <div class="window-header">
           <div class="window-title" id="window-indicators-title"><img alt="Indicadores" class="win-img" src="images/icons/scraper.png" /> Indicadores</div>
@@ -1141,7 +1103,6 @@
         </div>
       </div>
 
-      <!-- ======================== CLIMA ======================== -->
       <div class="win11-window d-none" id="window-weather" role="dialog" aria-labelledby="window-weather-title" aria-modal="false" style="width:210px; height:170px; left:calc(100vw - 247px); top:calc(100vh - 50px - 20px - 170px); z-index:130;">
         <div class="window-header">
           <div class="window-title" id="window-weather-title"><img alt="Clima" class="win-img" src="images/icons/weather.png" /> <span data-es="Clima" data-en="Weather">Clima</span></div>
@@ -1164,7 +1125,6 @@
         </div>
       </div>
 
-      <!-- ======================== QR GENERATOR ======================== -->
       <div class="win11-window d-none" id="qr-generator" role="dialog" aria-labelledby="window-qr-title" aria-modal="false" style="width:450px; height:400px;">
         <div class="window-header">
           <div class="window-title" id="window-qr-title"><i class="fas fa-qrcode"></i> Generador QR</div>
@@ -1177,7 +1137,6 @@
         <div class="window-content"></div>
       </div>
 
-      <!-- ======================== COMMENTS ======================== -->
       <div class="win11-window d-none" id="comments" role="dialog" aria-labelledby="window-comments-title" aria-modal="false" style="width:500px; height:500px;">
         <div class="window-header">
           <div class="window-title" id="window-comments-title"><i class="fas fa-comments"></i> Anotaciones</div>
@@ -1193,9 +1152,7 @@
     </div><!-- /#windows-container -->
   </div><!-- /#desktop -->
 
-  <!-- ================================================================
      TOAST NOTIFICATION
-     ================================================================ -->
   <div id="toast-notification" class="win-toast d-none">
     <div class="toast-content">
       <div class="toast-icon"><i class="fas fa-headphones"></i></div>
@@ -1207,9 +1164,7 @@
     </div>
   </div>
 
-  <!-- ================================================================
       SCRIPTS
-      ================================================================
       Librerías externas (defer → se ejecutan antes que el módulo).
       js/main.js (type="module") es el entry point del sistema modular.
 
@@ -1219,7 +1174,6 @@
       4. Vanta Clouds        → Nubes 3D animadas (defer)
       5. anime.js            → Animaciones de texto (defer)
       6. js/main.js (module) → Entry point modular (defer automático)
-      ================================================================ -->
   <script src="https://www.youtube.com/iframe_api"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>

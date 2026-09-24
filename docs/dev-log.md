@@ -23,3 +23,7 @@ fecha | fase | archivo(s) | cambio | resultado | duracion.
   labels descriptivos + hint Click to start en P0, FAB WhatsApp siempre visible,
   modo simple en P1, blog-posts.json se elimina (data muerta).
 - [entorno] Node v24.11.1 / npm 11.6.2 / Python 3.14.5 / Windows 11 PS 5.1.
+- [seguridad] Strip de firma SSH/HOST/EMAIL/FECHA en index.html, css/style.css y
+  js/main.js. Reemplazo por copyright neutro: (c) 2026 gambito700 - Alex Martinez.
+  Verificado: 0 ocurrencias de SSH:/HOST:/FECHA: en el repo, UTF-8 valido intacto.
+  result=OK

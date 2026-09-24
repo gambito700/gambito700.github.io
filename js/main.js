@@ -1,4 +1,4 @@
-/* FIRMA DIGITAL — gambito700 | SSH: SHA256:V+ckr6XyXG4FdJ7X+s9JAKJqUFiLGa3LXkAMs+91fzU | HOST: HPVictusi7 */
+/* (c) 2026 gambito700 - Alex Martinez | gambito700.github.io */
 import { WindowManagerInstance } from './core/window-manager.js'
 import { ThemeManagerInstance } from './core/theme.js'
 import { LanguageManagerInstance } from './core/language.js'

@@ -1,10 +1,5 @@
 /* ================================================================
-   FIRMA DIGITAL — gambito700
-   HOST:    HPVictusi7
-   SSH:     SHA256:V+ckr6XyXG4FdJ7X+s9JAKJqUFiLGa3LXkAMs+91fzU
-   EMAIL:   gambitocerati@gmail.com
-   FECHA:   2026-06-15
-   ================================================================
+  (c) 2026 gambito700 - Alex Martinez | gambito700.github.io
    PORTAFOLIO ALEX MARTÍNEZ – FRONT-END 2026
    Archivo: css/style.css
 
@@ -36,7 +31,6 @@
     14. Toast          – Notificaciones emergentes
     15. Media Queries  – Adaptaciones responsive
 
-   ================================================================ */
 
 /* ---------------------------------------------------------------
    1. :root – VARIABLES CSS GLOBALES
@@ -138,13 +132,10 @@
   --tray-icon-opacity: 0.7;
 }
 
-/* ================================================================
    OVERRIDES DEL TEMA CLARO – Componentes con colores hardcodeados
-   ================================================================
    Sección que agrupa todos los overrides necesarios para que los
    componentes del simulador Windows 11 se vean correctamente con
    la paleta Solarized Light. Agregar aquí cualquier override nuevo.
-   ================================================================ */
 
 /* ── Taskbar ─────────────────────────────────────────── */
 [data-theme="light"] .win11-taskbar {
@@ -1785,13 +1776,10 @@ body > h1, body > h2, body > h3 {
   border-color: rgba(101, 123, 131, 0.3);
 }
 
-/* ================================================================
    5. WINDOWS 11 DESKTOP SYSTEM – Escritorio, iconos y ventanas
-   ================================================================
    Este bloque contiene los estilos del escritorio simulado:
    el contenedor principal, los iconos, el contenedor de ventanas
    y las ventanas con sus cabeceras, controles y animaciones.
-   ================================================================ */
 /* body.desktop-mode additional props (merged — first declaration at top of file) */
 body.desktop-mode {
   overflow: hidden;
@@ -2627,9 +2615,7 @@ body.desktop-mode {
   color: #e74c3c !important;
 }
 
-/* ================================================================
    12. MEDIA QUERIES – Diseño responsive para todos los dispositivos
-   ================================================================
    Adaptaciones del layout según el tamaño de pantalla.
    Los breakpoints se basan en los 3 puntos de quiebre principales:
 
@@ -2648,7 +2634,6 @@ body.desktop-mode {
      en max-width / min-width de cada @media.
    - Para ocultar elementos en móvil, agrega "display: none" dentro
      del breakpoint XS o SM.
-   ================================================================ */
 
 /* ── Light theme (prefers-color-scheme) ───────────────
    Stub para tema claro del sistema operativo del usuario.
@@ -3032,9 +3017,7 @@ body.desktop-mode {
 
 /* ── Light mode calendar ───────────────────────────── */
 
-/* ================================================================
    9. TOAST NOTIFICATION – Notificación emergente estilo Windows
-   ================================================================
    Pequeña notificación que aparece en la esquina inferior derecha.
    Se usa actualmente para mostrar qué canción está sonando en el
    reproductor de música.
@@ -3049,7 +3032,6 @@ body.desktop-mode {
    CÓMO MODIFICAR:
    - La duración en pantalla se controla desde JS (showToast en script.js).
    - Cambia la posición con top/right/bottom/left en .win-toast.
-   ================================================================ */
 .win-toast {
   position: fixed;
   bottom: max(2rem, 5vh);
@@ -3105,9 +3087,7 @@ body.desktop-mode {
 }
 .toast-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
 
-/* ================================================================
    10. CALCULATOR – Calculadora estilo Windows
-   ================================================================
    Calculadora funcional con operaciones básicas: suma, resta,
    multiplicación, división, porcentaje y cambio de signo.
 
@@ -3121,7 +3101,6 @@ body.desktop-mode {
 
    NOTA: La lógica está en js/script.js (initCalculator).
    Cada botón tiene un atributo data-v con el valor que representa.
-   ================================================================ */
 .calc-btn {
   border: none;
   border-radius: 6px;
@@ -3154,9 +3133,7 @@ body.desktop-mode {
 }
 .calc-btn.eq:hover { opacity: 0.85; }
 
-/* ================================================================
    11. INDICATORS – Indicadores económicos (UTM / UF / Dólar)
-   ================================================================
    Ventana que muestra valores económicos chilenos actualizados
    desde un scraper (scraperUTM/dashboard_data.json).
 
@@ -3167,7 +3144,6 @@ body.desktop-mode {
 
    NOTA: La carga de datos se hace en js/script.js (initIndicators)
    con un sistema de fallback entre dos URLs.
-   ================================================================ */
 #window-indicators .ind-row {
   display: flex;
   justify-content: space-between;
@@ -3188,9 +3164,7 @@ body.desktop-mode {
   font-size: 0.95rem;
 }
 
-/* ================================================================
    8. WEATHER WIDGET – Clima en vivo (Open-Meteo API)
-   ================================================================
    Widget del clima que se conecta a la API gratuita de Open-Meteo
    para mostrar la temperatura, humedad y viento de Villarrica, Chile.
 
@@ -3202,7 +3176,6 @@ body.desktop-mode {
 
    NOTA: Los datos se cargan desde js/script.js (initWeather).
    Si la API falla, se muestra un mensaje de error.
-   ================================================================ */
 #window-weather .weather-main {
   text-align: center;
   margin-bottom: 8px;
@@ -3254,9 +3227,7 @@ body.desktop-mode {
   to { transform: translateY(-100vh) scale(0.5); opacity: 0; }
 }
 
-/* ================================================================
    13. QR GENERATOR
-   ================================================================ */
 .qr-container { padding:16px; display:flex; flex-direction:column; gap:14px; }
 .qr-input-group { display:flex; flex-direction:column; gap:6px; }
 .qr-input-group label { font-size:0.82rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
@@ -3271,9 +3242,7 @@ body.desktop-mode {
 .qr-actions .btn-secondary { background:rgba(255,255,255,0.1); color:#fff; }
 .qr-message { font-size:0.78rem; color:var(--accent); text-align:center; display:none; }
 
-/* ================================================================
    14. COMMENTS / ANOTACIONES
-   ================================================================ */
 .comments-container { padding:16px; display:flex; flex-direction:column; gap:14px; }
 .comments-filter { display:flex; gap:8px; align-items:center; }
 .comments-filter label { font-size:0.78rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; }
