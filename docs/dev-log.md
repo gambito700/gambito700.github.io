@@ -121,3 +121,50 @@ fecha | fase | archivo(s) | cambio | resultado | duracion.
       hoy; fragile si el root scrollea).
   S5. (HECHO en 7367c68) vault/ en .gitignore.
   S6. js/features/ux.js sin newline final.
+
+--------------------------------------------------------------------------------
+
+## 2026-09-24 - P0.9 Tour en cada carga + layout startup sin solape
+
+- [decision] Retencion de tutorial: el tour de onboarding se muestra en CADA
+  carga. Se elimina el gate por localStorage g700_onboarding_done (deja de
+  leerse en ux.js/onboarding.js y de escribirse en onboarding.js stop();
+  StorageUtil ya no se importa en ux.js, onboarding.js ni main.js).
+  'Saltar ayuda' y Escape solo afectan la sesion actual: al recargar, el
+  tour vuelve a ofrecerse. Persistencia eliminada por decision explicita
+  del usuario (retencion de tutorial intencionada). result=OK
+- [feat] main.js unifica el camino de la musica: tras 'app-ready' (splash)
+  SIEMPRE espera 'onboarding-resolved' (once) y abre window-music a los
+  400ms. Se elimina la rama de visitante recurrente (600ms) y el import de
+  StorageUtil. result=OK
+- [feat] window-manager.js: nuevo metodo _layoutStartupWindows() ejecutado
+  en _freshSession DESPUES de la limpieza left/top de _restoreOS. Posiciona
+  window-cv en (40,40) y window-music a la derecha (innerWidth-340-50, 15)
+  cuando cabe (RIGHT_X >= CV_RIGHT + 24 = 40+600+24); en viewports angostos
+  queda debajo del CV (top = 40+480+12, clamp contra innerHeight-50-180-10
+  con minimo 15). 0px de solape verificado en 1024x768 y 1440x900. result=OK
+- [css] Exencion puntual LG: dentro de la media query
+  (min-width:1024px) and (max-width:1199px), #window-cv (600x480) y
+  #window-music (340x180) conservan tamano de diseno (!important). Decision
+  explicita del usuario: se autorizo tocar la regla del clamp solo para las
+  dos ventanas de arranque. result=OK
+- [archivos] 5 archivos tocados en 8b2a9c9: css/style.css (+10),
+  js/core/window-manager.js (+33), js/features/onboarding.js (11),
+  js/features/ux.js (9), js/main.js (21). Total +57/-27. result=OK
+- [scm] Commit 8b2a9c9 feat(p0): tour en cada carga + layout startup sin
+  solape (task 8ae264f5). result=OK
+- [verificacion] Test 7/7 PASS + revision APROBADO. result=OK
+- [deuda] Sugerencias de la revision (R1-R4; registradas, NO implementadas;
+  detalle en docs/adr-010-ux-tour-retencion.md):
+  R1. Magic numbers en _layoutStartupWindows (40/600/480/340/180/50/24/12/
+      15/10) sin nombre ni comentario; el tamano de diseno vive en 3 lugares
+      (index.html inline, CSS overrides, JS math) - riesgo de drift.
+  R2. main.js: el unico camino depende de que 'onboarding-resolved' ocurra;
+      sugerido fallback timeout (5-8s) tras app-ready para abrir la musica.
+  R3. Rango MD 768-1023px: la media query clamp(80vw/65vh) !important sigue
+      forzando el tamano de las ventanas; si se quiere cubrir, extender
+      exenciones por ID o leer el tamano real del DOM. Mejora vs antes pero
+      no perfecto.
+  R4. Repeticion del tour en cada refresco: friccion potencial para
+      visitantes recurrentes (decision explicita del usuario); foco queda en
+      body al cerrar el tour (herencia P0.8, ver S3 de ADR-009).

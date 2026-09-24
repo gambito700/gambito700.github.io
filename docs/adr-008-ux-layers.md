@@ -1,7 +1,9 @@
 # ADR-008: Composicion de capas UX del portfolio
 
 Fecha: 2026-09-24
-Estado: Aceptado
+Estado: Aceptado - SUPERSEDED parcialmente en P0.9 (retencion de tutorial en
+cada carga; ver ADR-010). Este documento queda como contexto historico de la
+decision original de persistencia.
 Fase: P0.8 (task 7f503a66)
 Commits: b662787, 7367c68
 
