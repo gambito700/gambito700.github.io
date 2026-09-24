@@ -27,3 +27,13 @@ fecha | fase | archivo(s) | cambio | resultado | duracion.
   js/main.js. Reemplazo por copyright neutro: (c) 2026 gambito700 - Alex Martinez.
   Verificado: 0 ocurrencias de SSH:/HOST:/FECHA: en el repo, UTF-8 valido intacto.
   result=OK
+- [incidencia] Tras el strip, el transform de lineas elimino por error los separadores
+  de cierre de comentarios de cabecera (index.html quedaba con el comentario HTML
+  abierto; style.css con la seccion de variables dentro del comentario). Detectado
+  por balance de comentarios (48 vs 47 en markup). Corregido reconstruyendo ambas
+  cabeceras desde git 534474f con cirugia de lineas: reemplazo SOLO de FIRMA/HOST/
+  SSH/EMAIL/FECHA por copyright. Verificado byte-a-byte idem original salvo firma.
+  result=OK (commits 2d56b9c + e6b225e)
+- [audit] Nuevo .editorconfig (UTF-8, LF, final newline) y scripts/audit-encoding.py
+  (verifica UTF-8 estricto + sin BOM + sin mezcla de line endings). Resultado:
+  36 archivos, 0 fallos. result=OK
