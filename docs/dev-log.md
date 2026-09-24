@@ -41,3 +41,9 @@ fecha | fase | archivo(s) | cambio | resultado | duracion.
   ASCII, estructura de archivos, tabla de configuracion, convenciones (UTF-8/LF/
   commits), deploy GH Pages (sin build, .nojekyll), roadmap P0-P4 activo y P5+
   congelado, estado P0 honesto (pendiente UX + verificacion). result=OK
+- [ux] P0.6 implementado por subagente frontend: js/features/ux.js (wizard
+  bienvenida por sesion via sessionStorage, FAB WhatsApp con hover email,
+  boton help en taskbar con overlay Como navegar, hint Click to start via
+  toast). z-index centralizado en config (overlays=2500 derivado de MODAL,
+  FAB=EMULATOR.Z_INDEX.FAB). 434 inserciones, 0 deletes; balance de
+  comentarios index.html 76/76; sin BOM; sin emojis nuevos. result=OK

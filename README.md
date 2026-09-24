@@ -153,11 +153,12 @@ eso la CSP se declara via meta tag en index.html.
 Progreso P0 con commits atomicos y bitacora en docs/dev-log.md:
 seguridad (firma SSH removida de fuente publica), encoding (auditoria:
 36 archivos, 0 fallos), config (blog muerto eliminado, package.json),
-README de produccion. Pendiente dentro de P0: UX (wizard por sesion,
-FAB WhatsApp, boton help, labels de iconos, hint Click to start) y
-verificacion en vivo con live-server :8080 (14 ventanas). El cierre
-de P0 se marca en dev-log cuando la verificacion confirme consola sin
-errores y las 14 ventanas operativas.
+README de produccion. Implementado en P0: UX para no tecnicos (wizard de bienvenida por
+sesion, boton flotante WhatsApp con hover de correo, boton de ayuda en
+la barra de tareas con overlay Como navegar, hint Click to start).
+Pendiente: verificacion en vivo con live-server :8080 (14 ventanas,
+consola sin errores). El cierre de P0 se marca en dev-log cuando la
+verificacion confirme consola sin errores y las 14 ventanas operativas.
 
 ## Autor
 

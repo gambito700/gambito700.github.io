@@ -15,6 +15,7 @@ import { MovingLettersModule } from './features/moving-letters.js'
 import { ToastModule } from './features/toast.js'
 import { QRGeneratorInstance } from './features/qr-generator.js'
 import { CommentSystemInstance } from './features/comments.js'
+import { UxModule } from './features/ux.js'
 
 function safeInit(fn, name) {
   try {
@@ -50,6 +51,9 @@ async function initApp() {
 
   QRGeneratorInstance.init().catch(e => console.warn('[modular] QRGenerator failed:', e))
   CommentSystemInstance.init()
+
+  // UX P0: wizard de bienvenida, ayuda y FAB (antes del autoplay de música)
+  safeInit(() => UxModule.init(), 'UX')
 
   setTimeout(() => {
     WindowManagerInstance.openWindow('window-music')

@@ -3286,4 +3286,247 @@ body.desktop-mode {
 .comment-form button:hover { opacity:0.85; }
 
 
+/* ================================================================
+   UX P0 - wizard, help, FAB, hint
+   ================================================================
+   Adiciones de UX para usuarios no técnicos:
+   - .ux-overlay        Capa fija a pantalla completa (z-index via JS)
+   - #welcome-wizard    Wizard de bienvenida (una vez por sesión)
+   - #help-overlay      Overlay de ayuda (botón ? de la taskbar)
+   - #fab-wrap         FAB de contacto rápido (WhatsApp + correo)
+
+   El z-index de overlays y FAB lo fija js/features/ux.js desde
+   EMULATOR.Z_INDEX (overlays = MODAL+500 = 2500; FAB = 2600).
+   ================================================================ */
+
+/* Overlay genérico (z-index de respaldo; ux.js lo sobreescribe) */
+.ux-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2500;
+}
+.ux-overlay.d-none { display: none !important; }
+
+/* Tarjeta acrylic estilo Windows 11 */
+.ux-card {
+  position: relative;
+  width: min(440px, 100%);
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  backdrop-filter: var(--glass);
+  -webkit-backdrop-filter: var(--glass);
+  color: var(--text);
+  padding: 20px 22px;
+}
+
+/* Encabezado de la tarjeta */
+.ux-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.ux-card-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--heading);
+  line-height: 1.3;
+}
+.ux-close-btn {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.ux-close-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--heading); }
+.ux-close-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Etiqueta de sección (p.ej. "Cómo navegar") */
+.ux-section-label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+/* Lista de viñetas */
+.ux-list {
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.ux-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: var(--text);
+}
+.ux-list li::before {
+  content: '';
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  margin-top: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+/* Items del overlay de ayuda: nombre + descripción */
+.ux-help-list li { flex-wrap: wrap; }
+.ux-help-name {
+  font-weight: 600;
+  color: var(--heading);
+}
+.ux-help-name::after {
+  content: ' \2014 ';
+  font-weight: 400;
+  color: var(--muted);
+}
+.ux-help-desc { color: var(--muted); }
+
+/* Botón principal (Empezar / Entendido) */
+.ux-primary-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--accent2, #0078d4);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 10px 18px;
+  cursor: pointer;
+  transition: filter var(--t-fast), transform 0.1s ease;
+}
+.ux-primary-btn:hover { filter: brightness(1.1); }
+.ux-primary-btn:active { transform: scale(0.98); }
+.ux-primary-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ================================================================
+   FAB DE CONTACTO RÁPIDO (WhatsApp + correo)
+   ================================================================
+   El contenedor usa row-reverse: el correo se expande hacia la
+   izquierda al hacer hover/focus sobre #fab-wrap. El z-index lo
+   fija ux.js desde EMULATOR.Z_INDEX.FAB (no hardcodear aquí). */
+#fab-wrap {
+  position: fixed;
+  bottom: calc(var(--taskbar-height, 50px) + 16px);
+  right: 16px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 10px;
+}
+#fab-whatsapp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+#fab-whatsapp:hover { transform: scale(1.06); box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); }
+#fab-whatsapp:active { transform: scale(0.96); }
+#fab-whatsapp svg { width: 26px; height: 26px; }
+#fab-whatsapp:focus-visible,
+#fab-email:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Chip de correo: colapsado por defecto, se expande en hover/focus */
+#fab-email {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 0;
+  height: 48px;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--surface-opaque);
+  border: 1px solid var(--border);
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+  transition: max-width 0.2s ease, opacity 0.2s ease, padding 0.2s ease, visibility 0s linear 0.2s;
+}
+#fab-wrap:hover #fab-email,
+#fab-wrap:focus-within #fab-email {
+  max-width: min(300px, calc(100vw - 100px));
+  padding: 0 18px;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+.fab-email-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--accent);
+}
+.fab-email-icon svg { width: 18px; height: 18px; }
+.fab-email-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  min-width: 0;
+}
+.fab-email-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--heading);
+}
+.fab-email-addr {
+  font-size: 0.68rem;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Overrides tema claro (mismo patrón que la sección de overrides) */
+[data-theme="light"] .ux-card { background: rgba(253, 246, 227, 0.96); }
+[data-theme="light"] .ux-close-btn:hover { background: rgba(147, 161, 161, 0.15); color: var(--heading); }
+
+
 

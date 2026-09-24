@@ -161,6 +161,8 @@
           <button class="tb-tray-btn" id="theme-toggle" title="Tema" aria-label="Alternar tema claro/oscuro">
             <img id="theme-toggle-icon" src="images/icons/theme-dark.png" style="width:20px;height:20px;object-fit:contain;" alt="Tema">
           </button>
+          <!-- UX P0: ayuda para usuarios no técnicos -->
+          <button class="tb-tray-btn" id="help-btn" title="Ayuda" aria-label="Ayuda"><i class="fas fa-question"></i></button>
         </div>
         <div class="tb-clock" id="taskbar-clock">
           <span id="clock-time">--:--</span>
@@ -1200,6 +1202,91 @@
         <div class="toast-msg" data-es="Hay música lista para reproducir en tu reproductor." data-en="Music is ready to play in your player.">Hay música lista para reproducir en tu reproductor.</div>
       </div>
       <button class="toast-close" id="toast-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <!-- ================================================================
+     UX P0 – FAB DE CONTACTO RÁPIDO (WhatsApp / correo)
+     ================================================================
+     Botón flotante abajo a la derecha. El correo se expande al hacer
+     hover sobre el contenedor (animación 0.2s). El z-index lo fija
+     js/features/ux.js desde EMULATOR.Z_INDEX.FAB (2600). -->
+  <div id="fab-wrap">
+    <a id="fab-whatsapp" href="https://wa.me/56945341572" target="_blank" rel="noopener" aria-label="Contacto por WhatsApp">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true" focusable="false">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path>
+      </svg>
+    </a>
+    <a id="fab-email" href="mailto:alexmartinezdiaz91@gmail.com" aria-label="Enviar correo a Alex Martínez">
+      <span class="fab-email-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="m22 7-10 6L2 7"></path>
+        </svg>
+      </span>
+      <span class="fab-email-text">
+        <span class="fab-email-label" data-es="Escríbeme" data-en="Write me">Escríbeme</span>
+        <span class="fab-email-addr">alexmartinezdiaz91@gmail.com</span>
+      </span>
+    </a>
+  </div>
+
+  <!-- ================================================================
+     UX P0 – WIZARD DE BIENVENIDA (una vez por sesión de pestaña)
+     ================================================================ -->
+  <div id="welcome-wizard" class="ux-overlay d-none" role="dialog" aria-modal="false" aria-labelledby="wizard-title">
+    <div class="ux-card">
+      <div class="ux-card-header">
+        <h2 class="ux-card-title" id="wizard-title" data-en="Welcome to my portfolio" data-es="Bienvenido a mi portafolio">Bienvenido a mi portafolio</h2>
+        <button type="button" class="ux-close-btn" id="wizard-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+      </div>
+      <span class="ux-section-label" data-en="How to navigate" data-es="Cómo navegar">Cómo navegar</span>
+      <ul class="ux-list">
+        <li data-en="Click the desktop icons to open apps." data-es="Haz clic en los iconos del escritorio para abrir aplicaciones.">Haz clic en los iconos del escritorio para abrir aplicaciones.</li>
+        <li data-en="Drag windows by their top bar." data-es="Arrastra las ventanas por su barra superior.">Arrastra las ventanas por su barra superior.</li>
+        <li data-en="Use the Start button (taskbar corner, Windows icon)." data-es="Usa el botón Inicio (esquina de la barra de tareas, icono Windows).">Usa el botón Inicio (esquina de la barra de tareas, icono Windows).</li>
+        <li data-en="Switch light/dark theme and language with the buttons on the right of the taskbar." data-es="Tema claro/oscuro e idioma se cambian con los botones a la derecha de la barra de tareas.">Tema claro/oscuro e idioma se cambian con los botones a la derecha de la barra de tareas.</li>
+      </ul>
+      <button type="button" class="ux-primary-btn" id="wizard-start-btn" data-en="Start" data-es="Empezar">Empezar</button>
+    </div>
+  </div>
+
+  <!-- ================================================================
+     UX P0 – OVERLAY DE AYUDA (botón ? de la barra de tareas)
+     ================================================================ -->
+  <div id="help-overlay" class="ux-overlay d-none" role="dialog" aria-modal="false" aria-labelledby="help-title">
+    <div class="ux-card">
+      <div class="ux-card-header">
+        <h2 class="ux-card-title" id="help-title" data-en="How to navigate this site" data-es="Cómo navegar este sitio">Cómo navegar este sitio</h2>
+        <button type="button" class="ux-close-btn" id="help-close-btn" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+      </div>
+      <ul class="ux-list ux-help-list">
+        <li>
+          <strong class="ux-help-name" data-en="Open apps" data-es="Abrir aplicaciones">Abrir aplicaciones</strong>
+          <span class="ux-help-desc" data-en="Single-click the desktop icons." data-es="Haz clic una vez sobre los iconos del escritorio.">Haz clic una vez sobre los iconos del escritorio.</span>
+        </li>
+        <li>
+          <strong class="ux-help-name" data-en="Move windows" data-es="Mover ventanas">Mover ventanas</strong>
+          <span class="ux-help-desc" data-en="Drag the top bar of each window." data-es="Arrastra la barra superior de cada ventana.">Arrastra la barra superior de cada ventana.</span>
+        </li>
+        <li>
+          <strong class="ux-help-name" data-en="Close windows" data-es="Cerrar ventanas">Cerrar ventanas</strong>
+          <span class="ux-help-desc" data-en="X button in the corner." data-es="Botón X en la esquina.">Botón X en la esquina.</span>
+        </li>
+        <li>
+          <strong class="ux-help-name" data-en="Start menu" data-es="Menú Inicio">Menú Inicio</strong>
+          <span class="ux-help-desc" data-en="Button with the Windows logo." data-es="Botón con el logo de Windows.">Botón con el logo de Windows.</span>
+        </li>
+        <li>
+          <strong class="ux-help-name" data-en="Change theme and language" data-es="Cambiar tema e idioma">Cambiar tema e idioma</strong>
+          <span class="ux-help-desc" data-en="Buttons on the right of the taskbar." data-es="Botones a la derecha de la barra de tareas.">Botones a la derecha de la barra de tareas.</span>
+        </li>
+        <li>
+          <strong class="ux-help-name" data-en="Quick contact" data-es="Contacto rápido">Contacto rápido</strong>
+          <span class="ux-help-desc" data-en="Floating button bottom right (WhatsApp / email)." data-es="Botón flotante abajo a la derecha (WhatsApp / correo).">Botón flotante abajo a la derecha (WhatsApp / correo).</span>
+        </li>
+      </ul>
+      <button type="button" class="ux-primary-btn" id="help-ok-btn" data-en="Got it" data-es="Entendido">Entendido</button>
     </div>
   </div>
 
