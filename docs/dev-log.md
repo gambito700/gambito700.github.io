@@ -47,3 +47,18 @@ fecha | fase | archivo(s) | cambio | resultado | duracion.
   toast). z-index centralizado en config (overlays=2500 derivado de MODAL,
   FAB=EMULATOR.Z_INDEX.FAB). 434 inserciones, 0 deletes; balance de
   comentarios index.html 76/76; sin BOM; sin emojis nuevos. result=OK
+- [verificacion] live-server :8080 levantado en background (PID del cmd abierto).
+  Verificado con Playwright headless (1440x900): 14 ventanas unicas en DOM
+  (cv, about, experience, skills, portfolio, contact, calendar, logs, music,
+  calculator, indicators, weather, qr, comments), 18 iconos de escritorio,
+  wizard visible en primera sesion y cierra con Empezar, hint toast dispara,
+  FAB presente, boton help abre/cierra overlay. 0 errores JS propios; unicas
+  fallas de red = pings de terceros de YouTube (doubleclick DNS bloqueado,
+  stats qoe abortado) + aviso CSP 'frame-ancestors' ignorado en meta (limite
+  documentado de GH Pages sin headers HTTP). result=OK
+- [incidencia] live-server fallo la primera vez por cache npx corrupta
+  (snapdragon/define-property MODULE_NOT_FOUND). Resuelto limpiando
+  _npx/a4d64eb1fb549592; reinstalacion limpia OK. result=OK
+- [cierre] CRITERIOS DE SALIDA P0: audit 36/0 OK, firma limpia, README
+  produccion, 14/14 ventanas, wizard/FAB/help/labels/hint operativos, sin
+  errores de codigo. P0 COMPLETADO.

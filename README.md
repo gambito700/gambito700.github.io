@@ -126,7 +126,7 @@ eso la CSP se declara via meta tag en index.html.
 
 ### Activo (P0 - P4)
 
-- P0 - Rigor de produccion: strip de firma SSH de la fuente
+- P0 COMPLETADO - Rigor de produccion: strip de firma SSH de la fuente
   publica, auditoria de encoding (36 archivos, 0 fallos), .editorconfig,
   README de produccion, eliminacion de data muerta (blog), package.json
   minimo, UX basica para no tecnicos (wizard, FAB, help, labels, hint).
@@ -153,12 +153,10 @@ eso la CSP se declara via meta tag en index.html.
 Progreso P0 con commits atomicos y bitacora en docs/dev-log.md:
 seguridad (firma SSH removida de fuente publica), encoding (auditoria:
 36 archivos, 0 fallos), config (blog muerto eliminado, package.json),
-README de produccion. Implementado en P0: UX para no tecnicos (wizard de bienvenida por
-sesion, boton flotante WhatsApp con hover de correo, boton de ayuda en
-la barra de tareas con overlay Como navegar, hint Click to start).
-Pendiente: verificacion en vivo con live-server :8080 (14 ventanas,
-consola sin errores). El cierre de P0 se marca en dev-log cuando la
-verificacion confirme consola sin errores y las 14 ventanas operativas.
+README de produccion. P0 cerrado el 2026-09-24: verificacion en vivo con Playwright sobre
+live-server :8080 confirmo 14 ventanas operativas, 18 iconos, wizard/FAB/
+help/hint funcionales y 0 errores JS propios (solo pings de terceros de
+YouTube bloqueados por DNS). Detalle en docs/dev-log.md.
 
 ## Autor
 
