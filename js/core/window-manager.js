@@ -342,9 +342,42 @@ class WindowManager {
     })
     this.nextWallpaper()
     setTimeout(() => {
+      this._layoutStartupWindows()
       this.openWindow('window-cv')
       this._systemLog('[startup] Fresh session: CV window opened')
     }, 500)
+  }
+
+  // P0.9: disposicion inicial del CV y la musica sin solape.
+  // Se ejecuta DESPUES de la limpieza de left/top de _restoreOS,
+  // asi los valores quedan como inline en el CSSOM.
+  _layoutStartupWindows() {
+    const cv = document.getElementById('window-cv')
+    if (cv) {
+      cv.style.left = '40px'
+      cv.style.top = '40px'
+    }
+
+    const music = document.getElementById('window-music')
+    if (!music) {
+      this._systemLog('[startup] Layout: window-music not found')
+      return
+    }
+
+    const RIGHT_X = window.innerWidth - 340 - 50
+    const CV_RIGHT = 40 + 600
+    if (RIGHT_X >= CV_RIGHT + 24) {
+      music.style.left = RIGHT_X + 'px'
+      music.style.top = '15px'
+      this._systemLog('[startup] Layout: music at ' + RIGHT_X + ',15')
+    } else {
+      let topY = 40 + 480 + 12
+      const maxY = window.innerHeight - 50 - 180 - 10
+      if (topY > maxY) topY = Math.max(15, maxY)
+      music.style.left = '40px'
+      music.style.top = topY + 'px'
+      this._systemLog('[startup] Layout: music at 40,' + topY + ' (below CV)')
+    }
   }
 
   _setWallpaperFallback(d) {

@@ -2989,6 +2989,16 @@ body.desktop-mode {
     transform: none !important;
   }
 
+  /* P0.9: ventanas de arranque conservan tamano de diseno */
+  #window-cv {
+    width: 600px !important;
+    height: 480px !important;
+  }
+  #window-music {
+    width: 340px !important;
+    height: 180px !important;
+  }
+
   .desktop-icons {
     padding: 0.85rem;
     gap: 0.4rem;

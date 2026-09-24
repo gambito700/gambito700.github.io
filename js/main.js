@@ -2,7 +2,6 @@
 import { WindowManagerInstance } from './core/window-manager.js'
 import { ThemeManagerInstance } from './core/theme.js'
 import { LanguageManagerInstance } from './core/language.js'
-import StorageUtil from './utils/storage.js'
 import { WeatherModule } from './features/weather.js'
 import { ClockModule } from './features/clock.js'
 import { CalendarModule } from './features/calendar.js'
@@ -56,22 +55,16 @@ async function initApp() {
   // UX P0: ayuda y FAB (antes del autoplay de música)
   safeInit(() => UxModule.init(), 'UX')
 
-  // P0.8: la apertura de la musica queda detras del splash. Se decide
-  // al recibir 'app-ready' (disparado por el boton Entrar del splash):
-  // - Visitante recurrente (g700_onboarding_done): musica a los 600ms.
-  // - Visitante nuevo: espera 'onboarding-resolved' y musica a los 400ms.
+  // P0.9: el tour corre en cada carga, asi que la apertura de la
+  // musica queda siempre detras del onboarding: se espera
+  // 'onboarding-resolved' (el tour termina o se salta) y a los 400ms
+  // se abre window-music.
   window.addEventListener('app-ready', () => {
-    if (StorageUtil.getItem('g700_onboarding_done')) {
+    window.addEventListener('onboarding-resolved', () => {
       setTimeout(() => {
         WindowManagerInstance.openWindow('window-music')
-      }, 600)
-    } else {
-      window.addEventListener('onboarding-resolved', () => {
-        setTimeout(() => {
-          WindowManagerInstance.openWindow('window-music')
-        }, 400)
-      }, { once: true })
-    }
+      }, 400)
+    }, { once: true })
   }, { once: true })
 
   WindowManagerInstance._systemLog('[modular] All modules initialized')

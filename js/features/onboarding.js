@@ -1,8 +1,7 @@
 /* (c) 2026 gambito700 - Alex Martinez | gambito700.github.io */
-import StorageUtil from '../utils/storage.js'
 
-// Clave persistente: una vez realizada (o saltada) el tour no se repite.
-const ONBOARDING_KEY = 'g700_onboarding_done'
+// P0.9: el tour corre en cada carga, sin persistencia ni gate por
+// localStorage.
 
 // Texto bilingue del tour (idioma activo = window.currentLang).
 const COPY = {
@@ -39,7 +38,6 @@ class OnboardingManager {
 
   start() {
     if (this._active) return
-    if (StorageUtil.getItem(ONBOARDING_KEY)) return
 
     // Paso 1: icono del Curriculumn (marcado en index.html con
     // data-onboard="step1"); fallback por onclick por robustez.
@@ -182,8 +180,8 @@ class OnboardingManager {
     if (primaryBtn) primaryBtn.focus()
   }
 
-  // Finaliza el tour: limpia DOM y listeners, marca la clave como
-  // hecha (persistente) y avisa a main.js (abre la musica).
+  // Finaliza el tour: limpia DOM y listeners y avisa a main.js
+  // (abre la musica). P0.9: sin persistencia.
   stop(finished) {
     this._active = false
     this._step = 0
@@ -207,7 +205,6 @@ class OnboardingManager {
     this._tooltip = null
     this._targets = []
 
-    StorageUtil.setItem(ONBOARDING_KEY, true, null)
     window.dispatchEvent(new CustomEvent('onboarding-resolved', { detail: { finished: !!finished } }))
   }
 }

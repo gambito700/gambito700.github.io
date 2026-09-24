@@ -1,6 +1,5 @@
 /* (c) 2026 gambito700 - Alex Martinez | gambito700.github.io */
 import { EMULATOR } from '../config.js'
-import StorageUtil from '../utils/storage.js'
 import { OnboardingModule } from './onboarding.js'
 
 // Overlays: sobre MODAL (2000), bajo FAB (2600) y NOTIFICATION (3000).
@@ -54,8 +53,8 @@ export class UxModule {
 
   // P0.8: reloj del splash + entrada al escritorio.
   // Al pulsar Entrar se dispara 'app-ready' (lo escucha main.js para
-  // abrir la musica) y, si el visitante no hizo el onboarding (P0.8),
-  // se lanza el tour de 2 pasos.
+  // abrir la musica) y se lanza el tour de 2 pasos (P0.9: siempre,
+  // en cada carga, sin persistencia).
   static _initSplash() {
     const splash = document.getElementById('splash-screen')
     const enterBtn = document.getElementById('splash-enter')
@@ -83,9 +82,7 @@ export class UxModule {
         // Devuelve el foco a la barra de tareas (mismo patron del wizard P0)
         const sb = document.getElementById('start-btn')
         if (sb && (!document.activeElement || document.activeElement === document.body)) sb.focus()
-        if (!StorageUtil.getItem('g700_onboarding_done')) {
-          OnboardingModule.start()
-        }
+        OnboardingModule.start()
       }, 500)
     })
   }
