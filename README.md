@@ -56,10 +56,10 @@ js/config.js (sin hardcodeo en features).
 |   |-- main.js              bootstrap de modulos (safeInit)
 |   |-- config.js            parametros globales (ver seccion Config)
 |   |-- core/                window-manager, theme, language
-|   |-- features/            13 modulos: calculator, calendar, clock,
+|   |-- features/            15 modulos: calculator, calendar, clock,
 |   |                        comments, contact, indicators, moving-letters,
-|   |                        music, qr-generator, skill-bars, text-fx,
-|   |                        toast, weather
+|   |                        music, onboarding, qr-generator, skill-bars,
+|   |                        text-fx, toast, ux, weather
 |   |-- utils/               storage (localStorage) y dom helpers
 |-- assets/
 |   |-- data/                projects.json, translations.json
@@ -126,10 +126,12 @@ eso la CSP se declara via meta tag en index.html.
 
 ### Activo (P0 - P4)
 
-- P0 COMPLETADO - Rigor de produccion: strip de firma SSH de la fuente
-  publica, auditoria de encoding (36 archivos, 0 fallos), .editorconfig,
-  README de produccion, eliminacion de data muerta (blog), package.json
-  minimo, UX basica para no tecnicos (wizard, FAB, help, labels, hint).
+- P0 COMPLETADO + extendido con UX revamp - Rigor de produccion: strip de
+  firma SSH de la fuente publica, auditoria de encoding (57 archivos, 0
+  fallos), .editorconfig, README de produccion, eliminacion de data muerta
+  (blog), package.json minimo, UX para no tecnicos (splash screen en cada
+  carga, onboarding guiado en 1ra visita, FAB, help, labels; wizard y hint
+  reemplazados por el splash).
 - P1 - Sistema de logs: js/core/logger.js (ring buffer, niveles, captura
   de errores, export JSON/TXT), modo simple UX, state manager + event bus.
 - P2 - Migracion a addEventListener (elimina los ~79 onclick inline y
@@ -152,11 +154,12 @@ eso la CSP se declara via meta tag en index.html.
 
 Progreso P0 con commits atomicos y bitacora en docs/dev-log.md:
 seguridad (firma SSH removida de fuente publica), encoding (auditoria:
-36 archivos, 0 fallos), config (blog muerto eliminado, package.json),
-README de produccion. P0 cerrado el 2026-09-24: verificacion en vivo con Playwright sobre
-live-server :8080 confirmo 14 ventanas operativas, 18 iconos, wizard/FAB/
-help/hint funcionales y 0 errores JS propios (solo pings de terceros de
-YouTube bloqueados por DNS). Detalle en docs/dev-log.md.
+57 archivos, 0 fallos), config (blog muerto eliminado, package.json),
+README de produccion. P0 cerrado el 2026-09-24 y extendido el mismo dia con
+el UX revamp P0.8 (splash screen + onboarding guiado): verificacion en vivo
+con Playwright sobre live-server :8080 confirmo 14 ventanas operativas, 18
+iconos, splash/onboarding/FAB/help operativos y 0 errores JS propios (solo
+pings de terceros de YouTube bloqueados por DNS). Detalle en docs/dev-log.md.
 
 ## Autor
 
