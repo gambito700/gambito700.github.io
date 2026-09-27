@@ -181,8 +181,13 @@ class WindowManager {
         const btn = document.createElement('button')
         btn.className = 'tb-btn tb-app active-win'
         btn.setAttribute('data-win', id)
-        const label = id.replace('window-', '')
-        btn.title = label.charAt(0).toUpperCase() + label.slice(1)
+        // data-title en la ventana da un nombre legible en la barra de
+        // tareas. Sin el, se cae al id sin el prefijo y 'window-cvbuilder'
+        // se lee como 'Cvbuilder'.
+        const winEl = document.getElementById(id)
+        const custom = winEl ? winEl.getAttribute('data-title') : null
+        const fb = id.replace('window-', '')
+        btn.title = custom || (fb.charAt(0).toUpperCase() + fb.slice(1))
         btn.setAttribute('aria-label', btn.title)
         btn.onclick = () => {
           const win = document.getElementById(id)

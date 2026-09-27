@@ -16,6 +16,7 @@ import { ToastModule } from './features/toast.js'
 import { QRGeneratorInstance } from './features/qr-generator.js'
 import { CommentSystemInstance } from './features/comments.js'
 import { UxModule } from './features/ux.js'
+import { CVBuilderEmbedInstance } from './features/cvbuilder-embed.js'
 
 function safeInit(fn, name) {
   try {
@@ -51,6 +52,7 @@ async function initApp() {
 
   QRGeneratorInstance.init().catch(e => console.warn('[modular] QRGenerator failed:', e))
   CommentSystemInstance.init()
+  safeInit(() => CVBuilderEmbedInstance.init(), 'CVBuilderEmbed')
 
   // UX P0: ayuda y FAB (antes del autoplay de música)
   safeInit(() => UxModule.init(), 'UX')

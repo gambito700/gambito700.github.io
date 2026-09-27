@@ -38,7 +38,7 @@
   <meta content="Portafolio profesional de Alex Martínez – Desarrollador Web, Marketing Digital, Villarrica Chile"
     name="description" />
   <!-- CSP (GitHub Pages no deja poner headers HTTP, usamos meta) -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://*.picsum.photos https://fastly.picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co https://formspree.io https://gambito700.github.io https://www.youtube.com; frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; upgrade-insecure-requests;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com; img-src 'self' https://picsum.photos https://*.picsum.photos https://fastly.picsum.photos https://i.ytimg.com data:; connect-src 'self' https://api.open-meteo.com https://ipapi.co https://formspree.io https://gambito700.github.io https://www.youtube.com; frame-src 'self' https://www.youtube.com;frame-src https://www.youtube.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'self'; upgrade-insecure-requests;">
   <meta name="referrer" content="no-referrer-when-downgrade">
   <!-- Open Graph / Twitter Cards -->
   <meta property="og:title" content="Alex Martínez – Fullstack &amp; Diseño Original 2026">
@@ -126,6 +126,7 @@
       <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-logs')}" onclick="openWindow('window-logs')"><img src="images/icons/logviewer.png"><span>Logs</span></div>
       <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-calculator')}" onclick="openWindow('window-calculator')"><i class="fas fa-calculator" style="font-size:24px;color:var(--accent,#0078d4);"></i><span>Calc.</span></div>
       <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('qr-generator')}" onclick="openWindow('qr-generator')"><i class="fas fa-qrcode" style="font-size:24px;color:#00d4ff;"></i><span>QR</span></div>
+      <div class="sm-grid-item" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cvbuilder')}" onclick="openWindow('window-cvbuilder')"><i class="fas fa-file-alt" style="font-size:24px;color:#60cdff;"></i><span>CV Builder</span></div>
     </div>
   </div>
   <div class="sm-footer">
@@ -332,6 +333,11 @@
         <span data-en="QR Generator" data-es="Generador QR">Generador QR</span>
       </div>
 
+
+      <div class="desktop-icon" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){openWindow('window-cvbuilder')}" onclick="openWindow('window-cvbuilder')">
+        <i class="fas fa-file-alt win-icon-fa" style="font-size:24px;color:#60cdff;"></i>
+        <span>CV Builder</span>
+      </div>
     </div><!-- /.desktop-icons -->
     <div id="moving-letters"></div>
 
@@ -886,8 +892,36 @@
                   </div>
                 </a>
               </div>
-            </div>
+                          <div class="col-md-6">
+                <a href="https://gambito700.github.io/cv-builder-public/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+                  <div class="proj-card">
+                    <div class="proj-card-icon"><i class="fas fa-file-alt"></i></div>
+                    <h5 class="proj-card-title">CV Builder</h5>
+                    <p class="proj-card-desc">Generador de CV en LaTeX con asistente, tres plantillas y exportacion a PDF.</p>
+                    <div class="proj-card-tags"><span class="tech-tag">JavaScript</span><span class="tech-tag">LaTeX</span><span class="tech-tag">GitHub Pages</span></div>
+                  </div>
+                </a>
+              </div>
+</div>
           </section>
+        </div>
+      </div>
+
+      <div class="win11-window d-none" id="window-cvbuilder" data-title="CV Builder" role="dialog" aria-labelledby="window-cvbuilder-title" aria-modal="false" style="width:900px;height:640px">
+        <div class="window-header">
+          <div class="window-title" id="window-cvbuilder-title"><i class="fas fa-file-alt win-img" style="color:#60cdff;"></i> CV Builder</div>
+          <div class="window-controls" role="toolbar" aria-label="Controles de ventana">
+            <button class="btn-min" aria-label="Minimizar CV Builder" onclick="minimizeWindow('window-cvbuilder')"><i class="fas fa-minus"></i></button>
+            <button class="btn-max" aria-label="Maximizar CV Builder" onclick="maximizeWindow('window-cvbuilder')"><i class="far fa-square"></i></button>
+            <button class="btn-close" aria-label="Cerrar CV Builder" onclick="closeWindow('window-cvbuilder')"><i class="fas fa-times"></i></button>
+          </div>
+        </div>
+        <div class="window-content window-content-embed">
+          <div class="embed-bar">
+            <span>Generador de CV en LaTeX</span>
+            <a href="cv-builder-public/" target="_blank" rel="noopener">Abrir en su propia pestaña</a>
+          </div>
+          <iframe id="cvbuilder-frame" class="embed-frame" title="CV Builder" referrerpolicy="no-referrer"></iframe>
         </div>
       </div>
 

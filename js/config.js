@@ -78,4 +78,13 @@ export const WINDOWS = {
   ABOUT: { id: 'about', title: 'Sobre Mi', icon: 'ℹ️', width: 500, height: 500 }
 };
 
-export default { AUTHOR, THEME, LANGUAGES, EMULATOR, APIS, STORAGE_KEYS, CACHE, FEATURES, SOCIAL_LINKS, WINDOWS };
+export const EMBEDS = {
+  CV_BUILDER: {
+    windowId: 'window-cvbuilder',
+    frameId: 'cvbuilder-frame',
+    url: 'cv-builder-public/',
+    title: 'CV Builder'
+  }
+};
+
+export default { AUTHOR, THEME, LANGUAGES, EMULATOR, APIS, STORAGE_KEYS, CACHE, FEATURES, SOCIAL_LINKS, WINDOWS, EMBEDS };

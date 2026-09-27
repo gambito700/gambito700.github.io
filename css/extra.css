@@ -57,3 +57,47 @@
     letter-spacing: 0.25em;
   }
 }
+
+/* ============================================================
+   VENTANAS EMBEBIDAS (CV Builder)
+   ============================================================
+   Una ventana embebida no quiere padding ni scroll propio: el
+   iframe tiene que pegar a los bordes del area de contenido y
+   ocupar todo el alto disponible.
+   ============================================================ */
+.window-content-embed {
+  padding: 0 !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.embed-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  color: var(--muted, #839496);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+}
+
+.embed-bar a {
+  color: var(--accent, #268bd2);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.embed-bar a:hover,
+.embed-bar a:focus-visible { text-decoration: underline; }
+
+.embed-frame {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  border: 0;
+  display: block;
+  background: #ffffff;
+}
